@@ -1,0 +1,15 @@
+{
+  "name": "automatic-scatter-chart-labelling",
+  "version": "1.0.0",
+  "description": "Implementation in d3 of the automatic labeling for scatter plots described [here](https://www.think-cell.com/en/career/talks/pdf/think-cell_article_aaai2006.pdf)",
+  "main": "index.js",
+  "scripts": {
+    "gulp": "gulp"
+  },
+  "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.16.0",
+    "gulp": "^3.9.1"
+  }
+}
