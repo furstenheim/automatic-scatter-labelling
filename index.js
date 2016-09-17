@@ -28,5 +28,10 @@ d3.tsv('data.tsv', function (err, data) {
     .attr('cx', d=>x(d.sepalWidth))
     .attr('cy', d=>y(d.sepalLength))
     .style('fill', d=> color(d.species))
-  
+
+  svg.append('g')
+    .attr('transform', `translate(0, ${height})`)
+    .call(d3.axisBottom(x))
+  svg.append('g')
+    .call(d3.axisLeft(y))
 })
