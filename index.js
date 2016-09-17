@@ -1,6 +1,6 @@
 var margin = {top: 20, right: 20, bottom: 30, left: 50}
-var width = 960 - margin.left - margin.right
-var height = 500 - margin.top - margin.bottom
+var width = 2060 - margin.left - margin.right
+var height = 900 - margin.top - margin.bottom
 
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
@@ -12,22 +12,22 @@ var svg = d3.select('body').append('svg')
   .attr('height', height + margin.top + margin.bottom)
   .append('g')
   .attr('transform', `translate(${margin.left}, ${margin.top})`)
-d3.tsv('data.tsv', function (err, data) {
+d3.csv('data.csv', function (err, data) {
   if (err) throw  err
   data.forEach(function (d) {
-    d.sepalLength = +d.sepalLength
-    d.sepalWidth = +d.sepalWidth
+    d.obesity_percentage = +d.obesity_percentage
+    d.life_expectancy_at_60 = +d.life_expectancy_at_60
   })
-  x.domain(d3.extent(data, d=>d.sepalWidth)).nice()
-  y.domain(d3.extent(data, d=>d.sepalLength)).nice()
+  x.domain(d3.extent(data, d=>d.obesity_percentage)).nice()
+  y.domain(d3.extent(data, d=>d.life_expectancy_at_60)).nice()
   svg.selectAll('dot')
     .data(data)
     .enter().append('circle')
     .attr('class', 'dot')
     .attr('r', 3.5)
-    .attr('cx', d=>x(d.sepalWidth))
-    .attr('cy', d=>y(d.sepalLength))
-    .style('fill', d=> color(d.species))
+    .attr('cx', d=>x(d.obesity_percentage))
+    .attr('cy', d=>y(d.life_expectancy_at_60))
+    .style('fill', d=> color(d.development_group))
 
   svg.append('g')
     .attr('transform', `translate(0, ${height})`)
