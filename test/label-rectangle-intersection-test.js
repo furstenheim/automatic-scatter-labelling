@@ -7,6 +7,8 @@ describe('Origin point', function () {
     var vi = {x: 0, y: 1}
     describe('Label to the side of the vector', function () {
       var lk = {top: 4, left: 1, right: 2, bottom: 3 }
+      lk.width = lk.right - lk.left
+      lk.height = lk.top - lk.bottom
       it('Initial label contains the original label', function () {
         var li = {width: 5, height: 2}
         var intersection = labelRectangleIntersection(lk, li, vi, pi)
