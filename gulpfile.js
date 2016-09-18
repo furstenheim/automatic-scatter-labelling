@@ -15,10 +15,11 @@ gulp.task('server-reload', function () {
 
 gulp.task('test', function () {
   gulp
-    .src('test/*.test.js')
+    .src('test/*-test.js')
     .pipe(mocha().on('error', console.error))
 })
 gulp.task('watch', function () {
     gulp.watch(['index.html', 'src/*.*', 'index.js'], ['server-reload', 'test'])
+    gulp.watch(['test/*.*'], ['test'])
 })
 gulp.task('default', ['start-server', 'watch'])
