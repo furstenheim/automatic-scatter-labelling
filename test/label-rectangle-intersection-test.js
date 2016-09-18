@@ -28,4 +28,26 @@ describe('Origin point', function () {
       })
     })
   })
+  describe('Diagonal vector', function () {
+    var vi = {x: 1, y: 1}
+    it('Width of the label is smaller', function () {
+      var lk = {top: 3, left: 1, right: 2, bottom: 2 }
+      lk.width = lk.right - lk.left
+      lk.height = lk.top - lk.bottom
+      var li = {width: 5, height: 2}
+      var intersection = labelRectangleIntersection(lk, li, vi, pi)
+      assert.deepEqual(intersection, interval(1,4))
+    })
+  })
+  describe('Horizontal vector', function () {
+    var vi = {x: 1, y: 0}
+    var lk = {top : 2, bottom: 1, left: 3, right :4}
+    lk.width = lk.right - lk.left
+    lk.height = lk.top - lk.bottom
+    it('First label contained', function () {
+      var li = {height: 5, width: 2}
+      var intersection = labelRectangleIntersection(lk, li, vi, pi)
+      assert.deepEqual(intersection, interval(2, 5))
+    })
+  })
 })
