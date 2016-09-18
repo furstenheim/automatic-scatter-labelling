@@ -23,6 +23,12 @@ describe('Intervals', function () {
       var expected = interval(1,4)
       assert.deepEqual(i3, expected)
     })
+    it('Empty array', function () {
+      var i1 = interval.empty()
+      var i2 = interval(2,4)
+      var i3 = i1.coalesce(i2)
+      assert.deepEqual(i3, i2)
+    })
   })
   describe('Intersection', function () {
     it('Containing', function () {
