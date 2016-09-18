@@ -1,3 +1,5 @@
+var interval  = require('./src/interval.js')
+
 var margin = {top: 20, right: 20, bottom: 30, left: 50}
 var width = 2060 - margin.left - margin.right
 var height = 900 - margin.top - margin.bottom
@@ -44,6 +46,13 @@ d3.csv('data.csv', function (err, data) {
     vectors.push([Math.cos(i * 2 * Math.PI / 128), Math.sin(i * 2 * Math.PI / 128)])
   }
 })
+
+// Given label lk, and label li moving on vector vi from point pi it computes the interval at which li intersects lk
+function labelRectangleIntersection (lk, li, vi, pi) {
+
+}
+
+
 
 // Given a bbox and an angle (of the ray coming from the point, We find the relative coordinates of the box. For example if the angle was P/2 the label would be clipped from the corner
 function getRelativeCornerToBBox (bbox, angle) {
