@@ -47,12 +47,6 @@ d3.csv('data.csv', function (err, data) {
   }
 })
 
-// Given label lk, and label li moving on vector vi from point pi it computes the interval at which li intersects lk
-function labelRectangleIntersection (lk, li, vi, pi) {
-
-}
-
-
 
 // Given a bbox and an angle (of the ray coming from the point, We find the relative coordinates of the box. For example if the angle was P/2 the label would be clipped from the corner
 function getRelativeCornerToBBox (bbox, angle) {

@@ -12,6 +12,9 @@
   "devDependencies": {
     "browser-sync": "^2.16.0",
     "gulp": "^3.9.1",
+    "gulp-spawn-mocha": "^3.1.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.0.2",
     "webpack": "^1.13.2"
   }
 }
