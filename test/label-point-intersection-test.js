@@ -15,7 +15,7 @@ describe('Origin point', function () {
       })
       it('Label does not intersect', function (){
         var li = {width: 2, height: 2}
-        var intersection = labelPointIntersection(lk, li, vi, pi)
+        var intersection = labelPointIntersection(pk, li, vi, pi)
         // The intersection starts when the center is at 2 and ends when the center is at 5
         assert.deepEqual(intersection, interval.empty())
       })
