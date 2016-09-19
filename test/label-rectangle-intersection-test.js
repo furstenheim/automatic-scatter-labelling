@@ -2,6 +2,8 @@ var assert = require('assert')
 var labelRectangleIntersection = require('./../src/label-rectangle-intersection')
 var interval = require('./../src/interval')
 describe('Origin point', function () {
+  // TODO test intersection from the beginning
+  // TODO test no intersection
   var pi = {x: 0, y: 0}
   describe('Vertical vector', function () {
     var vi = {x: 0, y: 1}
