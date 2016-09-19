@@ -35,6 +35,12 @@ describe('Origin point', function () {
       var intersection = labelPointIntersection(pk, li, vi, pi)
       assert.deepEqual(intersection, interval(0.5, 2.5))
     })
+    it('Point in the line', function () {
+      var pk = {x: 3, y:3}
+      var li = {width:10, height: 4}
+      var intersection = labelPointIntersection(pk, li, vi, pi)
+      assert.deepEqual(intersection, interval(1, Number.POSITIVE_INFINITY))
+    })
   })
   describe('Horizontal vector', function () {
     var vi = {x: 1, y: 0}
