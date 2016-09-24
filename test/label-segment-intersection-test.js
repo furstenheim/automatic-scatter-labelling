@@ -14,7 +14,7 @@ describe('Label segment Intersection', function () {
     },
     {
       description: 'Label containing the point',
-      expected: interval(1, Number.POSITIVE_INFINITY),
+      expected: interval(1,4),
       li: {width: 2, height: 2},
       vi: {x: 0, y: 1},
       pk: {x: 0, y: 2},
@@ -22,7 +22,7 @@ describe('Label segment Intersection', function () {
     },
     {
       description: 'Segment parallel to vector',
-      expected: interval(1, Number.POSITIVE_INFINITY),
+      expected: interval(1, 4),
       li: {width: 2, height: 2},
       vi: {x: 0, y: 1},
       pk: {x: 0, y: 2},
@@ -30,7 +30,7 @@ describe('Label segment Intersection', function () {
     },
     {
       description: 'Diagonal vector',
-      expected: interval(1, Number.POSITIVE_INFINITY),
+      expected: interval(1, 4),
       li: {width: 2, height: 2},
       vi: {x: 1, y: 1},
       pk: {x: 2, y: 2},

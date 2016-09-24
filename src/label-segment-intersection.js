@@ -13,7 +13,7 @@ function labelSegmentIntersection (li, vi, pk, vk) {
   const intersections = []
   // the end points of the segment intersect
   for (let x of [- li.width / 2, li.width / 2]) {
-    for (let y of [li.height / 2, li.width / 2]) {
+    for (let y of [ - li.height / 2, li.height / 2]) {
       let intersection = segmentSegmentIntersection({x, y}, vi, pk, vk)
       // Intersects inside the segment
       if (intersection && intersection.s >= 0 && intersection.s <= 1) {
@@ -30,10 +30,10 @@ function labelSegmentIntersection (li, vi, pk, vk) {
       intersection = segmentSegmentIntersection({x, y}, side, pk, vi)
       if (intersection && intersection.t >= 0 && intersection.t <= 1) {
         intersections.push(-intersection.s)
-        // The side covers the point in the future
-        if (intersection.s < 0) {
-          intersections.push(Number.POSITIVE_INFINITY)
-        }
+        //// The side covers the point in the future
+        //if (intersection.s < 0) {
+        //  intersections.push(Number.POSITIVE_INFINITY)
+        //}
       }
       intersection = segmentSegmentIntersection({x, y}, side, {x: pk.x + vk.x, y: pk.y + vk.y}, vi)
       if (intersection && intersection.t >= 0 && intersection.t <= 1) {
