@@ -29,6 +29,10 @@ Interval.prototype.coalesce = function (interval) {
   }
   return new Interval(Math.min(interval.start, this.start), Math.max(interval.end, this.end))
 }
+Interval.prototype.clone = function () {
+  if (this.empty) return Interval.empty()
+  return new Interval(this.start, this.end)
+}
 function interval(start, end) {
   return new Interval(start, end)
 }

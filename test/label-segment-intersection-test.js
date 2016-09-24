@@ -1,7 +1,7 @@
 var interval = require('./../src/interval')
 var labelSegmentIntersection = require('./../src/label-segment-intersection')
 var assert = require('assert')
-
+// TODO test rectangle
 describe('Label segment Intersection', function () {
   var tests = [
     {
