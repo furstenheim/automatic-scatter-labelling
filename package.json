@@ -16,5 +16,8 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "webpack": "^1.13.2"
+  },
+  "dependencies": {
+    "lodash": "^4.16.2"
   }
 }

@@ -38,3 +38,58 @@ describe('Creation of intervals', function () {
     })
   })
 })
+
+describe('Remove interval', function () {
+  var tests = [
+    {
+      description: 'Remove empty interval from empty interval',
+      multiInterval: multiInterval([interval.empty()]),
+      toRemove: interval.empty(),
+      expected: multiInterval.empty()
+    },
+    {
+      description: 'Remove empty interval from non empty',
+      multiInterval: multiInterval([interval(0, 3)]),
+      toRemove: interval.empty(),
+      expected: multiInterval([interval(0, 3)]),
+      notExpected: multiInterval([interval.empty()])
+    },
+    {
+      description: 'Disjoint multiinterval, intersect one',
+      multiInterval: multiInterval([interval(0, 4), interval(5, 6)]),
+      toRemove: interval(-1, 2),
+      expected: multiInterval([interval(2, 4), interval(5, 6)]),
+      notExpected: multiInterval([interval(2, 4)])
+    },
+    {
+      description: 'Disjoint multiinterval, intersect two',
+      multiInterval: multiInterval([interval(0, 4), interval(5, 6)]),
+      toRemove: interval(3, 5.5),
+      expected: multiInterval([interval(0, 3), interval(5.5, 6)]),
+      notExpected: multiInterval([interval(2, 4)])
+    },
+    {
+      description: 'Disjoint multiinterval, contained in one',
+      multiInterval: multiInterval([interval(0, 4), interval(5, 6)]),
+      toRemove: interval(1, 3),
+      expected: multiInterval([interval(0, 1), interval(3,4), interval(5, 6)]),
+      notExpected: multiInterval([interval(2, 4)])
+    },
+    {
+      description: 'Disjoint multiinterval, contains one',
+      multiInterval: multiInterval([interval(0, 4), interval(5, 6)]),
+      toRemove: interval(-0.1, 5),
+      expected: multiInterval([interval(5, 6)]),
+      notExpected: multiInterval([interval(2, 4)])
+    }
+  ]
+  tests.forEach(function (test) {
+    it(test.description, function () {
+      var actual = test.multiInterval.remove(test.toRemove)
+      assert.deepEqual(actual, test.expected)
+      if (test.notExpected) {
+        assert.notDeepEqual(actual, test.notExpected)
+      }
+    })
+  })
+})

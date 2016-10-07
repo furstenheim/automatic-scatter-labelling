@@ -47,6 +47,25 @@ function MultiInterval(intervals) {
 MultiInterval.empty = function () {
   return new MultiInterval([])
 }
+
+MultiInterval.prototype.intervalConstructor = interval(0, 1).constructor
+MultiInterval.prototype.clone = function () {
+  return new MultiInterval(this.intervals)
+}
+MultiInterval.prototype.remove = function (myInterval) {
+  if (! myInterval instanceof this.intervalConstructor) {
+    throw new Error('Not an interval')
+  }
+  if (this.empty || myInterval.empty) {
+    return this.clone()
+  }
+
+  var leftComplement = interval(Number.NEGATIVE_INFINITY, myInterval.start)
+  var rightComplement = interval(myInterval.end, Number.POSITIVE_INFINITY)
+  var leftIntervals = this.intervals.map(i => i.intersect(leftComplement))
+  var rightIntervals = this.intervals.map(i => i.intersect(rightComplement))
+  return new MultiInterval(leftIntervals.concat(rightIntervals))
+}
 function multiInterval(intervals) {
   return new MultiInterval(intervals)
 }
