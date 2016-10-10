@@ -66,6 +66,15 @@ MultiInterval.prototype.remove = function (myInterval) {
   var rightIntervals = this.intervals.map(i => i.intersect(rightComplement))
   return new MultiInterval(leftIntervals.concat(rightIntervals))
 }
+
+// Warning only works properly with positive multiintervals
+MultiInterval.prototype.measure = function () {
+  var measure = 0
+  for (let mInterval of this.intervals) {
+    measure += mInterval.measure()
+  }
+  return measure
+}
 function multiInterval(intervals) {
   return new MultiInterval(intervals)
 }

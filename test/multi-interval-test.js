@@ -93,3 +93,30 @@ describe('Remove interval', function () {
     })
   })
 })
+
+/* Only works on positive intervals */
+describe('Interval integral', function () {
+  var tests = [
+    {
+      description: 'Empty interval',
+      multiInterval: multiInterval([interval.empty()]),
+      expected: 0
+    },
+    {
+      description: 'Simple interval',
+      multiInterval: multiInterval([interval(0, 3)]),
+      expected: 1 - 1/8,
+    },
+    {
+      description: 'Disjoint multiinterval',
+      multiInterval: multiInterval([interval(0, 4), interval(5, 6)]),
+      expected: 1 - 1 / 16 + 1 / 32 - 1 / 64
+    }
+  ]
+  tests.forEach(function (test) {
+    it(test.description, function () {
+      var actual = test.multiInterval.measure()
+      assert.deepEqual(actual, test.expected)
+    })
+  })
+})

@@ -33,6 +33,10 @@ Interval.prototype.clone = function () {
   if (this.empty) return Interval.empty()
   return new Interval(this.start, this.end)
 }
+Interval.prototype.measure = function () {
+  if (this.empty) return 0
+  return Math.pow(2, -this.start) - Math.pow(2, -this.end)
+}
 function interval(start, end) {
   return new Interval(start, end)
 }
