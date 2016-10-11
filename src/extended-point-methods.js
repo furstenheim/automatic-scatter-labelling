@@ -20,8 +20,7 @@ function updateAvailableSpace (extendedPoint) {
 function updateMinima (extendedPoint) {
   var rays = extendedPoint.rays
   for (let ray of rays) {
-    let minimum = ray.available.getMin()
-    ray.minimum = minimum
+    ray.minimum = ray.available.getMin()
   }
 }
 
@@ -29,7 +28,7 @@ function updateMinima (extendedPoint) {
 function promoteLabelToRectangle (extendedPoint, vi) {
   const point = extendedPoint.position
   const label = extendedPoint.label
-  const rectangle = {
+  extendedPoint.rectangle = {
     height: label.height,
     width: label.width,
     top: point.y + vi.y + label.height / 2,
@@ -37,4 +36,5 @@ function promoteLabelToRectangle (extendedPoint, vi) {
     left: point.x + vi.x - label.width / 2,
     right: point.x + vi.x + label.width / 2
   }
+  extendedPoint.segment = {x: vi.x, y: vi.y}
 }
