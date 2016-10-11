@@ -78,4 +78,10 @@ MultiInterval.prototype.measure = function () {
 function multiInterval(intervals) {
   return new MultiInterval(intervals)
 }
+
+//TODO test
+MultiInterval.prototype.getMin = function () {
+  if (this.empty) return Number.POSITIVE_INFINITY
+  return this.intervals.reduce((min, cur) => cur.start < min ? cur.start : min, Number.POSITIVE_INFINITY)
+}
 multiInterval.empty = MultiInterval.empty
