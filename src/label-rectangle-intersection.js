@@ -2,6 +2,7 @@
 var interval = require('./interval')
 module.exports = labelRectangleIntersection
 
+/* Rectangle lk intersects label li moving from pi with vector vi in positive time */
 // Compare centers of the labels they must be within li.height / 2 + lk.height / 2 in the vertical variable and li.width / 2 + lk.width / 2 in the horizontal variable
 function labelRectangleIntersection (lk, li, vi, pi) {
   var firstInterval, secondInterval, thirdInterval, fourthInterval

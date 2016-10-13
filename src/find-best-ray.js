@@ -21,20 +21,30 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
   for (let pi of P) {
     let mindik = _.minBy(pi.rays, 'minimun').minimum
     let R = pi.rays.filter(rij => rij.miminum < mindik + TOLERANCE)
-    for (let rij of R) {
-      extendedPointMethods.promoteLabelToRectangle(pi, {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum})
+    rijloop: for (let rij of R) {
+      let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
+      extendedPointMethods.promoteLabelToRectangle(pi, segment)
       for (let pk of P0) {
         if (pk === pi) continue
         // No sense to wait for the intersection if rbest is defined
-        if (rbest) break // If rbest is already assign we can skip computations
 
+        let lk = pk.label
+        //int pk
+        let availableSpace = 0
         // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
         for (let rkl of pk.rays) {
-          // We have split label rectangle intersection into two algorithms, label rectangle and label segment
+          // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
+          let labelInterval = labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
+          let segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
+          availableSpace += rkl.available.remove(labelInterval.coalesce(segmentInterval)).measure()
         }
-
+        // This ray is not good because we try to maximize the minimum
+        if (rbest && availableSpace < minimumAvailableSpace) {
+          continue rijloop
+        }
       }
-      if (rbest) break // If rbest is already assign we can skip computations
+
+
     }
   }
 }

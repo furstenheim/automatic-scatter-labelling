@@ -47,9 +47,10 @@ describe('Label segment Intersection', function () {
   ]
   tests.forEach(function (test) {
     it(test.description, function () {
-      var result = labelSegmentIntersection(test.li, test.vi, test.pk, test.vk)
+      var result = labelSegmentIntersection(test.pk, test.vk, test.li, test.vi, {x: 0, y: 0})
       assert.deepEqual(result, test.expected)
     })
   })
 
+  // TODO test with origin of label not 0,0
 })
