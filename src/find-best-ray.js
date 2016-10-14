@@ -1,3 +1,4 @@
+'use strict'
 module.exports = findBestRay
 
 const _ = require('lodash')

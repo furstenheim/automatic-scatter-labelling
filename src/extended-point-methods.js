@@ -1,3 +1,4 @@
+'use strict'
 module.exports = {updateAvailableSpace, promoteLabelToRectangle, updateMinima}
 /*
  An extended point may contain the following
