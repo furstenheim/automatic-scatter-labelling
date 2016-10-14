@@ -118,3 +118,55 @@ describe('Update minima', function () {
     })
   })
 })
+
+
+describe('Promote label to rectangle', function () {
+  const tests = [
+    {
+      description: 'Diagonal vector, point at origin',
+      point: {
+        position: {x: 0, y: 0},
+        label: {height: 1, width: 2},
+        rays: [
+        ]
+      },
+      vi: {x: 1, y: 1},
+      expected: {height: 1, width: 2, top: 1.5, bottom: 0.5, left: 0, right: 2}
+    },
+    {
+      description: 'Horizontal negative vector point at origin',
+      point: {
+        position: {x: 0, y: 0},
+        label: {height: 2, width: 2},
+        rays: [
+          {
+            available: multiInterval([interval.empty()])
+          }
+        ]
+      },
+      vi: {x: 0, y: -2},
+      expected: {height: 2, width: 2, top: -1, bottom: -3, left: -1, right: 1}
+    },
+    {
+      description: 'Point not at origin',
+      point: {
+        position: {x: -1, y: -1},
+        label: {height: 2, width: 2},
+        rays: [
+          {
+            available: multiInterval([interval.empty()])
+          }
+        ]
+      },
+      vi: {x: 0, y: -2},
+      expected: {height: 2, width: 2, top: -2, bottom: -4, left: -2, right: 0}
+    }
+  ]
+  tests.forEach(function (test) {
+    it(test.description, function () {
+      extendedPointMethods.promoteLabelToRectangle(test.point, test.vi)
+      // If there are no rays there is no much we can test apart from no breaking
+      assert.deepEqual(test.expected, test.point.rectangle)
+    })
+  })
+})
