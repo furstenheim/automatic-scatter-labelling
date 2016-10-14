@@ -5,6 +5,7 @@ const _ = require('lodash')
 const extendedPointMethods = require('./extended-point-methods')
 const labelRectangleIntersection = require('./label-rectangle-intersection')
 const labelSegmentIntersection = require('./label-segment-intersection')
+const utils = require('./utils')
 
 const TOLERANCE = 2 // pixels
 
@@ -15,6 +16,7 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
   // int P min in the article
   var minimumAvailableSpace = Number.POSITIVE_INFINITY
   var rbest
+  var Vbest
   P0.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
   P.forEach(p=> extendedPointMethods.updateMinima(p))
   P.sort((p1, p2) => p2.availableMeasure - p1.availableMeasure )
@@ -22,6 +24,7 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
     let mindik = _.minBy(pi.rays, 'minimun').minimum
     let R = pi.rays.filter(rij => rij.miminum < mindik + TOLERANCE)
     rijloop: for (let rij of R) {
+      let Vij = []
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
       extendedPointMethods.promoteLabelToRectangle(pi, segment)
       for (let pk of P0) {
@@ -42,9 +45,15 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
         if (rbest && availableSpace < minimumAvailableSpace) {
           continue rijloop
         }
+        Vij.push(availableSpace)
       }
-
-
+      Vij.sort((i,j) => i - j) // order to compare in lexicographical order
+      if (!Vbest || utils.compareArraysLexicographically(Vij, Vbest) < 0) {
+        rbest = rij
+        Vbest = Vij
+        minimumAvailableSpace = _.min(Vij)
+      }
     }
   }
+  return rbest
 }
