@@ -22,8 +22,8 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
   P.forEach(p=> extendedPointMethods.updateMinima(p))
   P.sort((p1, p2) => p2.availableMeasure - p1.availableMeasure )
   for (let pi of P) {
-    let mindik = _.minBy(pi.rays, 'minimun').minimum
-    let R = pi.rays.filter(rij => rij.miminum < mindik + TOLERANCE)
+    let mindik = _.minBy(pi.rays, 'minimum').minimum
+    let R = pi.rays.filter(rij => rij.minimum < mindik + TOLERANCE)
     rijloop: for (let rij of R) {
       let Vij = []
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
