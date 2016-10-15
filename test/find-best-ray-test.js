@@ -38,7 +38,9 @@ describe('Find best ray', function () {
         }
       }
     ]
-    const rbest = findBestRay(pointsToLabel, pointsNotToLabel)
+    const rbest = findBestRay(pointsToLabel, pointsNotToLabel).rbest
     assert.equal(rbest, pointsToLabel[0].rays[0], 'There was only one ray')
   })
+
+  // TODO add more tests
 })

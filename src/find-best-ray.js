@@ -18,6 +18,7 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
   var minimumAvailableSpace = Number.POSITIVE_INFINITY
   var rbest
   var Vbest
+  var pbest // This is not in the original algorithm but allows to easily find the corresponding point
   P0.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
   P.forEach(p=> extendedPointMethods.updateMinima(p))
   P.sort((p1, p2) => p2.availableMeasure - p1.availableMeasure )
@@ -53,8 +54,9 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
         rbest = rij
         Vbest = Vij
         minimumAvailableSpace = _.min(Vij)
+        pbest = pi
       }
     }
   }
-  return rbest
+  return {rbest: rbest, pbest: pbest}
 }
