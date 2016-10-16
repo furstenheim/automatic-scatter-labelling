@@ -1,12 +1,15 @@
 'use strict'
-module.exports = {updateAvailableSpace, promoteLabelToRectangle, updateMinima}
+module.exports = {updateAvailableSpace, promoteLabelToRectangle, computeInitialAvailabeSpaces, resetAvailableSpace, updateMinima}
+
+const pointSegmentIntersection = require('./point-segment-intersection')
+const multiInterval = require('./multi-interval')
+const interval = require('./interval')
 /*
  An extended point may contain the following
   rays a collection of rays starting from the point as well as the intervals where they are allowed
   label in case the label is not yet settled
   rectangle in case the label is settled
  */
-// TODO test
 function updateAvailableSpace (extendedPoint) {
   var rays = extendedPoint.rays
   var measure = 0
@@ -18,6 +21,27 @@ function updateAvailableSpace (extendedPoint) {
   extendedPoint.availableMeasure = measure
 }
 
+function computeInitialAvailabeSpaces (extendedPoints) {
+  for (let pi of extendedPoints) {
+    for (let rij of pi.rays){
+      rij.initiallyAvailable =  multiInterval([interval(0, Number.POSITIVE_INFINITY)])
+      for (let pk of extendedPoints) {
+        if (pk === pi) continue
+        const intervalToRemove = pointSegmentIntersection(pk.position, pi.position, rij.vector)
+        rij.initallyAvailable = rij.initallyAvailable.remove(intervalToRemove)
+      }
+    }
+  }
+}
+
+function resetAvailableSpace (extendedPoints) {
+  for (let pi of extendedPoints) {
+    for (let rij of pi.rays) {
+      rij.available = rij.initallyAvailable
+    }
+  }
+}
+
 function updateMinima (extendedPoint) {
   var rays = extendedPoint.rays
   for (let ray of rays) {
@@ -25,7 +49,6 @@ function updateMinima (extendedPoint) {
   }
 }
 
-// TODO test
 function promoteLabelToRectangle (extendedPoint, vi) {
   const point = extendedPoint.position
   const label = extendedPoint.label
