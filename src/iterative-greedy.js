@@ -16,7 +16,7 @@ function iterativeGreedy (extendedPoints) {
     const nextIteration = []
     // We change the order here wrt to the article
     for (let i = 0; i < pointQueue.length; i++) {
-      
+
     }
   }
 
