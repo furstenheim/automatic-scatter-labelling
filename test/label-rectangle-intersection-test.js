@@ -1,6 +1,6 @@
 var assert = require('assert')
-var labelRectangleIntersection = require('./../src/label-rectangle-intersection')
-var interval = require('./../src/interval')
+var labelRectangleIntersection = require('./../src/label-rectangle-intersection').labelRectangleIntersection
+var interval = require('./../src/interval').interval
 describe('Origin point', function () {
   // TODO test intersection from the beginning
   // TODO test no intersection

@@ -1,5 +1,5 @@
-var interval = require('./../src/interval')
-var multiInterval = require('./../src/multi-interval')
+var interval = require('./../src/interval').interval
+var multiInterval = require('./../src/multi-interval').multiInterval
 var assert = require('assert')
 
 describe('Creation of intervals', function () {

@@ -1,6 +1,6 @@
-const findBestRay = require('./../src/find-best-ray')
-const multiInterval = require('./../src/multi-interval')
-const interval = require('./../src/interval')
+const findBestRay = require('./../src/find-best-ray').findBestRay
+const multiInterval = require('./../src/multi-interval').multiInterval
+const interval = require('./../src/interval').interval
 const assert = require('assert')
 describe('Find best ray', function () {
   it('It returns a ray from points to Label', function () {

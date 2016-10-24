@@ -1,6 +1,6 @@
 var assert = require('assert')
-var labelPointIntersection = require('./../src/label-point-intersection')
-var interval = require('./../src/interval')
+var labelPointIntersection = require('./../src/label-point-intersection').labelPointIntersection
+var interval = require('./../src/interval').interval
 describe('Origin point', function () {
   var pi = {x: 0, y: 0}
   describe('Vertical vector', function () {

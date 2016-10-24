@@ -1,11 +1,11 @@
 'use strict'
-module.exports = findBestRay
+module.exports = {findBestRay}
 
 const _ = require('lodash')
 
 const extendedPointMethods = require('./extended-point-methods')
-const labelRectangleIntersection = require('./label-rectangle-intersection')
-const labelSegmentIntersection = require('./label-segment-intersection')
+const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
+const labelSegmentIntersection = require('./label-segment-intersection').labelSegmentIntersection
 const utils = require('./utils')
 
 const TOLERANCE = 2 // pixels

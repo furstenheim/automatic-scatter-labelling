@@ -1,4 +1,4 @@
-module.exports = interval
+module.exports = {interval}
 function Interval (start, end) {
   if (start > end) {
     // console.error('Wrong order of interval', start, end)

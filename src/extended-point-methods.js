@@ -1,9 +1,9 @@
 'use strict'
 module.exports = {updateAvailableSpace, promoteLabelToRectangle, computeInitialAvailabeSpaces, resetAvailableSpace, updateMinima}
 
-const pointSegmentIntersection = require('./point-segment-intersection')
-const multiInterval = require('./multi-interval')
-const interval = require('./interval')
+const pointSegmentIntersection = require('./point-segment-intersection').pointSegmentIntersection
+const multiInterval = require('./multi-interval').multiInterval
+const interval = require('./interval').interval
 /*
  An extended point may contain the following
   rays a collection of rays starting from the point as well as the intervals where they are allowed

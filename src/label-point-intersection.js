@@ -1,6 +1,6 @@
 'use strict'
-var interval = require('./interval')
-module.exports = labelPointIntersection
+var interval = require('./interval').interval
+module.exports = {labelPointIntersection}
 
 function labelPointIntersection (pk, li, vi, pi) {
   var firstInterval, secondInterval, thirdInterval, fourthInterval

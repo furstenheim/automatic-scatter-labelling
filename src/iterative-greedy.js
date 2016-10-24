@@ -1,4 +1,4 @@
-module.exports = iterativeGreedy
+module.exports = {iterativeGreedy}
 
 const extendedPointMethods = require('./extended-point-methods')
 const _ = require('lodash')

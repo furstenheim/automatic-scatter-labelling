@@ -1,6 +1,6 @@
 'use strict'
-module.exports = multiInterval
-var interval = require('./interval')
+module.exports = {multiInterval}
+var interval = require('./interval').interval
 //Disjoint union of several intervals
 function MultiInterval(intervals) {
   if (!Array.isArray(intervals)) {

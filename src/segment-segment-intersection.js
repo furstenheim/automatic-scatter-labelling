@@ -1,4 +1,4 @@
-module.exports = segmentSegmentIntersection
+module.exports = {segmentSegmentIntersection}
 // A point pi moves with vi, a segment is defined with pj, vj, we find the time t at which the point intersects and returns parameters s on the segment
 function segmentSegmentIntersection (pi, vi, pj, vj /*Vector of the segment */) {
   // (vi -vj)(t, s)^T = (pj - pi)

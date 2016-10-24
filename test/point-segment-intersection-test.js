@@ -1,5 +1,5 @@
-var interval = require('./../src/interval')
-var pointSegmentIntersection = require('./../src/point-segment-intersection')
+var interval = require('./../src/interval').interval
+var pointSegmentIntersection = require('./../src/point-segment-intersection').pointSegmentIntersection
 var assert = require('assert')
 
 describe('Point segment intersection', function () {

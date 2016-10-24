@@ -1,10 +1,10 @@
 'use strict'
-module.exports = rayIntersection
+module.exports = {rayIntersection}
 
-const findBestRay = require('./find-best-ray')
+const findBestRay = require('./find-best-ray').findBestRay
 const extendedPointMethods = require('./extended-point-methods')
-const labelRectangleIntersection = require('./label-rectangle-intersection')
-const labelSegmentIntersection = require('./label-segment-intersection')
+const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
+const labelSegmentIntersection = require('./label-segment-intersection').labelSegmentIntersection
 
 
 // TODO use sets

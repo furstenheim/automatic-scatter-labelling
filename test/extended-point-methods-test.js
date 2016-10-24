@@ -1,7 +1,7 @@
 const assert = require('assert')
 const extendedPointMethods = require('./../src/extended-point-methods')
-const multiInterval = require('./../src/multi-interval')
-const interval = require('./../src/interval')
+const multiInterval = require('./../src/multi-interval').multiInterval
+const interval = require('./../src/interval').interval
 const _ = require('lodash')
 
 describe('Update available space', function () {

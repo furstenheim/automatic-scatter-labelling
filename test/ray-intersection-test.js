@@ -1,7 +1,7 @@
-const rayIntersection = require('./../src/ray-intersection')
+const rayIntersection = require('./../src/ray-intersection').rayIntersection
 const assert = require('assert')
-const multiInterval = require('../src/multi-interval')
-const interval = require('../src/interval')
+const multiInterval = require('../src/multi-interval').multiInterval
+const interval = require('../src/interval').interval
 
 describe('Ray intersection', function () {
   it('empty arrays', function () {

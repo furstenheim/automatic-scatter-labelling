@@ -1,5 +1,5 @@
 var assert = require('assert')
-var segmentSegmentIntersection = require('./../src/segment-segment-intersection')
+var segmentSegmentIntersection = require('./../src/segment-segment-intersection').segmentSegmentIntersection
 describe('Intersection of vectors', function () {
   it('Orthogonal vectors', function () {
     var p1 = {x: 0, y: 1}

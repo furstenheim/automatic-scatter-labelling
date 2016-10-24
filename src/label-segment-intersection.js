@@ -1,9 +1,9 @@
 'use strict'
 // Find interval in which an interval and a segment intersect
-module.exports = labelSegmentIntersection
+module.exports = {labelSegmentIntersection}
 
-var segmentSegmentIntersection = require('./segment-segment-intersection')
-var interval = require('./interval')
+var segmentSegmentIntersection = require('./segment-segment-intersection').segmentSegmentIntersection
+var interval = require('./interval').interval
 
 // Label li moves with vector vi. We find the interval at which it intersects the segment pk, vk. If pk is contained then the interval goes to INFINITY
 function labelSegmentIntersection (pk, vk, li, vi, pi) {

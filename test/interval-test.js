@@ -1,4 +1,4 @@
-var interval = require('./../src/interval')
+var interval = require('./../src/interval').interval
 var assert = require('assert')
 describe('Intervals', function () {
   describe('coallesce', function () {
