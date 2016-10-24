@@ -10,7 +10,7 @@ describe('Ray intersection', function () {
     const result = rayIntersection(pointsToLabel, pointsNotToLabel)
     assert.deepEqual(result, {N: [], pointsLabeled: []})
   })
-  it.only('One point to label', function () {
+  it('One point to label', function () {
     const pointsToLabel = [
       {
         position: {

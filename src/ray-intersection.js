@@ -20,8 +20,9 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
     let vi = {x: rij.vector.x * rij.available.getMin(), y: rij.vector.y * rij.available.getMin()}
     extendedPointMethods.promoteLabelToRectangle(pi, vi)
     let index = pointsToLabel.findIndex(el => el === pi)
-    P0.splice(index, 1)
-    pointsLabeled.push(P.splice(index, 1)[0])
+    P0 = P0.filter((el, i) => i!== index)
+    P = P.filter((el, i) => i!== index)
+    pointsLabeled.push(pi)
     for (let pk of P0) {
       for (let rkl of pk.rays) {
         const labelInterval = labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
@@ -32,7 +33,9 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
 
       // The original article is not very clear here. It removes the point from P but the iteration was on P0. I suppose that if the integral is 0 and the point is in P then it will be removed in the next iteration of the greedy algorithm
       if (pk.availableMeasure === 0 && P.findIndex(el => el === pk) !== -1){
-        P.splice(P.findIndex(el => el === pk))
+        const index = P.findIndex(el => el === pk)
+        P0 = P0.filter((el, i) => i!== index)
+        P = P.filter((el, i) => i!== index)
         N.push(pk)
       }
     }
