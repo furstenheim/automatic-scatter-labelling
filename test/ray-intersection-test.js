@@ -16,7 +16,7 @@ describe('Ray intersection', function () {
     const pointsToLabel = []
     const pointsNotToLabel = []
     const result = rayIntersection(pointsToLabel, pointsNotToLabel)
-    assert.deepEqual(result, {N: [], pointsLabeled: []})
+    assert.deepEqual(result, {rejected: [], chosen: []})
   })
   it('One point to label', function () {
     const pointsToLabel = [
@@ -53,11 +53,11 @@ describe('Ray intersection', function () {
         }
       }
     ]
-    const result = rayIntersection(pointsToLabel, pointsNotToLabel)
+    const {chosen, rejected} = rayIntersection(pointsToLabel, pointsNotToLabel)
     // There is only one ray to label so it is labeled and measure is updated in the not to label
-    assert.equal(result.N.length, 0, 'All rays where accepted')
-    assert.equal(result.pointsLabeled.length, 1, 'Only point was labeled')
-    assert.equal(result.pointsLabeled[0], pointsToLabel[0], 'The only point was labeled')
+    assert.equal(rejected.length, 0, 'All rays where accepted')
+    assert.equal(chosen.length, 1, 'Only point was labeled')
+    assert.equal(chosen[0], pointsToLabel[0], 'The only point was labeled')
   })
   it('Two points stubbed methods', function () {
     const pointsToLabel = [
@@ -112,9 +112,50 @@ describe('Ray intersection', function () {
     sandbox.stub(findBestRay, 'findBestRay', () => { return {pbest: pointsToLabel[1], rbest: pointsToLabel[1].rays[0]} })
     // Intersection is the whole positive axis, this means that the remaining label cannot be displayed
     sandbox.stub(labelSegmentIntersection, 'labelSegmentIntersection', () => interval(0, Number.POSITIVE_INFINITY))
-    const result = rayIntersection(pointsToLabel, pointsNotToLabel)
-    assert.equal(result.pointsLabeled[0], pointsToLabel[1], 'Best ray was stubbed to return second point')
-    assert.equal(result.N[0], pointsToLabel[0], 'intersection algorithms where stubbed to make intersection impossible')
-    assert.deepEqual(result.N[0].rays[0].available, multiInterval.empty(), 'There was no room left')
+    const {chosen, rejected} = rayIntersection(pointsToLabel, pointsNotToLabel)
+    assert.equal(chosen[0], pointsToLabel[1], 'Best ray was stubbed to return second point')
+    assert.equal(rejected[0], pointsToLabel[0], 'intersection algorithms where stubbed to make intersection impossible')
+    assert.deepEqual(rejected[0].rays[0].available, multiInterval.empty(), 'There was no room left')
+  })
+
+  it('One point to label without free space', function () {
+    const pointsToLabel = [
+      {
+        position: {
+          x: 0,
+          y: 0
+        },
+        rays: [
+          {
+            available: multiInterval.empty(),
+            vector: {x: 1, y: 1}
+          }
+        ],
+        label: {
+          height: 1, width: 2
+        }
+      }
+    ]
+    const pointsNotToLabel = [
+      {
+        position: {
+          x: 0,
+          y: 1
+        },
+        rays: [
+          {
+            available: multiInterval([interval(0, Number.POSITIVE_INFINITY)]),
+            vector: {x: 1, y: 1}
+          }
+        ],
+        label: {
+          height: 1, width: 2
+        }
+      }
+    ]
+    const {chosen, rejected} = rayIntersection(pointsToLabel, pointsNotToLabel)
+    // There is only one ray to label so it is labeled and measure is updated in the not to label
+    assert.equal(rejected.length, 1, 'All rays where accepted')
+    assert.equal(chosen.length, 0, 'Only point was labeled')
   })
 })
