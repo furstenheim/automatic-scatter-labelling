@@ -19,6 +19,7 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
+    "iterative-greedy": "git://github.com/furstenheim/iterative-greedy.git#66a85230b023b53c33369879b3ad053c82f464f6",
     "lodash": "^4.16.2",
     "lodash.clone": "^4.5.0"
   }

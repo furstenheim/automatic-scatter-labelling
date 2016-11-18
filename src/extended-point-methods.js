@@ -14,6 +14,7 @@ function updateAvailableSpace (extendedPoint) {
   var rays = extendedPoint.rays
   var measure = 0
   for (let ray of rays) {
+    console.log(ray)
     let rayMeasure = ray.available.measure()
     ray.availableMeasure = rayMeasure
     measure += rayMeasure
@@ -28,17 +29,16 @@ function computeInitialAvailabeSpaces (extendedPoints) {
       for (let pk of extendedPoints) {
         if (pk === pi) continue
         const intervalToRemove = pointSegmentIntersection(pk.position, pi.position, rij.vector)
-        rij.initallyAvailable = rij.initallyAvailable.remove(intervalToRemove)
+        rij.initiallyAvailable = rij.initiallyAvailable.remove(intervalToRemove)
       }
+      rij.available = rij.initiallyAvailable.clone()
     }
   }
 }
 
-function resetAvailableSpace (extendedPoints) {
-  for (let pi of extendedPoints) {
-    for (let rij of pi.rays) {
-      rij.available = rij.initallyAvailable
-    }
+function resetAvailableSpace (extendedPoint) {
+  for (let rij of extendedPoint.rays) {
+    rij.available = rij.initiallyAvailable
   }
 }
 
