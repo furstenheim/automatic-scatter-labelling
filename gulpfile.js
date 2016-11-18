@@ -22,4 +22,4 @@ gulp.task('watch', function () {
     gulp.watch(['index.html', 'src/*.*', 'index.js'], ['server-reload', 'test'])
     gulp.watch(['test/*.*'], ['test'])
 })
-gulp.task('default', ['start-server', 'watch'])
+gulp.task('default', [/*'start-server',*/'test', 'watch'])

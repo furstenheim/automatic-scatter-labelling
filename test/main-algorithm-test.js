@@ -5,6 +5,7 @@ describe.only('Main algorithm', function () {
   it('Label one point', function () {
     const pointsToLabel = [
       {
+        id: 1,
         position: {
           x: 0,
           y: 0

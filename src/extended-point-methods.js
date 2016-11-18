@@ -14,7 +14,6 @@ function updateAvailableSpace (extendedPoint) {
   var rays = extendedPoint.rays
   var measure = 0
   for (let ray of rays) {
-    console.log(ray)
     let rayMeasure = ray.available.measure()
     ray.availableMeasure = rayMeasure
     measure += rayMeasure

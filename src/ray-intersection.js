@@ -50,6 +50,5 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
       }
     }
   }
-
   return {chosen: pointsLabeled, rejected: rejectedPoints}
 }

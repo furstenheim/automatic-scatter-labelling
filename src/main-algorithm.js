@@ -1,7 +1,7 @@
 module.exports = {mainAlgorithm}
 
 const extendedPointMethods = require('./extended-point-methods')
-const findBestRay = require('./find-best-ray').findBestRay
+const rayIntersection = require('./ray-intersection').rayIntersection
 const _ = require('lodash')
 const iterativeGreedy = require('iterative-greedy')
 
@@ -10,8 +10,7 @@ const NUMBER_OF_RAYS = 128
 function mainAlgorithm (extendedPoints) {
   computeRays(extendedPoints)
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints)
-  var result = iterativeGreedy.solve(findBestRay, extendedPoints, resetFunction, {serializeFunction})
-  console.log(result)
+  var result = iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction})
 }
 
 function computeRays (extendedPoints) {
@@ -40,5 +39,4 @@ function serializeFunction (arrayOfPoints) {
 function resetFunction (generalizedPoint) {
   generalizedPoint.rectangle = null
   extendedPointMethods.resetAvailableSpace(generalizedPoint)
-  console.log('reset function', generalizedPoint)
 }
