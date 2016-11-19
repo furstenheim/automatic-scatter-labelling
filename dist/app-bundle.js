@@ -75,17 +75,21 @@
 	    d.obesity_percentage = Number(d.obesity_percentage)
 	    d.life_expectancy_at_60 = Number(d.life_expectancy_at_60)
 	  })
-	  render(data)
-	  /*setTimeout(function () {
-	    render(data.slice(0, 5))
-	  }, 10000)*/
+	  const xAxis = svg.append('g')
+	    .attr('transform', `translate(0, ${height})`)
+	  const yAxis = svg.append('g')
+	    .attr('class', 'axis-y')
+	  render(data, xAxis, yAxis)
+	  setTimeout(function () {
+	    render(data.slice(0, 5), xAxis, yAxis)
+	  }, 2000)
 	})
 
 
-	function render (data) {
+	function render (data, xAxis, yAxis) {
 	  x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
 	  y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
-	  const dots = svg.selectAll('dot')
+	  const dots = svg.selectAll('.dot')
 	    .data(data)
 	  dots.enter().append('circle')
 	    .attr('class', 'dot')
@@ -94,12 +98,11 @@
 	    .attr('cy', d => y(d.life_expectancy_at_60))
 	    .style('fill', d=> color(d.development_group))
 	  dots.exit()
+	    .transition(500)
+	    .attr('oppacitiy', 0)
 	    .remove()
-	  svg.append('g')
-	    .attr('transform', `translate(0, ${height})`)
-	    .call(d3.axisBottom(x))
-	  svg.append('g')
-	    .call(d3.axisLeft(y))
+	  xAxis.call(d3.axisBottom(x))
+	  yAxis.call(d3.axisLeft(y))
 
 	}
 
