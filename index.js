@@ -41,13 +41,19 @@ function render (data, xAxis, yAxis) {
   dots.enter().append('circle')
     .attr('class', 'dot')
     .attr('r', 3.5)
+    .attr('opacity', 100)
     .attr('cx', d => x(d.obesity_percentage))
     .attr('cy', d => y(d.life_expectancy_at_60))
     .style('fill', d=> color(d.development_group))
   dots.exit()
-    .transition(500)
-    .attr('oppacitiy', 0)
+    .transition()
+    .duration(500)
+    .attr('opacity', 0)
+    .attr('r', 0)
     .remove()
+    /*.on('end', function (){
+      this.remove()
+    })*/
   xAxis.call(d3.axisBottom(x))
   yAxis.call(d3.axisLeft(y))
 
