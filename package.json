@@ -13,13 +13,14 @@
     "browser-sync": "^2.16.0",
     "gulp": "^3.9.1",
     "gulp-spawn-mocha": "^3.1.0",
+    "gulp-webpack": "^1.5.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "sinon": "^1.17.6",
     "webpack": "^1.13.2"
   },
   "dependencies": {
-    "iterative-greedy": "git://github.com/furstenheim/iterative-greedy.git#66a85230b023b53c33369879b3ad053c82f464f6",
+    "iterative-greedy": "git://github.com/furstenheim/iterative-greedy.git#6c7570d7fb4155e1ad18e6911788b87adeb598e2",
     "lodash": "^4.16.2",
     "lodash.clone": "^4.5.0"
   }

@@ -1,7 +1,7 @@
 const mainAlgorithm = require('./../src/main-algorithm').mainAlgorithm
 const multiInterval = require('./../src/multi-interval').multiInterval
 const interval = require('./../src/interval').interval
-describe.only('Main algorithm', function () {
+describe('Main algorithm', function () {
   it('Label one point', function () {
     const pointsToLabel = [
       {
