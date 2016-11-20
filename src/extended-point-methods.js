@@ -1,5 +1,6 @@
 'use strict'
-module.exports = {updateAvailableSpace, promoteLabelToRectangle, computeInitialAvailabeSpaces, resetAvailableSpace, updateMinima}
+module.exports = {updateAvailableSpace, promoteLabelToRectangle,
+  computeInitialAvailabeSpaces, resetAvailableSpace, updateMinima, translateLabel}
 
 const pointSegmentIntersection = require('./point-segment-intersection').pointSegmentIntersection
 const multiInterval = require('./multi-interval').multiInterval
@@ -49,9 +50,14 @@ function updateMinima (extendedPoint) {
 }
 
 function promoteLabelToRectangle (extendedPoint, vi) {
+  extendedPoint.rectangle = translateLabel(extendedPoint, vi)
+  extendedPoint.segment = {x: vi.x, y: vi.y}
+}
+
+function translateLabel (extendedPoint, vi) {
   const point = extendedPoint.position
   const label = extendedPoint.label
-  extendedPoint.rectangle = {
+  return {
     height: label.height,
     width: label.width,
     top: point.y + vi.y + label.height / 2,
@@ -59,5 +65,4 @@ function promoteLabelToRectangle (extendedPoint, vi) {
     left: point.x + vi.x - label.width / 2,
     right: point.x + vi.x + label.width / 2
   }
-  extendedPoint.segment = {x: vi.x, y: vi.y}
 }

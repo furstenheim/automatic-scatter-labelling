@@ -11,7 +11,7 @@ const NUMBER_OF_RAYS = 128
 function mainAlgorithm (extendedPoints) {
   computeRays(extendedPoints)
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints)
-  var result = iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction})
+  return iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction})
 }
 
 function computeRays (extendedPoints) {

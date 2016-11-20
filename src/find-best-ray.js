@@ -28,18 +28,17 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
     rijloop: for (let rij of R) {
       let Vij = []
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
-      extendedPointMethods.promoteLabelToRectangle(pi, segment)
+      const rectangle = extendedPointMethods.translateLabel(pi, segment)
       for (let pk of P0) {
         if (pk === pi) continue
         // No sense to wait for the intersection if rbest is defined
 
-        let lk = pk.label
         //int pk
         let availableSpace = 0
         // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
         for (let rkl of pk.rays) {
           // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
-          let labelInterval = labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
+          let labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
           let segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
           availableSpace += rkl.available.remove(labelInterval.coalesce(segmentInterval)).measure()
         }

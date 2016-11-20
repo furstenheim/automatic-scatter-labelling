@@ -16,6 +16,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
   var P0 = pointsToLabel.concat(pointsNotToLabel)
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
+    console.log(remainingPoints.length)
     let bestRay = findBestRay.findBestRay(remainingPoints, pointsNotToLabel)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
@@ -27,7 +28,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
       return {chosen: [], rejected: clone(pointsToLabel)}
     }
     let vi = {x: rij.vector.x * rij.available.getMin(), y: rij.vector.y * rij.available.getMin()}
-    extendedPointMethods.promoteLabelToRectangle(pi, vi)
+    const rectangle = extendedPointMethods.translateLabel(pi, vi)
     //let index = pointsToLabel.findIndex(el => el === pi)
     remainingPoints = remainingPoints.filter(el => el !== pi)
     P0 = P0.filter(el => el !== pi)
@@ -36,7 +37,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
     pointsLabeled.push(pi)
     for (let pk of P0) {
       for (let rkl of pk.rays) {
-        const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
+        const labelInterval = labelRectangleIntersection.labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
         const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
         rkl.available = rkl.available.remove(labelInterval.coalesce(segmentInterval))
       }

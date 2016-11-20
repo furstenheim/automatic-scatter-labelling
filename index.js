@@ -1,5 +1,5 @@
 'use strict'
-var interval  = require('./src/interval.js')
+const mainAlgorithm = require('./src/main-algorithm').mainAlgorithm
 
 var margin = {top: 20, right: 20, bottom: 30, left: 50}
 var width = 2060 - margin.left - margin.right
@@ -26,16 +26,33 @@ d3.csv('data.csv', function (err, data) {
     .attr('transform', `translate(0, ${height})`)
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
-  render(data, xAxis, yAxis)
-  setTimeout(function () {
+  render(data.slice(0, 10), xAxis, yAxis)
+/*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
-  }, 2000)
+  }, 2000)*/
 })
 
 
 function render (data, xAxis, yAxis) {
   x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
   y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
+  const extendedPoints = data.map((d,i) => {
+   return {
+     id: i,
+     position: {
+       x: x(d.obesity_percentage),
+       y: y(d.life_expectancy_at_60)
+     },
+     label: {
+       height: 1,
+       width: 2
+     }
+   }
+  })
+  console.log('start ', extendedPoints)
+  debugger
+  const result = mainAlgorithm(extendedPoints)
+  console.log(result)
   const dots = svg.selectAll('.dot')
     .data(data)
   dots.enter().append('circle')
@@ -54,6 +71,15 @@ function render (data, xAxis, yAxis) {
     /*.on('end', function (){
       this.remove()
     })*/
+  const lines = svg.selectAll('.segment')
+    .data(result)
+  lines.enter().append('line')
+    .attr('class', 'segment')
+    .style('stroke', 'black')
+    .attr('x1', d => extendedPoints[d.id].position.x)
+    .attr('y1', d => extendedPoints[d.id].position.y)
+    .attr('x2', d => (d.rectangle.left + d.rectangle.right) / 2)
+    .attr('y2', d => (d.rectangle.top + d.rectangle.bottom) / 2)
   xAxis.call(d3.axisBottom(x))
   yAxis.call(d3.axisLeft(y))
 
