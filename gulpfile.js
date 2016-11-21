@@ -26,7 +26,7 @@ gulp.task('test', function () {
     .pipe(mocha().on('error', console.error))
 })
 gulp.task('watch', function () {
-    gulp.watch(['index.html', 'src/*.*', 'index.js'], ['webpack', 'server-reload', 'test'])
+    gulp.watch(['index.html', 'src/*.*', 'index.js'], [/*'webpack', 'server-reload', */'test'])
     gulp.watch(['test/*.*'], ['test'])
 })
-gulp.task('default', ['start-server','test', 'watch'])
+gulp.task('default', [/*'start-server',*/'test', 'watch'])

@@ -6,6 +6,7 @@ const _ = require('lodash')
 const extendedPointMethods = require('./extended-point-methods')
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
 const labelSegmentIntersection = require('./label-segment-intersection').labelSegmentIntersection
+const multiInterval = require('./multi-interval').multiInterval
 const utils = require('./utils')
 
 const TOLERANCE = 2 // pixels
@@ -40,7 +41,10 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
           // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
           let labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
           let segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
-          availableSpace += rkl.available.remove(labelInterval.coalesce(segmentInterval)).measure()
+          if (!labelInterval.empty && !segmentInterval.empty && segmentInterval.start === 222.59811903705506) {
+            //debugger
+          }
+          availableSpace += rkl.available.multipleRemove(multiInterval.coalesce(labelInterval, segmentInterval)).measure()
         }
         // This ray is not good because we try to maximize the minimum
         if (rbest && availableSpace < minimumAvailableSpace) {

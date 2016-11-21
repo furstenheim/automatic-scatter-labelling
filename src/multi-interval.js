@@ -67,6 +67,19 @@ MultiInterval.prototype.remove = function (myInterval) {
   return new MultiInterval(leftIntervals.concat(rightIntervals))
 }
 
+MultiInterval.prototype.multipleRemove = function (myMultiInterval) {
+  if (! myMultiInterval instanceof MultiInterval) {
+    throw new Error('Not a multi interval')
+  }
+  if (this.empty || myMultiInterval.empty) {
+    return this.clone()
+  }
+  let resultMultiInterval = this
+  for (let interval of myMultiInterval.intervals) {
+    resultMultiInterval = resultMultiInterval.remove(interval)
+  }
+  return resultMultiInterval
+}
 // Warning only works properly with positive multiintervals
 MultiInterval.prototype.measure = function () {
   var measure = 0
@@ -83,5 +96,13 @@ function multiInterval(intervals) {
 MultiInterval.prototype.getMin = function () {
   if (this.empty) return Number.POSITIVE_INFINITY
   return this.intervals.reduce((min, cur) => cur.start < min ? cur.start : min, Number.POSITIVE_INFINITY)
+}
+
+multiInterval.coalesce = function (interval, anotherInterval) {
+  if (interval.start > anotherInterval.end || anotherInterval.start > interval.end) {
+    return multiInterval([interval, anotherInterval])
+  } else {
+    return multiInterval([interval.coalesce(anotherInterval)])
+  }
 }
 multiInterval.empty = MultiInterval.empty

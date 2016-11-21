@@ -3,6 +3,7 @@ module.exports = {rayIntersection}
 
 const findBestRay = require('./find-best-ray')
 const extendedPointMethods = require('./extended-point-methods')
+const multiInterval = require('./multi-interval').multiInterval
 // Better to grab the module here and fetch the method in the algorithm, that way we can stub
 const labelRectangleIntersection = require('./label-rectangle-intersection')
 const labelSegmentIntersection = require('./label-segment-intersection')
@@ -39,7 +40,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
       for (let rkl of pk.rays) {
         const labelInterval = labelRectangleIntersection.labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
         const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
-        rkl.available = rkl.available.remove(labelInterval.coalesce(segmentInterval))
+        rkl.available = rkl.available.multipleRemove(multiInterval.coalesce(labelInterval, segmentInterval))
       }
       extendedPointMethods.updateAvailableSpace(pk)
 

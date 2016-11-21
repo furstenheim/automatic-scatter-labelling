@@ -27,8 +27,13 @@ function computeInitialAvailabeSpaces (extendedPoints) {
     for (let rij of pi.rays){
       rij.initiallyAvailable =  multiInterval([interval(0, Number.POSITIVE_INFINITY)])
       for (let pk of extendedPoints) {
-        if (pk === pi) continue
-        const intervalToRemove = pointSegmentIntersection(pk.position, pi.position, rij.vector)
+        let intervalToRemove
+        if (pk === pi) {
+          // TODO move this to method
+          intervalToRemove = interval(0, Math.min(Math.abs(pi.label.width / rij.vector.x), Math.abs(pi.label.height / rij.vector.y)))
+        } else {
+          intervalToRemove = pointSegmentIntersection(pk.position, pi.position, rij.vector)
+        }
         rij.initiallyAvailable = rij.initiallyAvailable.remove(intervalToRemove)
       }
       rij.available = rij.initiallyAvailable.clone()

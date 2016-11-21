@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "gulp": "gulp",
-    "webpack": "webpack"
+    "webpack": "webpack",
+    "dev-server": "webpack-dev-server --inline --hot"
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",
@@ -17,7 +18,8 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "sinon": "^1.17.6",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
     "iterative-greedy": "git://github.com/furstenheim/iterative-greedy.git#6c7570d7fb4155e1ad18e6911788b87adeb598e2",
