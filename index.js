@@ -44,8 +44,8 @@ function render (data, xAxis, yAxis) {
        y: y(d.life_expectancy_at_60)
      },
      label: {
-       height: 1,
-       width: 2
+       height: 40,
+       width: 40
      }
    }
   })
@@ -76,6 +76,7 @@ function render (data, xAxis, yAxis) {
   lines.enter().append('line')
     .attr('class', 'segment')
     .style('stroke', 'black')
+    .style('stroke-with', '2px')
     .attr('x1', d => extendedPoints[d.id].position.x)
     .attr('y1', d => extendedPoints[d.id].position.y)
     .attr('x2', d => (d.rectangle.left + d.rectangle.right) / 2)

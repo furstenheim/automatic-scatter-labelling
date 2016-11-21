@@ -29,7 +29,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
       return {chosen: [], rejected: clone(pointsToLabel)}
     }
     let vi = {x: rij.vector.x * rij.available.getMin(), y: rij.vector.y * rij.available.getMin()}
-    const rectangle = extendedPointMethods.translateLabel(pi, vi)
+    extendedPointMethods.promoteLabelToRectangle(pi, vi)
     //let index = pointsToLabel.findIndex(el => el === pi)
     remainingPoints = remainingPoints.filter(el => el !== pi)
     P0 = P0.filter(el => el !== pi)
@@ -38,7 +38,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
     pointsLabeled.push(pi)
     for (let pk of P0) {
       for (let rkl of pk.rays) {
-        const labelInterval = labelRectangleIntersection.labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
+        const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
         const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
         rkl.available = rkl.available.multipleRemove(multiInterval.coalesce(labelInterval, segmentInterval))
       }
