@@ -37,7 +37,7 @@ d3.csv('data.csv', function (err, data) {
 function render (data, xAxis, yAxis) {
   x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
   y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
-  //data = _.filter(data, d => _.includes(['Ireland', 'Luxembourg'], d.country))
+  //data = _.filter(data, d => _.includes(['Ireland', 'United Kingdom', 'Luxembourg'], d.country))
 
   const labels = svg.selectAll('text.graph-label')
     .data(data, function (d, i) {
@@ -68,7 +68,10 @@ function render (data, xAxis, yAxis) {
        x: x(d.obesity_percentage),
        y: -y(d.life_expectancy_at_60)
      },
-     label: d.label
+     label: {
+       height: d.label.height + 2,
+       width: d.label.width + 2
+     }
    }
   })
   const idToPoints = _.groupBy(extendedPoints, 'id')

@@ -6,6 +6,7 @@ const _ = require('lodash')
 const extendedPointMethods = require('./extended-point-methods')
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
 const labelSegmentIntersection = require('./label-segment-intersection').labelSegmentIntersection
+const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const multiInterval = require('./multi-interval').multiInterval
 const utils = require('./utils')
 
@@ -39,9 +40,10 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
         // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
         for (let rkl of pk.rays) {
           // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
-          let labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
-          let segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
-          availableSpace += rkl.available.multipleRemove(multiInterval.coalesce(labelInterval, segmentInterval)).measure()
+          const labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
+          const segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
+          const rayInterval = rayRectangleIntersection(rectangle, rkl.vector, pk.position)
+          availableSpace += rkl.available.multipleRemove(multiInterval.coalesce(labelInterval.coalesce(rayInterval), segmentInterval)).measure()
         }
         // This ray is not good because we try to maximize the minimum
         if (rbest && availableSpace < minimumAvailableSpace) {
