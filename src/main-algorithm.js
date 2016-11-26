@@ -6,7 +6,7 @@ const rayIntersection = require('./ray-intersection').rayIntersection
 const _ = require('lodash')
 const iterativeGreedy = require('iterative-greedy')
 
-const NUMBER_OF_RAYS = 128
+const NUMBER_OF_RAYS = 3
 
 function mainAlgorithm (extendedPoints) {
   computeRays(extendedPoints)

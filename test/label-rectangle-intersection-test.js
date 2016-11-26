@@ -52,4 +52,16 @@ describe('Origin point', function () {
       assert.deepEqual(intersection, interval(2, 5))
     })
   })
+  describe('Vector with negative coordinates', function () {
+    var vi = {y: 0.8660254037844387, x: -0.4999999999999998}
+    var pi = {x: 1164.1499999999999, y: -382.50000000000017}
+    var li = {height: 21.25, width: 111.296875}
+    var lk = {"height":21.25,"width":61.265625,"top":-350.62500000000017,"bottom":-371.87500000000017,"left":1175.9734942797204,"right":1237.2391192797204}
+    it('Intersect', function ()  {
+      assert.ok((Math.abs((lk.top + lk.bottom) / 2 - (pi.y + vi.y * 5)) < li.height) && Math.abs((lk.left + lk.right) / 2 - (pi.x + vi.y * 5)) <  li.width, 'Label intersect at 5')
+      var intersection = labelRectangleIntersection(lk, li, vi, pi)
+      console.log(intersection)
+      assert.notDeepEqual(intersection, interval.empty(), 'Interval should not be empty')
+    })
+  })
 })

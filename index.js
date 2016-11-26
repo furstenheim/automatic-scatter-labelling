@@ -27,7 +27,7 @@ d3.csv('data.csv', function (err, data) {
     .attr('transform', `translate(0, ${height})`)
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
-  render(data.slice(0, 15), xAxis, yAxis)
+  render(data.slice(0, 40), xAxis, yAxis)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/
@@ -37,6 +37,7 @@ d3.csv('data.csv', function (err, data) {
 function render (data, xAxis, yAxis) {
   x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
   y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
+  //data = _.filter(data, d => _.includes(['Ireland', 'Luxembourg'], d.country))
 
   const labels = svg.selectAll('text.graph-label')
     .data(data, function (d, i) {
@@ -65,7 +66,7 @@ function render (data, xAxis, yAxis) {
      id: d.id,
      position: {
        x: x(d.obesity_percentage),
-       y: y(d.life_expectancy_at_60)
+       y: -y(d.life_expectancy_at_60)
      },
      label: d.label
    }
@@ -98,9 +99,9 @@ function render (data, xAxis, yAxis) {
     .style('stroke', 'black')
     .style('stroke-with', '2px')
     .attr('x1', d => idToPoints[d.id][0].position.x)
-    .attr('y1', d => idToPoints[d.id][0].position.y)
+    .attr('y1', d => -idToPoints[d.id][0].position.y)
     .attr('x2', d => (d.rectangle.left + d.rectangle.right) / 2)
-    .attr('y2', d => (d.rectangle.top + d.rectangle.bottom) / 2)
+    .attr('y2', d => -(d.rectangle.top + d.rectangle.bottom) / 2)
 
   const label2 = svg.selectAll('text.graph-label')
     .data(result, function (d, i) {
@@ -113,7 +114,7 @@ function render (data, xAxis, yAxis) {
     .attr('x', function (d) {
       return (d.rectangle.left + d.rectangle.right) / 2
     })
-    .attr('y', d => (d.rectangle.top + d.rectangle.bottom) / 2)
+    .attr('y', d => -(d.rectangle.top + d.rectangle.bottom) / 2)
   label2.exit()
     .each(function (d, i){
       console.log(d, i)

@@ -41,9 +41,6 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
           // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
           let labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
           let segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
-          if (!labelInterval.empty && !segmentInterval.empty && segmentInterval.start === 222.59811903705506) {
-            //debugger
-          }
           availableSpace += rkl.available.multipleRemove(multiInterval.coalesce(labelInterval, segmentInterval)).measure()
         }
         // This ray is not good because we try to maximize the minimum
