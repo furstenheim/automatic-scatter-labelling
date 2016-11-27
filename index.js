@@ -75,7 +75,7 @@ function render (data, xAxis, yAxis) {
    }
   })
   const idToPoints = _.groupBy(extendedPoints, 'id')
-  console.log('start ', extendedPoints)
+  console.log('start ', JSON.stringify(extendedPoints))
   //debugger
   const result = mainAlgorithm(extendedPoints)
   console.log(result)

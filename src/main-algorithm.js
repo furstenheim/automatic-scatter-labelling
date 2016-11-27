@@ -6,12 +6,13 @@ const rayIntersection = require('./ray-intersection').rayIntersection
 const _ = require('lodash')
 const iterativeGreedy = require('iterative-greedy')
 
-const NUMBER_OF_RAYS = 3
+let NUMBER_OF_RAYS
 
-function mainAlgorithm (extendedPoints) {
+function mainAlgorithm (extendedPoints, params = {}) {
+  NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
   computeRays(extendedPoints)
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints)
-  return iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction})
+  return iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS: 1})
 }
 
 function computeRays (extendedPoints) {
