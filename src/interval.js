@@ -29,6 +29,19 @@ Interval.prototype.coalesce = function (interval) {
   }
   return new Interval(Math.min(interval.start, this.start), Math.max(interval.end, this.end))
 }
+// TODO remove coalesce and rename this method to coalesce
+// modifies interval
+Interval.prototype.coalesceInPlace = function (interval) {
+  if (this.empty) return interval
+  if (interval.empty) return this
+  if (interval.start > this.end || this.start > interval.end) {
+    // We probably need a multi interval in this case
+    throw new Error('Cannot coallesce')
+  }
+  this.start = Math.min(interval.start, this.start)
+  this.end = Math.max(interval.end, this.end)
+  return this
+}
 Interval.prototype.clone = function () {
   if (this.empty) return Interval.empty()
   return new Interval(this.start, this.end)
