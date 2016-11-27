@@ -58,7 +58,6 @@ MultiInterval.prototype.clone = function () {
   throw new Error('Not implemented')
   return new MultiInterval(this.intervals)
 }
-// Removes in place
 MultiInterval.prototype.remove = function (myInterval) {
   if (! myInterval instanceof this.intervalConstructor) {
     throw new Error('Not an interval')
@@ -66,8 +65,10 @@ MultiInterval.prototype.remove = function (myInterval) {
   if (this.empty || myInterval.empty) {
     return this
   }
-  const myStart = myInterval.start
-  const myEnd = myInterval.end
+  return this._remove(myInterval.start, myInterval.end)
+}
+// Removes in place
+MultiInterval.prototype._remove = function (myStart, myEnd) {
   let i = 0
   while (i < this.intervals.length) {
     const intervalStart = this.intervals[i]
@@ -104,25 +105,17 @@ MultiInterval.prototype.remove = function (myInterval) {
   return this
 }
 
-
-MultiInterval.prototype.intersectRight = function (start) {
-
-}
-
-
-
 MultiInterval.prototype.multipleRemove = function (myMultiInterval) {
   if (! myMultiInterval instanceof MultiInterval) {
     throw new Error('Not a multi interval')
   }
   if (this.empty || myMultiInterval.empty) {
-    return this.clone()
+    return this
   }
-  let resultMultiInterval = this
-  for (let interval of myMultiInterval.intervals) {
-    resultMultiInterval = resultMultiInterval.remove(interval)
+  for (let i = 0; i < myMultiInterval.intervals.length; i++) {
+    this._remove(myMultiInterval.intervals[i], myMultiInterval.intervals[i + 1])
   }
-  return resultMultiInterval
+  return this
 }
 // Warning only works properly with positive multiintervals
 MultiInterval.prototype.measure = function () {
