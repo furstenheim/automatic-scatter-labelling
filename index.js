@@ -27,7 +27,7 @@ d3.csv('data.csv', function (err, data) {
     .attr('transform', `translate(0, ${height})`)
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
-  render(data.slice(0, 40), xAxis, yAxis)
+  render(data.slice(0, 80), xAxis, yAxis)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/

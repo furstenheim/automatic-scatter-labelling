@@ -4,6 +4,7 @@ module.exports = {updateAvailableSpace, promoteLabelToRectangle,
 
 const pointSegmentIntersection = require('./point-segment-intersection').pointSegmentIntersection
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
+const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const multiInterval = require('./multi-interval').multiInterval
 const interval = require('./interval').interval
 /*
@@ -32,6 +33,9 @@ function computeInitialAvailabeSpaces (extendedPoints, params) {
       for (let pk of extendedPoints) {
         const rectangle = {top: pk.position.y + radius, bottom: pk.position.y - radius, left: pk.position.x - radius, right: pk.position.x + radius, width: 2 * radius, height: 2 * radius}
         rij.initiallyAvailable.remove(labelRectangleIntersection(rectangle, pi.label, rij.vector, pi.position))
+        if (pi !== pk) {
+          rij.initiallyAvailable.remove(rayRectangleIntersection(rectangle, rij.vector, pi.position))
+        }
       }
       const labelContainedInterval = labelRectangleIntersection({top: bbox.top - pi.label.height, bottom: bbox.bottom + pi.label.height, left: bbox.left + pi.label.width, right: bbox.right - pi.label.width, width: bbox.width - 2 * pi.label.width, height: bbox.height - 2 * pi.label.height}, pi.label, rij.vector, pi.position)
       // Want labels inside of the graph
