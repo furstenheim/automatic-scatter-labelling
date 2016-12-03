@@ -35,6 +35,7 @@ d3.csv('data.csv', function (err, data) {
 
 
 function render (data, xAxis, yAxis) {
+  const radius = 3.5
   x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
   y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
   //data = _.filter(data, d => _.includes(['Ireland', 'United Kingdom', 'Luxembourg'], d.country))
@@ -77,13 +78,13 @@ function render (data, xAxis, yAxis) {
   const idToPoints = _.groupBy(extendedPoints, 'id')
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
-  const result = mainAlgorithm(extendedPoints)
+  const result = mainAlgorithm(extendedPoints, {NUMBER_OF_RAYS: 3, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log(result)
   const dots = svg.selectAll('.dot')
     .data(data)
   dots.enter().append('circle')
     .attr('class', 'dot')
-    .attr('r', 3.5)
+    .attr('r', radius)
     .attr('opacity', 100)
     .attr('cx', d => x(d.obesity_percentage))
     .attr('cy', d => y(d.life_expectancy_at_60))

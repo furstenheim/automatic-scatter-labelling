@@ -11,7 +11,7 @@ let NUMBER_OF_RAYS
 function mainAlgorithm (extendedPoints, params = {}) {
   NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
   computeRays(extendedPoints)
-  extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints)
+  extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius, bbox: params.bbox})
   return iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS: 1})
 }
 

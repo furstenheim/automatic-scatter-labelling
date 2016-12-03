@@ -3,6 +3,7 @@ module.exports = {updateAvailableSpace, promoteLabelToRectangle,
   computeInitialAvailabeSpaces, resetAvailableSpace, updateMinima, translateLabel}
 
 const pointSegmentIntersection = require('./point-segment-intersection').pointSegmentIntersection
+const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
 const multiInterval = require('./multi-interval').multiInterval
 const interval = require('./interval').interval
 /*
@@ -22,20 +23,19 @@ function updateAvailableSpace (extendedPoint) {
   extendedPoint.availableMeasure = measure
 }
 
-function computeInitialAvailabeSpaces (extendedPoints) {
+function computeInitialAvailabeSpaces (extendedPoints, params) {
+  const radius = params.radius
+  const bbox = params.bbox
   for (let pi of extendedPoints) {
     for (let rij of pi.rays){
       rij.initiallyAvailable =  multiInterval([interval(0, Number.POSITIVE_INFINITY)])
       for (let pk of extendedPoints) {
-        let intervalToRemove
-        if (pk === pi) {
-          // TODO move this to method
-          intervalToRemove = interval(0, Math.min(Math.abs(pi.label.width / rij.vector.x), Math.abs(pi.label.height / rij.vector.y)))
-        } else {
-          intervalToRemove = pointSegmentIntersection(pk.position, pi.position, rij.vector)
-        }
-        rij.initiallyAvailable = rij.initiallyAvailable.remove(intervalToRemove)
+        const rectangle = {top: pk.position.y + radius, bottom: pk.position.y - radius, left: pk.position.x - radius, right: pk.position.x + radius, width: 2 * radius, height: 2 * radius}
+        rij.initiallyAvailable.remove(labelRectangleIntersection(rectangle, pi.label, rij.vector, pi.position))
       }
+      const labelContainedInterval = labelRectangleIntersection({top: bbox.top - pi.label.height, bottom: bbox.bottom + pi.label.height, left: bbox.left + pi.label.width, right: bbox.right - pi.label.width, width: bbox.width - 2 * pi.label.width, height: bbox.height - 2 * pi.label.height}, pi.label, rij.vector, pi.position)
+      // Want labels inside of the graph
+      rij.initiallyAvailable.remove(interval(labelContainedInterval.end, Number.POSITIVE_INFINITY))
       rij.available = rij.initiallyAvailable.clone()
     }
   }
