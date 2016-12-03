@@ -9,11 +9,9 @@ function MultiInterval(intervals, isClone) {
   // Not very nice but it is hard to clone in js
   if (isClone) {
     this.intervals = _.clone(intervals)
-    if (intervals.length === 0) this.empty = true
     return this
   }
-  if (!Array.isArray(intervals)) {
-    this.empty = true
+  if (!Array.isArray(intervals) || intervals.length === 0) {
     this.intervals = []
     return this
   }
@@ -23,7 +21,6 @@ function MultiInterval(intervals, isClone) {
   var intervalConstructor = interval(0, 1).constructor
   for (let myInterval of intervals) {
     if (! myInterval instanceof intervalConstructor) {
-      this.empty = true
       this.intervals = []
       return this
     }
@@ -69,7 +66,7 @@ MultiInterval.prototype.remove = function (myInterval) {
   if (! myInterval instanceof this.intervalConstructor) {
     throw new Error('Not an interval')
   }
-  if (this.empty || myInterval.empty) {
+  if (this.isEmpty() || myInterval.empty) {
     return this
   }
   _remove(this.intervals, myInterval.start, myInterval.end)
@@ -122,7 +119,7 @@ MultiInterval.prototype.multipleRemove = function (myMultiInterval) {
   if (! myMultiInterval instanceof MultiInterval) {
     throw new Error('Not a multi interval')
   }
-  if (this.empty || myMultiInterval.empty) {
+  if (this.isEmpty() || myMultiInterval.isEmpty()) {
     return this
   }
   for (let i = 0; i < myMultiInterval.intervals.length; i += 2) {
@@ -180,9 +177,19 @@ MultiInterval.prototype.measureMultipleIntersection = function (multiInterval) {
   }
   return measure
 }
+
+MultiInterval.prototype.measure = function () {
+  let measure = 0
+  for (let i = 0; i < this.intervals.length; i += 2) {
+    measure += utils.measure(this.intervals[i], this.intervals[i + 1])
+  }
+  return measure
+}
+
+
 //TODO test
 MultiInterval.prototype.getMin = function () {
-  if (this.empty) return Number.POSITIVE_INFINITY
+  if (this.isEmpty()) return Number.POSITIVE_INFINITY
   return this.intervals[0]//this.intervals.reduce((min, cur) => cur.start < min ? cur.start : min, Number.POSITIVE_INFINITY)
 }
 

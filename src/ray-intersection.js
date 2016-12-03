@@ -42,7 +42,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
         const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
         const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
         const rayInterval = rayRectangleIntersection(pi.rectangle, rkl.vector, pk.position)
-        rkl.available = rkl.available.multipleRemove(multiInterval.coalesce(labelInterval.coalesce(rayInterval), segmentInterval))
+        rkl.available.multipleRemove(multiInterval.coalesce(labelInterval.coalesce(rayInterval), segmentInterval))
       }
       extendedPointMethods.updateAvailableSpace(pk)
 
