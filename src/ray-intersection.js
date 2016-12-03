@@ -8,6 +8,7 @@ const multiInterval = require('./multi-interval').multiInterval
 const labelRectangleIntersection = require('./label-rectangle-intersection')
 const labelSegmentIntersection = require('./label-segment-intersection')
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
+const raySegmentIntersection = require('./ray-segment-intersection').raySegmentIntersection
 const clone = require('lodash.clone')
 
 // TODO use sets
@@ -42,7 +43,8 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
         const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
         const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
         const rayInterval = rayRectangleIntersection(pi.rectangle, rkl.vector, pk.position)
-        rkl.available.multipleRemove(multiInterval.coalesce(labelInterval.coalesce(rayInterval), segmentInterval))
+        const raySegmentInterval = raySegmentIntersection(pi.position, vi, pk.position, rkl.vector)
+        rkl.available.multipleRemove(multiInterval.coalesce(labelInterval.coalesce(rayInterval), segmentInterval.coalesceInPlace(raySegmentInterval)))
       }
       extendedPointMethods.updateAvailableSpace(pk)
 

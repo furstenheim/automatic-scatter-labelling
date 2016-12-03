@@ -7,6 +7,7 @@ const extendedPointMethods = require('./extended-point-methods')
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
 const labelSegmentIntersection = require('./label-segment-intersection').labelSegmentIntersection
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
+const raySegmentIntersection = require('./ray-segment-intersection').raySegmentIntersection
 const multiInterval = require('./multi-interval').multiInterval
 const utils = require('./utils')
 
@@ -43,7 +44,8 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
           const labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
           const segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
           const rayInterval = rayRectangleIntersection(rectangle, rkl.vector, pk.position)
-          availableSpace += rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelInterval.coalesceInPlace(rayInterval), segmentInterval))
+          const raySegmentInterval = raySegmentIntersection(pi.position, segment, pk.position, rkl.vector)
+          availableSpace += rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelInterval.coalesceInPlace(rayInterval), segmentInterval.coalesceInPlace(raySegmentInterval)))
         }
         // This ray is not good because we try to maximize the minimum
         if (rbest && availableSpace < minimumAvailableSpace) {

@@ -1,5 +1,6 @@
 module.exports = {segmentSegmentIntersection}
 // A point pi moves with vi, a segment is defined with pj, vj, we find the time t at which the point intersects and returns parameters s on the segment
+// TODO change order so that pj, vj is the ray
 function segmentSegmentIntersection (pi, vi, pj, vj /*Vector of the segment */) {
   // (vi -vj)(t, s)^T = (pj - pi)
   var det = - (vi.x* vj.y - vj.x * vi.y)
@@ -9,7 +10,7 @@ function segmentSegmentIntersection (pi, vi, pj, vj /*Vector of the segment */) 
     // TODO concurrent lines
     throw new Error('Parallel lines not allowed') // This must be handled out of the algorithm
   }
-  t = (-(pj.x - pi.x) * vj.y + (pj.y - pi.y) * vj.x) / det
-  s = (-(pj.x - pi.x) * vi.y + (pj.y - pi.y) * vi.x) / det
+  const t = (-(pj.x - pi.x) * vj.y + (pj.y - pi.y) * vj.x) / det
+  const s = (-(pj.x - pi.x) * vi.y + (pj.y - pi.y) * vi.x) / det
   return {t, s}
 }
