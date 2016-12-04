@@ -10,9 +10,10 @@ let NUMBER_OF_RAYS
 
 function mainAlgorithm (extendedPoints, params = {}) {
   NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
+  const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
   computeRays(extendedPoints)
-  extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius, bbox: params.bbox})
-  return iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS: 1})
+  extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
+  return iterativeGreedy.solve(rayIntersection, extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
 }
 
 function computeRays (extendedPoints) {

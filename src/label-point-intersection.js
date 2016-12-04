@@ -1,4 +1,5 @@
 'use strict'
+// Not used
 var interval = require('./interval').interval
 module.exports = {labelPointIntersection}
 

@@ -78,7 +78,7 @@ function render (data, xAxis, yAxis) {
   const idToPoints = _.groupBy(extendedPoints, 'id')
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
-  const result = mainAlgorithm(extendedPoints, {NUMBER_OF_RAYS: 3, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 3, NUMBER_OF_RAYS: 3, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log(result)
   const dots = svg.selectAll('.dot')
     .data(data)

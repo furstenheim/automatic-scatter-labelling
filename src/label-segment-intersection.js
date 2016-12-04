@@ -44,7 +44,7 @@ function labelSegmentIntersection (pk, vk, li, vi, pi) {
   }
   var min = intersections.reduce((a, b) => Math.min(a,b), Number.POSITIVE_INFINITY)
   var max = intersections.reduce((a, b) => Math.max(a,b), Number.NEGATIVE_INFINITY)
-
-  return interval(min, max).intersect(interval(0, Number.POSITIVE_INFINITY))
+  min = Math.max(min, 0)
+  return interval(min, max)
 
 }
