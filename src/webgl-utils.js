@@ -3,7 +3,8 @@ module.exports = {calculateGpuResult}
 // https://github.com/turbo/js/blob/master/turbo.js && https://github.com/sethsamuel/sethsamuel.github.io/blob/master/talks/2016-08-25-jsconficeland/js/matrix.js
 function calculateGpuResult () {
   const gl = createGl()
-
+  const width = 500
+  const height = 500
   var triangle = [
     -0.5,0.5, 0.0,
     -0.5,-0.5, 0.0,
@@ -56,9 +57,28 @@ function calculateGpuResult () {
   gl.enable(gl.DEPTH_TEST)
   gl.clear(gl.COLOR_BUFFER_BIT)
 
-  gl.viewport(0, 0, 500, 500)
+  gl.viewport(0, 0, width, height)
 
   gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
+
+  // turbojs
+  var data = new Float32Array(500 * 500 * 4)
+  for (let i = 0; i < data.length; i++) data[i] = Math.random()
+  gl.bindFramebuffer(gl.FRAMEBUFFER, gl.createFramebuffer())
+  var texture = gl.createTexture()
+  gl.bindTexture(gl.TEXTURE_2D, texture)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 500, 500, 0, gl.RGBA, gl.FLOAT, data)
+  gl.bindTexture(gl.TEXTURE_2D, null)
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0)
+  gl.bindTexture(gl.TEXTURE_2D, texture)
+
+  var data2 = new Float32Array(500 * 500 * 4)
+  var pixels = new Float32Array(width * height * 4)
+  gl.readPixels(0, 0, 100, 100, gl.RGBA, gl.FLOAT, data2)
 }
 function draw (gl) {
   gl.viewport(0, 0, 0, gl.viewportWidth, gl.viewportHeight)
