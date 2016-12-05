@@ -33,16 +33,21 @@ function calculateGpuResult () {
   var fragmentShaderCode = `
   precision mediump float;
   uniform sampler2D u_texture;
+  uniform sampler2D u_texture2;
   varying vec2 pos;
   vec4 read (void) {
     return texture2D(u_texture, pos);
+  }
+  vec4 read2 (void) {
+    return texture2D(u_texture2, pos);
   }
   void commit (vec4 val) {
     gl_FragColor = val;
   }
   void main (void) {
     vec4 ipt = read();
-    commit(vec4(ipt.rg, 1., 0.));
+    vec4 ipt2 = read2();
+    commit(vec4(ipt.rg * ipt2.rg, 2. * ipt.b, 0.));
   }
   `
 
@@ -53,8 +58,11 @@ function calculateGpuResult () {
 
   var data = new Float32Array(size * size * 4)
   for (let i = 0; i < data.length; i++) data[i] = Math.random()
-
   var texture = createTexture(gl, data, size)
+
+  var data3 = new Float32Array(size * size * 4)
+  for (let i = 0; i < data3.length; i++) data3[i] = Math.random()
+  var texture3 = createTexture(gl, data3, size)
 
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
   gl.shaderSource(fragmentShader, fragmentShaderCode)
@@ -66,6 +74,7 @@ function calculateGpuResult () {
   gl.linkProgram(program)
 
   var uTexture = gl.getUniformLocation(program, 'u_texture')
+  var uTexture3 = gl.getUniformLocation(program, 'u_texture2')
   var aPosition = gl.getAttribLocation(program, 'position')
   var aTexture = gl.getAttribLocation(program, 'texture')
 
@@ -76,13 +85,20 @@ function calculateGpuResult () {
   var nTexture = createTexture(gl, new Float32Array(size * size * 4), size)
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, nTexture, 0)
 
-  gl.bindTexture(gl.TEXTURE_2D, texture)
   gl.activeTexture(gl.TEXTURE0)
+  gl.bindTexture(gl.TEXTURE_2D, texture)
   gl.uniform1i(uTexture, 0)
+
+  gl.activeTexture(gl.TEXTURE1)
+  gl.bindTexture(gl.TEXTURE_2D, texture3)
+  gl.uniform1i(uTexture3, 1)
+
   gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer)
+
   gl.enableVertexAttribArray(aTexture)
   gl.vertexAttribPointer(aTexture, 2, gl.FLOAT, false, 0, 0)
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+
   gl.enableVertexAttribArray(aPosition)
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
