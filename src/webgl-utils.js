@@ -34,6 +34,7 @@ function calculateGpuResult () {
   precision mediump float;
   uniform sampler2D u_texture;
   uniform sampler2D u_texture2;
+  uniform sampler2D u_label_texture;
   varying vec2 pos;
   vec4 read (void) {
     return texture2D(u_texture, pos);
@@ -41,13 +42,17 @@ function calculateGpuResult () {
   vec4 read2 (void) {
     return texture2D(u_texture2, pos);
   }
+  vec4 get_label (void) {
+    return texture2D(u_label_texture, vec2(float(0) / ${size}.0, 0.));
+  }
   void commit (vec4 val) {
     gl_FragColor = val;
   }
   void main (void) {
     vec4 ipt = read();
     vec4 ipt2 = read2();
-    commit(vec4(ipt.rg * ipt2.rg, 2. * ipt.b, 0.));
+    vec4 label = get_label();
+    commit(vec4(ipt.rg * ipt2.rg, label.r * ipt.b, label.g));
   }
   `
 
@@ -64,6 +69,10 @@ function calculateGpuResult () {
   for (let i = 0; i < data3.length; i++) data3[i] = Math.random()
   var texture3 = createTexture(gl, data3, size)
 
+  var label = new Float32Array(size * size * 4)
+  for (let i = 0; i < 16; i++) label[i] = Math.random()
+  var labelTexture = createTexture(gl, label, size)
+
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
   gl.shaderSource(fragmentShader, fragmentShaderCode)
   gl.compileShader(fragmentShader)
@@ -75,6 +84,7 @@ function calculateGpuResult () {
 
   var uTexture = gl.getUniformLocation(program, 'u_texture')
   var uTexture3 = gl.getUniformLocation(program, 'u_texture2')
+  var uLabelTexture = gl.getUniformLocation(program, 'u_label_texture')
   var aPosition = gl.getAttribLocation(program, 'position')
   var aTexture = gl.getAttribLocation(program, 'texture')
 
@@ -92,6 +102,10 @@ function calculateGpuResult () {
   gl.activeTexture(gl.TEXTURE1)
   gl.bindTexture(gl.TEXTURE_2D, texture3)
   gl.uniform1i(uTexture3, 1)
+
+  gl.activeTexture(gl.TEXTURE2)
+  gl.bindTexture(gl.TEXTURE_2D, labelTexture)
+  gl.uniform1i(uLabelTexture, 2)
 
   gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer)
 
