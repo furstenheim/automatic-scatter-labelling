@@ -267,7 +267,7 @@ function newBuffer(gl, data, f, e) {
 }
 function computeTexturesSize (number) {
   // Taken from turbojs. Best size for textures is power of two, this is the closest size so that size * size * 4 is bigger than data size
-  return Math.pow(2, Math.ceil(Math.log(number) / 1.386) - 1)
+  return 2 * Math.pow(2, Math.ceil(Math.log(number) / 1.386) - 1)
 }
 
 function redraw (gl) {

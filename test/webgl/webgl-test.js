@@ -9,12 +9,12 @@ describe('Set up', function () {
   it('Size should fit 1', function () {
     const numberOfRays = 5
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
-    assert.isAtMost(extendedPoints.length * numberOfRays, intersectionData.length, 'Data fits in buffer' )
+    assert.isAtMost(extendedPoints.length * numberOfRays * 4, intersectionData.length, 'Data fits in buffer' )
   })
   it('Size should fit 2', function () {
     const numberOfRays = 16
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
-    assert.isAtMost(extendedPoints.length * numberOfRays, intersectionData.length, 'Data fits in buffer' )
+    assert.isAtMost(extendedPoints.length * numberOfRays * 4, intersectionData.length, 'Data fits in buffer' )
   })
   it('Set up fragment is run', function () {
     const numberOfRays = 16
@@ -36,6 +36,7 @@ describe('Set up', function () {
     assert.equal(radiusData[6], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[7], 0, 'Only compute first two coordinates')
     assert.isOk(radiusData[8], 0, 'Radius should contain sin and cos')
+    assert.equal(radiusData[0], radiusData[numberOfRays * 4], 'Radius data is the same for all points')
     console.log(radiusData.slice(0, 32))
   })
 })
