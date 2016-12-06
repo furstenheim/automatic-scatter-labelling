@@ -247,6 +247,10 @@ function getShaders(gl, size, numberOfRays) {
   gl.compileShader(vertexShader)
   gl.compileShader(setUpFragmentShader)
   gl.compileShader(transformFragmentShader)
+  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(vertexShader))
+  if (!gl.getShaderParameter(setUpFragmentShader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(setUpFragmentShader))
+  if (!gl.getShaderParameter(transformFragmentShader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(transformFragmentShader))
+
   return {
     vertexShader,
     setUpFragmentShader,

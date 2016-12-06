@@ -28,4 +28,14 @@ describe('Set up', function () {
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(radiusData[0], 1, 'All radius should be set to 1')
   })
+  it('Set up fragment additional coordinates', function () {
+    const numberOfRays = 16
+    const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
+    assert.equal(radiusData[2], 0, 'Only compute first two coordinates')
+    assert.equal(radiusData[3], 0, 'Only compute first two coordinates')
+    assert.equal(radiusData[6], 0, 'Only compute first two coordinates')
+    assert.equal(radiusData[7], 0, 'Only compute first two coordinates')
+    assert.isOk(radiusData[8], 0, 'Radius should contain sin and cos')
+    console.log(radiusData.slice(0, 32))
+  })
 })
