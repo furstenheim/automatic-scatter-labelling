@@ -52,7 +52,7 @@ function calculateGpuResult () {
     vec4 ipt = read();
     vec4 ipt2 = read2();
     vec4 label = get_label();
-    commit(vec4(ipt.rg * ipt2.rg, label.r * ipt.b, label.g));
+    commit(vec4(ipt.rg / 0.00000000000000000000000000001, label.r * ipt.b, label.g));
   }
   `
 
