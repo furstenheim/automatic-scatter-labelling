@@ -127,43 +127,7 @@ function setUp (extendedPoints, numberOfRays) {
   var textureBuffer  = newBuffer(gl, [  0,  0, 1,  0, 1, 1,  0, 1 ]);
   var indexBuffer    = newBuffer(gl, [  1,  2, 0,  3, 0, 2 ], Uint16Array, gl.ELEMENT_ARRAY_BUFFER);
 
-  var vertexShaderCode = `
-  attribute vec2 position;
-  varying vec2 pos;
-  attribute vec2 texture;
-
-  void main (void) {
-    pos = texture;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    }
-  `
-  var fragmentShaderCode = `
-  precision mediump float;
-  uniform sampler2D u_texture;
-  uniform sampler2D u_texture2;
-  uniform sampler2D u_label_texture;
-  varying vec2 pos;
-  vec4 read (void) {
-    return texture2D(u_texture, pos);
-  }
-  vec4 read2 (void) {
-    return texture2D(u_texture2, pos);
-  }
-  vec4 get_label (void) {
-    return texture2D(u_label_texture, vec2(float(0) / ${size}.0, 0.));
-  }
-  void commit (vec4 val) {
-    gl_FragColor = val;
-  }
-  void main (void) {
-    vec4 ipt = read();
-    vec4 ipt2 = read2();
-    vec4 label = get_label();
-    commit(vec4(ipt.rg / 0.00000000000000000000000000001, label.r * ipt.b, label.g));
-  }
-  `
-
-  var vertexShader = gl.createShader(gl.VERTEX_SHADER)
+  const {vertexShader, setUpFragmentShader, transformFragmentShader} = getShaders(gl, size, numberOfRays)
   gl.shaderSource(vertexShader, vertexShaderCode)
   gl.compileShader(vertexShader)
 
@@ -248,6 +212,73 @@ function createTexture (gl, data, size) {
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, data)
   gl.bindTexture(gl.TEXTURE_2D, null)
   return texture
+}
+
+function getShaders(gl, size, numberOfRays) {
+
+  var vertexShaderCode = `
+  attribute vec2 position;
+  varying vec2 pos;
+  attribute vec2 texture;
+
+  void main (void) {
+    pos = texture;
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    }
+  `
+  // Compute sin and cos for radius shader
+  var setUpFragmentShaderCode = `
+  precision mediump float;
+  varying vec2 pos;
+  double m_pi = 3.14159265358;
+  void commit (vec4 val) {
+    gl_FragColor = val;
+  }
+  void main (void) {
+    float i_ray = mod(pos.x * ${size}.0 + (pos.y * ${size}.0 * ${size}.0), ${numberOfRays}.0);
+    commit(vec4(sin(2*m_pi*i_ray / ${numberOfRays}.0, cos(2*m_pi*i_ray/${numberOfRays}.0), 0., 0.));
+  }
+  `
+  var transformFragmentShaderCode = `
+  precision mediump float;
+  uniform sampler2D u_points_texture;
+  uniform sampler2D u_radius_texture;
+  uniform sampler2D u_label_texture;
+  varying vec2 pos;
+  vec4 read_point (void) {
+    return texture2D(u_points_texture, pos);
+  }
+  vec4 read_radius (void) {
+    return texture2D(u_radius_texture, pos);
+  }
+  vec4 read_label (void) {
+    return texture2D(u_label_texture, vec2(float(0) / ${size}.0, 0.));
+  }
+  void commit (vec4 val) {
+    gl_FragColor = val;
+  }
+  void main (void) {
+    vec4 point = read_point();
+    vec4 radius = read_radius();
+    vec4 label = read_label();
+    commit(vec4(point.rg / 0.00000000000000000000000000001, label.r * point.b, label.g));
+  }
+  `
+  const vertexShader = gl.createShader(gl.VERTEX_SHADER)
+  const setUpFragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+  const transformFragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
+  gl.shaderSource(vertexShader, vertexShaderCode)
+  gl.shaderSource(setUpFragmentShader, setUpFragmentShader)
+  gl.shaderSource(transformFragmentShader, transformFragmentShader)
+
+  gl.compileShader(vertexShader)
+  gl.compileShader(setUpFragmentShader)
+  gl.compileShader(transformFragmentShader)
+  return {
+    vertexShader,
+    setUpFragmentShader,
+    transformFragmentShader
+  }
 }
 function newBuffer(gl, data, f, e) {
   var buf = gl.createBuffer()
