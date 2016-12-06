@@ -1,4 +1,7 @@
 module.exports = {calculateGpuResult, setUp}
+
+const setUpFragment = require('./set-up-fragment')
+const mainFragment = require('./main-fragment').mainFragment
 // Necessary to start webgl
 // https://github.com/turbo/js/blob/master/turbo.js && https://github.com/sethsamuel/sethsamuel.github.io/blob/master/talks/2016-08-25-jsconficeland/js/matrix.js
 function calculateGpuResult () {
@@ -128,9 +131,6 @@ function setUp (extendedPoints, numberOfRays) {
   var indexBuffer    = newBuffer(gl, [  1,  2, 0,  3, 0, 2 ], Uint16Array, gl.ELEMENT_ARRAY_BUFFER);
 
   const {vertexShader, setUpFragmentShader, transformFragmentShader} = getShaders(gl, size, numberOfRays)
-  gl.shaderSource(vertexShader, vertexShaderCode)
-  gl.compileShader(vertexShader)
-
 
   const pointsData = new Float32Array(size * size * 4)
   for (let i = 0; i < extendedPoints.length; i++) {
@@ -149,17 +149,12 @@ function setUp (extendedPoints, numberOfRays) {
   // We will fill with sin and cos later in the setup
   var radiusTexture = createTexture(gl, radiusData, size)
 
-  var label = new Float32Array(size * size * 4)
-  for (let i = 0; i < 16; i++) label[i] = Math.random()
-  var labelTexture = createTexture(gl, label, size)
-
-  var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
-  gl.shaderSource(fragmentShader, fragmentShaderCode)
-  gl.compileShader(fragmentShader)
+  var labelData = new Float32Array(size * size * 4)
+  var labelTexture = createTexture(gl, labelData, size)
 
   var program = gl.createProgram()
   gl.attachShader(program, vertexShader)
-  gl.attachShader(program, fragmentShader)
+  gl.attachShader(program, setUpFragmentShader)
   gl.linkProgram(program)
 
   var uPointsTexture = gl.getUniformLocation(program, 'u_points_texture')
@@ -197,9 +192,22 @@ function setUp (extendedPoints, numberOfRays) {
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
   redraw(gl)
-  var data2 = new Float32Array(size * size * 4)
-  gl.readPixels(0, 0, 100, 100, gl.RGBA, gl.FLOAT, data2)
-  return data2
+  gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, radiusData)
+
+  const intersectionData = new Float32Array(size * size * 4)
+
+  return {
+    radiusData,
+    intersectionData,
+    labelData,
+    computeLabel
+  }
+  // TODO change program
+
+  function computeLabel () {
+    redraw(gl)
+    gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
+  }
 }
 
 function createTexture (gl, data, size) {
@@ -227,49 +235,14 @@ function getShaders(gl, size, numberOfRays) {
     }
   `
   // Compute sin and cos for radius shader
-  var setUpFragmentShaderCode = `
-  precision mediump float;
-  varying vec2 pos;
-  double m_pi = 3.14159265358;
-  void commit (vec4 val) {
-    gl_FragColor = val;
-  }
-  void main (void) {
-    float i_ray = mod(pos.x * ${size}.0 + (pos.y * ${size}.0 * ${size}.0), ${numberOfRays}.0);
-    commit(vec4(sin(2*m_pi*i_ray / ${numberOfRays}.0, cos(2*m_pi*i_ray/${numberOfRays}.0), 0., 0.));
-  }
-  `
-  var transformFragmentShaderCode = `
-  precision mediump float;
-  uniform sampler2D u_points_texture;
-  uniform sampler2D u_radius_texture;
-  uniform sampler2D u_label_texture;
-  varying vec2 pos;
-  vec4 read_point (void) {
-    return texture2D(u_points_texture, pos);
-  }
-  vec4 read_radius (void) {
-    return texture2D(u_radius_texture, pos);
-  }
-  vec4 read_label (void) {
-    return texture2D(u_label_texture, vec2(float(0) / ${size}.0, 0.));
-  }
-  void commit (vec4 val) {
-    gl_FragColor = val;
-  }
-  void main (void) {
-    vec4 point = read_point();
-    vec4 radius = read_radius();
-    vec4 label = read_label();
-    commit(vec4(point.rg / 0.00000000000000000000000000001, label.r * point.b, label.g));
-  }
-  `
+  var setUpFragmentShaderCode = setUpFragment.setUpFragment(size, numberOfRays)
+  var transformFragmentShaderCode = mainFragment(size, numberOfRays)
   const vertexShader = gl.createShader(gl.VERTEX_SHADER)
   const setUpFragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
   const transformFragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
   gl.shaderSource(vertexShader, vertexShaderCode)
-  gl.shaderSource(setUpFragmentShader, setUpFragmentShader)
-  gl.shaderSource(transformFragmentShader, transformFragmentShader)
+  gl.shaderSource(setUpFragmentShader, setUpFragmentShaderCode)
+  gl.shaderSource(transformFragmentShader, transformFragmentShaderCode)
 
   gl.compileShader(vertexShader)
   gl.compileShader(setUpFragmentShader)
