@@ -16,4 +16,16 @@ describe('Set up', function () {
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.isAtMost(extendedPoints.length * numberOfRays, intersectionData.length, 'Data fits in buffer' )
   })
+  it('Set up fragment is run', function () {
+    const numberOfRays = 16
+    sandbox.stub(setUpFragment, 'setUpFragment', function (size, numberOfRays) {
+      return `
+      void main (void) {
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+      }
+      `
+    })
+    const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
+    assert.equal(radiusData[0], 1, 'All radius should be set to 1')
+  })
 })
