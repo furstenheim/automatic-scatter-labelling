@@ -196,15 +196,24 @@ function setUp (extendedPoints, numberOfRays) {
 
   const intersectionData = new Float32Array(size * size * 4)
 
+  const transformProgram = gl.createProgram()
+  gl.attachShader(transformProgram, vertexShader)
+  gl.attachShader(transformProgram, transformFragmentShader)
+  gl.linkProgram(transformProgram)
+  gl.useProgram(transformProgram)
   return {
     radiusData,
     intersectionData,
     labelData,
-    computeLabel
+    computeIntersection
   }
   // TODO change program
 
-  function computeLabel () {
+  function computeIntersection (top, left, right, bottom) {
+    labelData[0] = top
+    labelData[1] = left
+    labelData[2] = right
+    labelData[3] = bottom
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
   }
@@ -254,7 +263,7 @@ function getShaders(gl, size, numberOfRays) {
   return {
     vertexShader,
     setUpFragmentShader,
-    transformFragmentShader
+    transformFragmentShader,
   }
 }
 function newBuffer(gl, data, f, e) {

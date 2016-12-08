@@ -1,4 +1,7 @@
 module.exports = {mainFragment}
+
+const mainIntersectionFragment = require('./main-intersection-fragment')
+
 function mainFragment (size, numberOfRays) {
   return `
   precision mediump float;
@@ -12,17 +15,12 @@ function mainFragment (size, numberOfRays) {
   vec4 read_radius (void) {
     return texture2D(u_radius_texture, pos);
   }
-  vec4 read_label (void) {
-    return texture2D(u_label_texture, vec2(float(0) / ${size}.0, 0.));
+  vec4 read_rectangle (void) {
+    return texture2D(u_label_texture, vec2(0., 0.));
   }
   void commit (vec4 val) {
     gl_FragColor = val;
   }
-  void main (void) {
-    vec4 point = read_point();
-    vec4 radius = read_radius();
-    vec4 label = read_label();
-    commit(vec4(point.rg / 0.00000000000000000000000000001, label.r * point.b, label.g));
-  }
+  ${mainIntersectionFragment.mainIntersectionFragment(size, numberOfRays)}
   `
 }
