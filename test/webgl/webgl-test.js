@@ -73,13 +73,51 @@ describe('Main fragment', function () {
     computeIntersection()
     assert.equal(intersectionData[0], 2, 'main intersection was ran')
   })
+  it('Read from point', function () {
+    const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+    const numberOfRays = 16
+    sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
+      return `void main (void) {
+         vec4 point = read_point();
+         commit(vec4(point));
+      }`
+    })
+    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
+    computeIntersection(5, 6, 7, 8)
+    console.log(intersectionData.slice(0, 10))
+    assert.equal(intersectionData[0], 1, 'Point x')
+    assert.equal(intersectionData[1], 2, 'Point y')
+    assert.equal(intersectionData[2], 1, 'Point width')
+    assert.equal(intersectionData[3], 3, 'Point height')
+    assert.equal(intersectionData[4 * numberOfRays], 5, 'Second point x')
+  })
+  it('Read from radius', function () {
+    const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+    const numberOfRays = 16
+    sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
+      return `void main (void) {
+         vec4 radius = read_radius();
+         commit(vec4(radius));
+      }`
+    })
+    const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
+    computeIntersection(5, 6, 7, 8)
+    console.log(intersectionData.slice(0, 10))
+    assert.equal(intersectionData[0], radiusData[0], 'Reading from radius')
+    assert.equal(intersectionData[1], radiusData[1], 'Reading from radius')
+    assert.equal(intersectionData[2], radiusData[2], 'Reading from radius')
+    assert.equal(intersectionData[3], radiusData[3], 'Reading from radius')
+    assert.equal(intersectionData[4 * numberOfRays], radiusData[4 * numberOfRays], 'Reading from radius')
+  })
   it('Read from rectangle', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
     const numberOfRays = 16
     sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
       return `void main (void) {
          vec4 rect = read_rectangle();
-         commit(vec4(rect.g, rect.b, 0., 0.));
+         commit(vec4(rect));
       }`
     })
     const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
