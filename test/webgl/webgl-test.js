@@ -31,12 +31,19 @@ describe('Set up', function () {
   it('Set up fragment additional coordinates', function () {
     const numberOfRays = 16
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
+    console.log(radiusData.slice(0, 32))
     assert.equal(radiusData[2], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[3], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[6], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[7], 0, 'Only compute first two coordinates')
     assert.isOk(radiusData[8], 0, 'Radius should contain sin and cos')
     assert.equal(radiusData[0], radiusData[numberOfRays * 4], 'Radius data is the same for all points')
+    assert.isAtMost(Math.abs(Math.pow(radiusData[0], 2) + Math.pow(radiusData[1], 2) -  1.0), 0.001, 'Pithagoras')
+    assert.isAtMost(Math.abs(radiusData[0] - Math.sin(2 * Math.PI * 0 / numberOfRays)), 0.001, 'It should be sin')
+    assert.isAtMost(Math.abs(radiusData[4] - Math.sin(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be sin')
+    assert.isAtMost(Math.abs(radiusData[1] - Math.cos(2 * Math.PI * 0 / numberOfRays)), 0.001, 'It should be cos')
+    assert.isAtMost(Math.abs(radiusData[5] -  Math.cos(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be cos')
+
     console.log(radiusData.slice(0, 32))
   })
 })
