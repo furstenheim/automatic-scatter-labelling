@@ -102,6 +102,10 @@ function setUp (extendedPoints, numberOfRays) {
     labelData[1] = left
     labelData[2] = right
     labelData[3] = bottom
+
+    gl.bindTexture(gl.TEXTURE_2D, labelTexture)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, labelData)
+
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
   }
