@@ -18,18 +18,6 @@ describe('Set up', function () {
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.isAtMost(extendedPoints.length * numberOfRays * 4, intersectionData.length, 'Data fits in buffer' )
   })
-  it('Set up fragment is run', function () {
-    const numberOfRays = 16
-    sandbox.stub(setUpFragment, 'setUpFragment', function (size, numberOfRays) {
-      return `
-      void main (void) {
-        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-      }
-      `
-    })
-    const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
-    assert.equal(radiusData[0], 1, 'All radius should be set to 1')
-  })
   it('Set up fragment additional coordinates', function () {
     const numberOfRays = 16
     const {radiusData, intersectionData, labelData} = webgl.setUp(extendedPoints, numberOfRays)
@@ -38,9 +26,8 @@ describe('Set up', function () {
     assert.equal(radiusData[3], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[6], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[7], 0, 'Only compute first two coordinates')
-    assert.isOk(radiusData[8], 0, 'Radius should contain sin and cos')
     assert.equal(radiusData[0], radiusData[numberOfRays * 4], 'Radius data is the same for all points')
-    assert.isAtMost(Math.abs(Math.pow(radiusData[0], 2) + Math.pow(radiusData[1], 2) -  1.0), 0.001, 'Pithagoras')
+    assert.isAtMost(Math.abs(Math.pow(radiusData[0], 2) + Math.pow(radiusData[1], 2)) -  1.0, 0.001, 'Pithagoras')
     assert.isAtMost(Math.abs(radiusData[0] - Math.sin(2 * Math.PI * 0 / numberOfRays)), 0.001, 'It should be sin')
     assert.isAtMost(Math.abs(radiusData[4] - Math.sin(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be sin')
     assert.isAtMost(Math.abs(radiusData[1] - Math.cos(2 * Math.PI * 0 / numberOfRays)), 0.001, 'It should be cos')

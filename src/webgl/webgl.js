@@ -1,119 +1,8 @@
-module.exports = {calculateGpuResult, setUp}
+module.exports = {setUp}
 
 const setUpFragment = require('./set-up-fragment')
 const mainFragment = require('./main-fragment').mainFragment
-// Necessary to start webgl
-// https://github.com/turbo/js/blob/master/turbo.js && https://github.com/sethsamuel/sethsamuel.github.io/blob/master/talks/2016-08-25-jsconficeland/js/matrix.js
-function calculateGpuResult () {
-  const gl = createGl()
-  const width = 500
-  const height = 500
-  const size = 500
-  // Four corners of the square
-  var positionBuffer = newBuffer(gl, [ -1, -1, 1, -1, 1, 1, -1, 1 ]);
-  var textureBuffer  = newBuffer(gl, [  0,  0, 1,  0, 1, 1,  0, 1 ]);
-  var indexBuffer    = newBuffer(gl, [  1,  2, 0,  3, 0, 2 ], Uint16Array, gl.ELEMENT_ARRAY_BUFFER);
 
-  var vertexShaderCode = `
-  attribute vec2 position;
-  varying vec2 pos;
-  attribute vec2 texture;
-
-  void main (void) {
-    pos = texture;
-    gl_Position = vec4(position.xy, 0.0, 1.0);
-    }
-  `
-  var fragmentShaderCode = `
-  precision mediump float;
-  uniform sampler2D u_texture;
-  uniform sampler2D u_texture2;
-  uniform sampler2D u_label_texture;
-  varying vec2 pos;
-  vec4 read (void) {
-    return texture2D(u_texture, pos);
-  }
-  vec4 read2 (void) {
-    return texture2D(u_texture2, pos);
-  }
-  vec4 get_label (void) {
-    return texture2D(u_label_texture, vec2(float(0) / ${size}.0, 0.));
-  }
-  void commit (vec4 val) {
-    gl_FragColor = val;
-  }
-  void main (void) {
-    vec4 ipt = read();
-    vec4 ipt2 = read2();
-    vec4 label = get_label();
-    commit(vec4(ipt.rg / 0.000001, label.r * ipt.b, label.g));
-  }
-  `
-
-  var vertexShader = gl.createShader(gl.VERTEX_SHADER)
-  gl.shaderSource(vertexShader, vertexShaderCode)
-  gl.compileShader(vertexShader)
-
-
-  var data = new Float32Array(size * size * 4)
-  for (let i = 0; i < data.length; i++) data[i] = Math.random()
-  var texture = createTexture(gl, data, size)
-
-  var data3 = new Float32Array(size * size * 4)
-  for (let i = 0; i < data3.length; i++) data3[i] = Math.random()
-  var texture3 = createTexture(gl, data3, size)
-
-  var label = new Float32Array(size * size * 4)
-  for (let i = 0; i < 16; i++) label[i] = Math.random()
-  var labelTexture = createTexture(gl, label, size)
-
-  var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
-  gl.shaderSource(fragmentShader, fragmentShaderCode)
-  gl.compileShader(fragmentShader)
-
-  var program = gl.createProgram()
-  gl.attachShader(program, vertexShader)
-  gl.attachShader(program, fragmentShader)
-  gl.linkProgram(program)
-
-  var uTexture = gl.getUniformLocation(program, 'u_texture')
-  var uTexture3 = gl.getUniformLocation(program, 'u_texture2')
-  var uLabelTexture = gl.getUniformLocation(program, 'u_label_texture')
-  var aPosition = gl.getAttribLocation(program, 'position')
-  var aTexture = gl.getAttribLocation(program, 'texture')
-
-  gl.useProgram(program)
-  gl.viewport(0, 0, size, size)
-  gl.bindFramebuffer(gl.FRAMEBUFFER, gl.createFramebuffer())
-
-  var nTexture = createTexture(gl, new Float32Array(size * size * 4), size)
-  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, nTexture, 0)
-
-  gl.activeTexture(gl.TEXTURE0)
-  gl.bindTexture(gl.TEXTURE_2D, texture)
-  gl.uniform1i(uTexture, 0)
-
-  gl.activeTexture(gl.TEXTURE1)
-  gl.bindTexture(gl.TEXTURE_2D, texture3)
-  gl.uniform1i(uTexture3, 1)
-
-  gl.activeTexture(gl.TEXTURE2)
-  gl.bindTexture(gl.TEXTURE_2D, labelTexture)
-  gl.uniform1i(uLabelTexture, 2)
-
-  gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer)
-
-  gl.enableVertexAttribArray(aTexture)
-  gl.vertexAttribPointer(aTexture, 2, gl.FLOAT, false, 0, 0)
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
-
-  gl.enableVertexAttribArray(aPosition)
-  gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
-  gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0)
-  var data2 = new Float32Array(size * size * 4)
-  gl.readPixels(0, 0, 100, 100, gl.RGBA, gl.FLOAT, data2)
-}
 /**
  *
  * @param extendedPoints array of objects with label and position
@@ -146,6 +35,13 @@ function setUp (extendedPoints, numberOfRays) {
   var pointsTexture = createTexture(gl, pointsData, size)
 
   const radiusData = new Float32Array(size * size * 4)
+  for (let i = 0; i < extendedPoints.length; i++) {
+    for (let j = 0; j < numberOfRays; j++) {
+      const index = numberOfRays * i * 4 + j * 4
+      radiusData[index] = Math.sin(2 * Math.PI * j / numberOfRays)
+      radiusData[index + 1] = Math.cos(2 * Math.PI * j / numberOfRays)
+    }
+  }
   // We will fill with sin and cos later in the setup
   var radiusTexture = createTexture(gl, radiusData, size)
 
@@ -154,7 +50,7 @@ function setUp (extendedPoints, numberOfRays) {
 
   var program = gl.createProgram()
   gl.attachShader(program, vertexShader)
-  gl.attachShader(program, setUpFragmentShader)
+  gl.attachShader(program, transformFragmentShader)
   gl.linkProgram(program)
 
   var uPointsTexture = gl.getUniformLocation(program, 'u_points_texture')
@@ -191,16 +87,8 @@ function setUp (extendedPoints, numberOfRays) {
   gl.enableVertexAttribArray(aPosition)
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
-  redraw(gl)
-  gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, radiusData)
 
   const intersectionData = new Float32Array(size * size * 4)
-
-  const transformProgram = gl.createProgram()
-  gl.attachShader(transformProgram, vertexShader)
-  gl.attachShader(transformProgram, transformFragmentShader)
-  gl.linkProgram(transformProgram)
-  gl.useProgram(transformProgram)
   return {
     radiusData,
     intersectionData,
