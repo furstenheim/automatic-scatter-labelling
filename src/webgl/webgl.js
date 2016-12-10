@@ -1,8 +1,8 @@
 module.exports = {setUp}
 
-const setUpFragment = require('./set-up-fragment')
 const mainFragment = require('./main-fragment').mainFragment
-
+const utils = require('./utils')
+const _ = require('lodash')
 /**
  *
  * @param extendedPoints array of objects with label and position
@@ -19,7 +19,7 @@ function setUp (extendedPoints, numberOfRays) {
   var textureBuffer  = newBuffer(gl, [  0,  0, 1,  0, 1, 1,  0, 1 ]);
   var indexBuffer    = newBuffer(gl, [  1,  2, 0,  3, 0, 2 ], Uint16Array, gl.ELEMENT_ARRAY_BUFFER);
 
-  const {vertexShader, setUpFragmentShader, transformFragmentShader} = getShaders(gl, size, numberOfRays)
+  const {vertexShader, transformFragmentShader} = getShaders(gl, size, numberOfRays)
 
   const pointsData = new Float32Array(size * size * 4)
   for (let i = 0; i < extendedPoints.length; i++) {
@@ -35,13 +35,7 @@ function setUp (extendedPoints, numberOfRays) {
   var pointsTexture = createTexture(gl, pointsData, size)
 
   const radiusData = new Float32Array(size * size * 4)
-  for (let i = 0; i < extendedPoints.length; i++) {
-    for (let j = 0; j < numberOfRays; j++) {
-      const index = numberOfRays * i * 4 + j * 4
-      radiusData[index] = Math.sin(2 * Math.PI * j / numberOfRays)
-      radiusData[index + 1] = Math.cos(2 * Math.PI * j / numberOfRays)
-    }
-  }
+  utils.computeRays(radiusData, extendedPoints.length, numberOfRays)
   // We will fill with sin and cos later in the setup
   var radiusTexture = createTexture(gl, radiusData, size)
 
@@ -97,11 +91,11 @@ function setUp (extendedPoints, numberOfRays) {
   }
   // TODO change program
 
-  function computeIntersection (top, left, right, bottom) {
+  function computeIntersection (top, left, bottom, right) {
     labelData[0] = top
     labelData[1] = left
-    labelData[2] = right
-    labelData[3] = bottom
+    labelData[2] = bottom
+    labelData[3] = right
 
     gl.bindTexture(gl.TEXTURE_2D, labelTexture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, labelData)
@@ -136,25 +130,19 @@ function getShaders(gl, size, numberOfRays) {
     }
   `
   // Compute sin and cos for radius shader
-  var setUpFragmentShaderCode = setUpFragment.setUpFragment(size, numberOfRays)
   var transformFragmentShaderCode = mainFragment(size, numberOfRays)
   const vertexShader = gl.createShader(gl.VERTEX_SHADER)
-  const setUpFragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
   const transformFragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
   gl.shaderSource(vertexShader, vertexShaderCode)
-  gl.shaderSource(setUpFragmentShader, setUpFragmentShaderCode)
   gl.shaderSource(transformFragmentShader, transformFragmentShaderCode)
 
   gl.compileShader(vertexShader)
-  gl.compileShader(setUpFragmentShader)
   gl.compileShader(transformFragmentShader)
   if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(vertexShader))
-  if (!gl.getShaderParameter(setUpFragmentShader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(setUpFragmentShader))
-  if (!gl.getShaderParameter(transformFragmentShader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(transformFragmentShader))
+  if (!gl.getShaderParameter(transformFragmentShader, gl.COMPILE_STATUS)) console.error(transformFragmentShaderCode, gl.getShaderInfoLog(transformFragmentShader))
 
   return {
     vertexShader,
-    setUpFragmentShader,
     transformFragmentShader,
   }
 }
