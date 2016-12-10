@@ -6,7 +6,7 @@ const sinon = require('sinon')
 let sandbox
 beforeEach(() => sandbox = sinon.sandbox.create())
 afterEach(() => sandbox.restore())
-describe.only('Segment ray intersects', function () {
+describe('Segment ray intersects', function () {
   const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
   const numberOfRays = 16
   beforeEach(function () {
@@ -16,8 +16,7 @@ describe.only('Segment ray intersects', function () {
         vec4 point = read_point();
         vec4 radius = read_radius();
         vec4 rect = read_rectangle();
-        intersects = segment_ray_intersects(vec2(0., 0.), radius.rg, vec2(0., 0.), rect.rg - rect.ba);
-        //commit(vec4(intersects, radius.rg, 0.));
+        intersects = segment_segment_intersects(vec2(0., 0.), radius.rg, vec2(0., 0.), rect.rg - rect.ba);
         if (intersects) {
           commit(vec4(1.0, 1.0, 1.0, 1.0));
         } else {

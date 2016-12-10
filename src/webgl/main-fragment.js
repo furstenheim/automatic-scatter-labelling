@@ -1,7 +1,8 @@
 module.exports = {mainFragment}
 
 const mainIntersectionFragment = require('./main-intersection-fragment')
-const segmentRayIntersectsFragment = require('./segment-ray-intersects-fragment')
+const segmentSegmentIntersectsFragment = require('./segment-segment-intersects-fragment')
+const segmentSegmentIntersectionFragment = require('./segment-segment-intersection-fragment')
 function mainFragment (size, numberOfRays) {
   return `
   precision mediump float;
@@ -21,7 +22,8 @@ function mainFragment (size, numberOfRays) {
   void commit (vec4 val) {
     gl_FragColor = val;
   }
-  ${segmentRayIntersectsFragment.segmentRayIntersectsFragment()}
+  ${segmentSegmentIntersectsFragment.segmentSegmentIntersectsFragment()}
+  ${segmentSegmentIntersectionFragment.segmentSegmentIntersectionFragment()}
   ${mainIntersectionFragment.mainIntersectionFragment(size, numberOfRays)}
   `
 }
