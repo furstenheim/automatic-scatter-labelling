@@ -28,8 +28,8 @@ function setUp (extendedPoints, numberOfRays) {
       const index = numberOfRays * i * 4 + j * 4
       pointsData[index] = point.position.x
       pointsData[index + 1] = point.position.y
-      pointsData[index + 2] = point.label.width
-      pointsData[index + 3] = point.label.height
+      pointsData[index + 2] = point.label.height
+      pointsData[index + 3] = point.label.width
     }
   }
   var pointsTexture = createTexture(gl, pointsData, size)

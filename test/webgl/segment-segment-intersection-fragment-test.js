@@ -7,7 +7,7 @@ let sandbox
 beforeEach(() => sandbox = sinon.sandbox.create())
 afterEach(() => sandbox.restore())
 // Same tests as in js
-describe.only('Segment ray intersects', function () {
+describe('Segment ray intersection', function () {
   const numberOfRays = 16
   beforeEach(function () {
     sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
@@ -16,7 +16,7 @@ describe.only('Segment ray intersects', function () {
         vec4 point = read_point();
         vec4 radius = read_radius();
         vec4 rect = read_rectangle();
-        // Just to make tests easier
+        // Just to make tests easier we pass rect.rg, and rect.ba instead of computing a segment
         intersection = segment_segment_intersection(point.xy, radius.rg, rect.rg, rect.ba);
         commit(vec4(intersection, 0., 0.));
       }`

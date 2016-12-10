@@ -10,8 +10,8 @@ function labelRectangleIntersectionFragment () {
   vec2 label_rectangle_intersection (vec4 rectangle, vec2 label, vec2 ray, vec2 point) {
     float my_min = 0.;
     float my_max = infinity;
-    float rectangle_height = (rectangle.r + rectangle.b) / 2.;
-    float rectangle_width = (rectangle.g + rectangle.a) / 2.;
+    float rectangle_height = (rectangle.r - rectangle.b);
+    float rectangle_width = (rectangle.a - rectangle.g);
     if (ray.y != 0.) {
       float firstIntersection = (rectangle_height / 2. + label.x / 2. + (rectangle.r + rectangle.b) / 2. - point.y) / ray.y;
       float secondIntersection = (- rectangle_height / 2. - label.x / 2. + (rectangle.r + rectangle.b) / 2. - point.y) / ray.y;
