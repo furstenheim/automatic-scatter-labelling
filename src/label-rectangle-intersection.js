@@ -7,7 +7,6 @@ module.exports = {labelRectangleIntersection}
 function labelRectangleIntersection (lk, li, vi, pi) {
   let min = 0
   let max = Number.POSITIVE_INFINITY
-  var firstInterval, secondInterval, thirdInterval, fourthInterval
   if (vi.y !== 0) {
     const firstIntersection = (lk.height / 2 + li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
     const secondIntersection = (- lk.height / 2 - li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
