@@ -91,12 +91,14 @@ function setUp (extendedPoints, numberOfRays) {
   }
   // TODO change program
 
-  function computeIntersection (top, left, bottom, right) {
+  // Rectangle, then pi
+  function computeIntersection (top, left, bottom, right, pix, piy) {
     labelData[0] = top
     labelData[1] = left
     labelData[2] = bottom
     labelData[3] = right
-
+    labelData[4] = pix
+    labelData[5] = piy
     gl.bindTexture(gl.TEXTURE_2D, labelTexture)
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, labelData)
 

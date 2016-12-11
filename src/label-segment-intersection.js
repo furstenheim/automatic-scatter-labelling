@@ -7,6 +7,7 @@ var interval = require('./interval').interval
 
 // Label li moves with vector vi. We find the interval at which it intersects the segment pk, vk. If pk is contained then the interval goes to INFINITY
 function labelSegmentIntersection (pk, vk, li, vi, pi) {
+  // translate so we can assume that point is in the centre
   pk = {x: pk.x - pi.x, y: pk.y - pi.y}
   // TODO handle parallel lines
   var pointCovered

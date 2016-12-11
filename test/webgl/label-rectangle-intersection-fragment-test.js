@@ -7,7 +7,7 @@ let sandbox
 beforeEach(() => sandbox = sinon.sandbox.create())
 afterEach(() => sandbox.restore())
 // Same tests as in js
-describe.only('Label rectangle intersection', function () {
+describe('Label rectangle intersection', function () {
   const numberOfRays = 16
   beforeEach(function () {
     sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {

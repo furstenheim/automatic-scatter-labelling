@@ -112,6 +112,21 @@ describe('Main fragment', function () {
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 5, 'main intersection was ran')
   })
+  it('Read from rectangle_point', function () {
+    const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+    const numberOfRays = 16
+    sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
+      return `void main (void) {
+         vec4 rect = read_rectangle_point();
+         commit(vec4(rect));
+      }`
+    })
+    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
+    computeIntersection(5, 6, 7, 8, 9, 10)
+    console.log(intersectionData.slice(0, 10))
+    assert.equal(intersectionData[0], 9, 'main intersection was ran')
+  })
   it('Read twice from rectangle', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
     const numberOfRays = 16
