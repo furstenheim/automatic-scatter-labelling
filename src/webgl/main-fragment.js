@@ -5,6 +5,8 @@ const segmentSegmentIntersectsFragment = require('./segment-segment-intersects-f
 const segmentSegmentIntersectionFragment = require('./segment-segment-intersection-fragment')
 const labelRectangleIntersectionFragment = require('./label-rectangle-intersection-fragment')
 const labelSegmentIntersectionFragment = require('./label-segment-intersection-fragment')
+const rayRectangleIntersectionFragment = require('./ray-rectangle-intersection-fragment')
+const raySegmentIntersectionFragment = require('./ray-segment-intersection-fragment')
 function mainFragment (size, numberOfRays) {
   return `
   precision mediump float;
@@ -33,6 +35,8 @@ function mainFragment (size, numberOfRays) {
   ${segmentSegmentIntersectionFragment.segmentSegmentIntersectionFragment()}
   ${labelRectangleIntersectionFragment.labelRectangleIntersectionFragment()}
   ${labelSegmentIntersectionFragment.labelSegmentIntersectionFragment()}
+  ${rayRectangleIntersectionFragment.rayRectangleIntersectionFragment()}
+  ${raySegmentIntersectionFragment.raySegmentIntersectionFragment()}
   ${mainIntersectionFragment.mainIntersectionFragment(size, numberOfRays)}
   `
 }
