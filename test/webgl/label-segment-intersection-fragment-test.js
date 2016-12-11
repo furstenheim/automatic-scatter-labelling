@@ -17,7 +17,7 @@ describe.only('Label segment Intersection', function () {
         vec4 radius = read_radius();
         vec4 rect = read_rectangle();
         vec4 rect_point = read_rectangle_point();
-        vec2 segment = rect.ra - rect.bg - rect_point.rg;
+        vec2 segment = (rect.ar + rect.gb) / 2. - rect_point.rg;
         intersection = label_segment_intersection(rect_point.xy, segment, point.ba, radius.rg, point.rg);
         commit(vec4(intersection, 0., 0.));
       }`
