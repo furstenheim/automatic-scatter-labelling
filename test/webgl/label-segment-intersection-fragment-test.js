@@ -24,7 +24,7 @@ describe.only('Label segment Intersection', function () {
     })
   })
   describe('Second point at origin', function () {
-    it.skip('Not intersecting', function () {
+    it('Not intersecting', function () {
       const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 2, width: 2}}, {
         position: {x: 5, y: 6},
         label: {width: 4, height: 4}
@@ -37,8 +37,8 @@ describe.only('Label segment Intersection', function () {
       // rectangle at 3, 3, 3, 3 so the vector goes from 2, 2, to 3, 3
       computeIntersection(3, 3, 3, 3, 2, 2)
       console.log(intersectionData.slice(0, 4))
-      assert.equal(intersectionData[0], 2)
-      assert.equal(intersectionData[1], 5)
+      assert.equal(intersectionData[0], -1)
+      assert.equal(intersectionData[1], -1)
     })
     it('Label containing the point', function () {
       const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 2, width: 2}}, {
@@ -56,6 +56,8 @@ describe.only('Label segment Intersection', function () {
       assert.equal(intersectionData[0], 1)
       assert.equal(intersectionData[1], 4)
     })
+
+    // TODO rest of the tests
   })
 
 })
