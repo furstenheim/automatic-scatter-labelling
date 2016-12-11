@@ -17,7 +17,7 @@ describe('Origin point', function () {
         // The intersection starts when the center is at 2 and ends when the center is at 5
         assert.deepEqual(intersection, interval(2,5))
       })
-      it('Initial label intersects in the middle and height is bigger than the other height', function (){
+      it('Initial label intersects in the middle and height is bigger than the other height', function () {
         var li = {width: 3, height: 2}
         var intersection = labelRectangleIntersection(lk, li, vi, pi)
         // The intersection starts when the center is at 2 and ends when the center is at 5

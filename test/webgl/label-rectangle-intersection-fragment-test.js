@@ -22,13 +22,15 @@ describe.only('Label rectangle intersection', function () {
     })
   })
   describe('Vertical vector', function () {
+    beforeEach(function () {
+      sandbox.stub(webglUtils, 'computeRays', function (radiusData) {
+        radiusData[0] = 0
+        radiusData[1] = 1
+      })
+    })
     describe('Label to the side of the vector', function () {
-      it.only('Initial label contains the original label', function () {
+      it('Initial label contains the original label', function () {
         const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 2, width: 5}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
-        sandbox.stub(webglUtils, 'computeRays', function (radiusData) {
-          radiusData[0] = 0
-          radiusData[1] = 1
-        })
         const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
         computeIntersection(4, 1, 3, 2)
         console.log(intersectionData.slice(0, 4))
@@ -36,6 +38,70 @@ describe.only('Label rectangle intersection', function () {
         assert.equal(intersectionData[1], 5)
 
       })
+      it('Initial label intersects in the middle and the height is bigger than the other height', function () {
+        const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 2, width: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+        const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+        computeIntersection(4, 1, 3, 2)
+        console.log(intersectionData.slice(0, 4))
+        assert.equal(intersectionData[0], 2)
+        assert.equal(intersectionData[1], 5)
+      })
+      it('Initial label intersects in the middle and height is smaller', function () {
+        const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 0.5, width: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+        const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+        computeIntersection(4, 1, 3, 2)
+        console.log(intersectionData.slice(0, 4))
+        assert.equal(intersectionData[0], 2.75)
+        assert.equal(intersectionData[1], 4.25)
+      })
+    })
+  })
+  describe('Diagonal vector', function () {
+    beforeEach(function () {
+      sandbox.stub(webglUtils, 'computeRays', function (radiusData) {
+        radiusData[0] = 1
+        radiusData[1] = 1
+      })
+    })
+    it('Width of the label is smaller', function () {
+      const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 2, width: 5}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+      const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+      computeIntersection(3, 1, 2, 2)
+      console.log(intersectionData.slice(0, 4))
+      assert.equal(intersectionData[0], 1)
+      assert.equal(intersectionData[1], 4)
+    })
+  })
+  describe('Horizontal vector', function () {
+    beforeEach(function () {
+      sandbox.stub(webglUtils, 'computeRays', function (radiusData) {
+        radiusData[0] = 1
+        radiusData[1] = 0
+      })
+    })
+    it('First label contained', function () {
+      const extendedPoints = [{position: {x: 0, y: 0}, label: {height: 5, width: 2}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+      const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+      computeIntersection(2, 3, 1, 4)
+      console.log(intersectionData.slice(0, 4))
+      assert.equal(intersectionData[0], 2)
+      assert.equal(intersectionData[1], 5)
+    })
+  })
+  describe('Vector with negative coordinates', function () {
+    beforeEach(function () {
+      sandbox.stub(webglUtils, 'computeRays', function (radiusData) {
+        radiusData[0] = -0.4999999999999998
+        radiusData[1] = 0.8660254037844387
+      })
+    })
+    it('First label contained', function () {
+      const extendedPoints = [{position: {x: 1164.1499999999999, y: -382.50000000000017}, label: {height: 21.25, width: 111.296875}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
+      const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+      computeIntersection(-350.62500000000017, 1175.9734942797204, -371.87500000000017, 1237.2391192797204)
+      console.log(intersectionData.slice(0, 4))
+      assert.notEqual(intersectionData[0], -1, 'Rectangle intersects at t 5')
+      assert.notEqual(intersectionData[1], -1)
     })
   })
 })
