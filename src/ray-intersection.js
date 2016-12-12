@@ -12,7 +12,7 @@ const raySegmentIntersection = require('./ray-segment-intersection').raySegmentI
 const clone = require('lodash.clone')
 
 // TODO use sets
-function rayIntersection (pointsToLabel, pointsNotToLabel) {
+function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
   const rejectedPoints = []
   // P in the article
   var remainingPoints = pointsToLabel
@@ -20,7 +20,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel) {
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
     console.log(remainingPoints.length)
-    let bestRay = findBestRay.findBestRay(remainingPoints, pointsNotToLabel)
+    let bestRay = findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, intersectionData, computeIntersection)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
     if (rij === undefined) {

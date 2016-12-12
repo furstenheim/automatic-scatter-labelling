@@ -1,6 +1,5 @@
 'use strict'
 const mainAlgorithm = require('./src/main-algorithm').mainAlgorithm
-const webgl = require('./src/webgl-utils')
 var margin = {top: 20, right: 20, bottom: 30, left: 50}
 var width = 2060 - margin.left - margin.right
 var height = 900 - margin.top - margin.bottom
@@ -27,8 +26,7 @@ d3.csv('data.csv', function (err, data) {
     .attr('transform', `translate(0, ${height})`)
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
-  webgl.calculateGpuResult()
-  //render(data.slice(0, 10), xAxis, yAxis)
+  render(data.slice(0, 70), xAxis, yAxis)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/
@@ -79,7 +77,7 @@ function render (data, xAxis, yAxis) {
   const idToPoints = _.groupBy(extendedPoints, 'id')
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
-  const result = mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, NUMBER_OF_RAYS: 3, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, NUMBER_OF_RAYS: 40, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log(result)
   const dots = svg.selectAll('.dot')
     .data(data)

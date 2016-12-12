@@ -9,11 +9,12 @@ const labelSegmentIntersection = require('./label-segment-intersection').labelSe
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const raySegmentIntersection = require('./ray-segment-intersection').raySegmentIntersection
 const multiInterval = require('./multi-interval').multiInterval
+const interval = require('./interval').interval
 const utils = require('./utils')
 
 const TOLERANCE = 2 // pixels
 
-function findBestRay (pointsToLabel, pointsNotToLabel) {
+function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
   // We follow the article page 4 Algorithm 1
   var P = pointsToLabel
   var P0 = pointsNotToLabel.concat(pointsToLabel)
@@ -32,6 +33,10 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
       let Vij = []
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
       const rectangle = extendedPointMethods.translateLabel(pi, segment)
+      if (isWebgl) {
+        computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
+      }
+
       for (let pk of P0) {
         if (pk === pi) continue
         // No sense to wait for the intersection if rbest is defined
@@ -40,12 +45,22 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
         let availableSpace = 0
         // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
         for (let rkl of pk.rays) {
-          // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
-          const labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
-          const segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
-          const rayInterval = rayRectangleIntersection(rectangle, rkl.vector, pk.position)
-          const raySegmentInterval = raySegmentIntersection(pi.position, segment, pk.position, rkl.vector)
-          availableSpace += rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelInterval.coalesceInPlace(rayInterval), segmentInterval.coalesceInPlace(raySegmentInterval)))
+          let labelIntersection
+          let segmentIntersection
+          if (isWebgl) {
+            const index = rkl.index
+            labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
+            segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
+          } else {
+            // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
+            const labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
+            const segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
+            const rayInterval = rayRectangleIntersection(rectangle, rkl.vector, pk.position)
+            const raySegmentInterval = raySegmentIntersection(pi.position, segment, pk.position, rkl.vector)
+            labelIntersection = labelInterval.coalesceInPlace(rayInterval)
+            segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
+          }
+          availableSpace += rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
         }
         // This ray is not good because we try to maximize the minimum
         if (rbest && availableSpace < minimumAvailableSpace) {
@@ -63,4 +78,5 @@ function findBestRay (pointsToLabel, pointsNotToLabel) {
     }
   }
   return {rbest: rbest, pbest: pbest}
+
 }

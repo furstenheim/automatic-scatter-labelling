@@ -2,7 +2,6 @@ module.exports = {mainIntersectionFragment}
 
 function mainIntersectionFragment (size, numberOfRays) {
   return `void main (void) {
-    vec2 segment_intersection;
     vec4 point = read_point();
     vec4 radius = read_radius();
     vec4 rect = read_rectangle();
@@ -17,13 +16,13 @@ function mainIntersectionFragment (size, numberOfRays) {
     vec2 label_intersection;
     vec2 segment_intersection;
     // if ray intervals are not empty then normal intervals are not empty. Hence we only need to consider rays emptiness
-    if (ray_interval.x < 0) {
+    if (ray_interval.x < 0.) {
       label_intersection = label_interval;
     } else {
       label_intersection = vec2(min(label_interval.x, ray_interval.x), max(label_interval.y, ray_interval.y));
     }
 
-    if (ray_segment_interval.x < 0) {
+    if (ray_segment_interval.x < 0.) {
       segment_intersection = segment_interval;
     } else {
       segment_intersection = vec2(min(segment_interval.x, ray_segment_interval.x), max(segment_interval.y, ray_segment_interval.y));
