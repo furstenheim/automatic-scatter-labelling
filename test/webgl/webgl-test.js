@@ -74,8 +74,8 @@ describe('Main fragment', function () {
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 1, 'Point x')
     assert.equal(intersectionData[1], 2, 'Point y')
-    assert.equal(intersectionData[2], 1, 'Point width')
-    assert.equal(intersectionData[3], 3, 'Point height')
+    assert.equal(intersectionData[3], 1, 'Point width')
+    assert.equal(intersectionData[2], 3, 'Point height')
     assert.equal(intersectionData[4 * numberOfRays], 5, 'Second point x')
   })
   it('Read from radius', function () {

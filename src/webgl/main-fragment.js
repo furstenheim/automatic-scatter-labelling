@@ -14,7 +14,8 @@ function mainFragment (size, numberOfRays) {
   float infinity = 1./0.0000001;
   uniform sampler2D u_points_texture;
   uniform sampler2D u_radius_texture;
-  uniform sampler2D u_label_texture;
+  uniform vec4 u_label_texture;
+  uniform vec4 u_rect_point;
   varying vec2 pos;
   vec4 read_point (void) {
     return texture2D(u_points_texture, pos);
@@ -23,10 +24,10 @@ function mainFragment (size, numberOfRays) {
     return texture2D(u_radius_texture, pos);
   }
   vec4 read_rectangle (void) {
-    return texture2D(u_label_texture, vec2(0., 0.));
+    return u_label_texture;
   }
   vec4 read_rectangle_point (void) {
-    return texture2D(u_label_texture, vec2(${2/size /2 }, 0.));
+    return u_rect_point;
   }
   void commit (vec4 val) {
     gl_FragColor = val;

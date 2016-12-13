@@ -7,6 +7,7 @@ module.exports = function (config) {
       // each file acts as entry point for the webpack configuration
     ],
     frameworks: ['mocha', 'chai'],
+    browserNoActivityTimeout: 1000000000,
     preprocessors: {
       // add webpack as preprocessor
       'test/webgl/*-test.js': ['webpack']

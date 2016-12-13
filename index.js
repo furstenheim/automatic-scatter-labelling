@@ -26,7 +26,7 @@ d3.csv('data.csv', function (err, data) {
     .attr('transform', `translate(0, ${height})`)
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
-  render(data.slice(0, 70), xAxis, yAxis)
+  render(data.slice(0, 10), xAxis, yAxis)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/
@@ -77,7 +77,7 @@ function render (data, xAxis, yAxis) {
   const idToPoints = _.groupBy(extendedPoints, 'id')
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
-  const result = mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, NUMBER_OF_RAYS: 40, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 10, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log(result)
   const dots = svg.selectAll('.dot')
     .data(data)

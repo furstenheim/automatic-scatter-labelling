@@ -39,8 +39,8 @@ function setUp (extendedPoints, numberOfRays) {
   // We will fill with sin and cos later in the setup
   var radiusTexture = createTexture(gl, radiusData, size)
 
-  var labelData = new Float32Array(size * size * 4)
-  var labelTexture = createTexture(gl, labelData, size)
+  //var labelData = new Float32Array(size * size * 4)
+  //var labelTexture = createTexture(gl, labelData, size)
 
   var program = gl.createProgram()
   gl.attachShader(program, vertexShader)
@@ -50,6 +50,7 @@ function setUp (extendedPoints, numberOfRays) {
   var uPointsTexture = gl.getUniformLocation(program, 'u_points_texture')
   var uRadiusTexture = gl.getUniformLocation(program, 'u_radius_texture')
   var uLabelTexture = gl.getUniformLocation(program, 'u_label_texture')
+  var uRectanglePoint = gl.getUniformLocation(program, 'u_rect_point')
   var aPosition = gl.getAttribLocation(program, 'position')
   var aTexture = gl.getAttribLocation(program, 'texture')
 
@@ -68,10 +69,6 @@ function setUp (extendedPoints, numberOfRays) {
   gl.bindTexture(gl.TEXTURE_2D, radiusTexture)
   gl.uniform1i(uRadiusTexture, 1)
 
-  gl.activeTexture(gl.TEXTURE2)
-  gl.bindTexture(gl.TEXTURE_2D, labelTexture)
-  gl.uniform1i(uLabelTexture, 2)
-
   gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer)
 
   gl.enableVertexAttribArray(aTexture)
@@ -86,22 +83,18 @@ function setUp (extendedPoints, numberOfRays) {
   return {
     radiusData,
     intersectionData,
-    labelData,
+    //labelData,
     computeIntersection
   }
   // TODO change program
 
   // Rectangle, then pi
   function computeIntersection (top, left, bottom, right, pix, piy) {
-    labelData[0] = top
-    labelData[1] = left
-    labelData[2] = bottom
-    labelData[3] = right
-    labelData[4] = pix
-    labelData[5] = piy
-    gl.bindTexture(gl.TEXTURE_2D, labelTexture)
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, labelData)
-
+    var labelData = [top, left, bottom, right]
+    //gl.bindTexture(gl.TEXTURE_2D, labelTexture)
+    //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, labelData)
+    gl.uniform4fv(uLabelTexture, labelData)
+    gl.uniform4fv(uRectanglePoint,  [pix, piy, 0, 0])
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
   }

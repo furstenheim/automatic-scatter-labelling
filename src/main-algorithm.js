@@ -11,7 +11,7 @@ let NUMBER_OF_RAYS
 function mainAlgorithm (extendedPoints, params = {}) {
   NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
   const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
-  const isWebgl = true
+  const isWebgl = params.isWebgl
   computeRays(extendedPoints)
   if (isWebgl) {
     var {intersectionData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS)
