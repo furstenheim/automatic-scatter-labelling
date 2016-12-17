@@ -49,6 +49,7 @@ function labelSegmentIntersectionFragment () {
         if (my_max == 0.) {
           return vec2(-1., -1.);
         }
+        my_min = max(my_min, 0.);
         return vec2(my_min, my_max);
     }
   `

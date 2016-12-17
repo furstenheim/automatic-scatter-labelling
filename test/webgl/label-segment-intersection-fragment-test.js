@@ -77,7 +77,7 @@ describe.only('Label segment Intersection', function () {
         // rectangle at pk + vk
         const pk = test.pk
         const vk = test.vk
-        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x, pk.y)
+        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y)
         assert.deepEqual(interval(intersectionData[0], intersectionData[1]), test.expected, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
       })
     })
@@ -141,8 +141,14 @@ describe.only('Label segment Intersection', function () {
         // rectangle at pk + vk
         const pk = test.pk
         const vk = test.vk
-        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x, pk.y)
-        assert.deepEqual(interval(intersectionData[0], intersectionData[1]), test.expected, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
+        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y)
+        if (test.expected.start !== null) {
+          assert.deepEqual(intersectionData[0], test.expected.start, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
+          assert.deepEqual(intersectionData[1], test.expected.end, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
+        } else {
+          assert.isAtMost(intersectionData[0], 0)
+          assert.isAtMost(intersectionData[1], 0)
+        }
       })
     })
     // TODO rest of the tests

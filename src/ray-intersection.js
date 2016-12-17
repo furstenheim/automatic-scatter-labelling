@@ -4,6 +4,7 @@ module.exports = {rayIntersection}
 const findBestRay = require('./find-best-ray')
 const extendedPointMethods = require('./extended-point-methods')
 const multiInterval = require('./multi-interval').multiInterval
+const interval = require('./interval').interval
 // Better to grab the module here and fetch the method in the algorithm, that way we can stub
 const labelRectangleIntersection = require('./label-rectangle-intersection')
 const labelSegmentIntersection = require('./label-segment-intersection')
@@ -38,13 +39,27 @@ function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersection
     //P0 = P0.filter((el, i) => i!== index)
     //P = P.filter((el, i) => i!== index)
     pointsLabeled.push(pi)
+    if (isWebgl) {
+      const rectangle = pi.rectangle
+      computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
+    }
     for (let pk of P0) {
       for (let rkl of pk.rays) {
-        const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
-        const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
-        const rayInterval = rayRectangleIntersection(pi.rectangle, rkl.vector, pk.position)
-        const raySegmentInterval = raySegmentIntersection(pi.position, vi, pk.position, rkl.vector)
-        rkl.available.multipleRemove(multiInterval.coalesce(labelInterval.coalesce(rayInterval), segmentInterval.coalesceInPlace(raySegmentInterval)))
+        let labelIntersection
+        let segmentIntersection
+        if (isWebgl) {
+          const index = rkl.index
+          labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
+          segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
+        } else {
+          const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
+          const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
+          const rayInterval = rayRectangleIntersection(pi.rectangle, rkl.vector, pk.position)
+          const raySegmentInterval = raySegmentIntersection(pi.position, vi, pk.position, rkl.vector)
+          labelIntersection = labelInterval.coalesceInPlace(rayInterval)
+          segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
+        }
+        rkl.available.multipleRemove(multiInterval.coalesce(labelIntersection, segmentIntersection))
       }
       extendedPointMethods.updateAvailableSpace(pk)
 

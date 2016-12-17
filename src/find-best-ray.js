@@ -42,7 +42,7 @@ function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData
         // No sense to wait for the intersection if rbest is defined
 
         //int pk
-        let availableSpace = 0
+        let availableSpace = pk.availableMeasure
         // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
         for (let rkl of pk.rays) {
           let labelIntersection
@@ -60,7 +60,7 @@ function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData
             labelIntersection = labelInterval.coalesceInPlace(rayInterval)
             segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
           }
-          availableSpace += rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
+          availableSpace -= rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
         }
         // This ray is not good because we try to maximize the minimum
         if (rbest && availableSpace < minimumAvailableSpace) {
