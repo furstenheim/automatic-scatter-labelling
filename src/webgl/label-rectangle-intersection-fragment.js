@@ -50,6 +50,9 @@ function labelRectangleIntersectionFragment () {
         return vec2(-1., -1.);
       }
     }
+    if (my_min >= my_max) {
+      return vec2(-1., -1.);
+    }
     return vec2(my_min, my_max);
     }
   `

@@ -60,7 +60,9 @@ function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData
             labelIntersection = labelInterval.coalesceInPlace(rayInterval)
             segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
           }
-          availableSpace -= rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
+          if (!labelIntersection.empty || !segmentIntersection.empty) {
+            availableSpace -= rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
+          }
         }
         // This ray is not good because we try to maximize the minimum
         if (rbest && availableSpace < minimumAvailableSpace) {

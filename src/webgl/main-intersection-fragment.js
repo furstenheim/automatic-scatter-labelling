@@ -21,7 +21,6 @@ function mainIntersectionFragment (size, numberOfRays) {
     } else {
       label_intersection = vec2(min(label_interval.x, ray_interval.x), max(label_interval.y, ray_interval.y));
     }
-
     if (ray_segment_interval.x < 0.) {
       segment_intersection = segment_interval;
     } else {
