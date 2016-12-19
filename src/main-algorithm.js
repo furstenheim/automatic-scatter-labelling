@@ -24,7 +24,7 @@ function computeRays (extendedPoints) {
   for (let j = 0; j < extendedPoints.length; j++) {
     let pi = extendedPoints[j]
     pi.rays = []
-    for (let i = 0; i <= NUMBER_OF_RAYS; i++) {
+    for (let i = 0; i < NUMBER_OF_RAYS; i++) {
       pi.rays.push( {
         index: j*NUMBER_OF_RAYS*4 + i * 4,
         vector : {
