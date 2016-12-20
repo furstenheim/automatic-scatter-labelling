@@ -14,7 +14,7 @@ const utils = require('./utils')
 
 const TOLERANCE = 2 // pixels
 
-function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
+async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
   // We follow the article page 4 Algorithm 1
   var P = pointsToLabel
   var P0 = pointsNotToLabel.concat(pointsToLabel)
@@ -34,7 +34,7 @@ function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
       const rectangle = extendedPointMethods.translateLabel(pi, segment)
       if (isWebgl) {
-        computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
+        await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
       }
 
       for (let pk of P0) {

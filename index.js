@@ -26,14 +26,14 @@ d3.csv('data.csv', function (err, data) {
     .attr('transform', `translate(0, ${height})`)
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
-  render(data.slice(0, 70), xAxis, yAxis)
+  render(data, xAxis, yAxis)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/
 })
 
 
-function render (data, xAxis, yAxis) {
+async function render (data, xAxis, yAxis) {
   const radius = 3.5
   x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
   y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
@@ -78,7 +78,7 @@ function render (data, xAxis, yAxis) {
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
   console.time('algorithm')
-  const result = mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 10, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 10, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.timeEnd('algorithm')
   console.log(result)
   const dots = svg.selectAll('.dot')

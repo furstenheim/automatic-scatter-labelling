@@ -13,7 +13,7 @@ const raySegmentIntersection = require('./ray-segment-intersection').raySegmentI
 const clone = require('lodash.clone')
 
 // TODO use sets
-function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
+async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
   const rejectedPoints = []
   // P in the article
   var remainingPoints = pointsToLabel
@@ -21,7 +21,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersection
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
     console.log(remainingPoints.length)
-    let bestRay = findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, intersectionData, computeIntersection)
+    let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, intersectionData, computeIntersection)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
     if (rij === undefined) {
@@ -41,7 +41,7 @@ function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersection
     pointsLabeled.push(pi)
     if (isWebgl) {
       const rectangle = pi.rectangle
-      computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
+      await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
     }
     for (let pk of P0) {
       for (let rkl of pk.rays) {
@@ -59,7 +59,9 @@ function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersection
           labelIntersection = labelInterval.coalesceInPlace(rayInterval)
           segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
         }
-        rkl.available.multipleRemove(multiInterval.coalesce(labelIntersection, segmentIntersection))
+        if (!labelIntersection.empty || !segmentIntersection.empty) {
+          rkl.available.multipleRemove(multiInterval.coalesce(labelIntersection, segmentIntersection))
+        }
       }
       extendedPointMethods.updateAvailableSpace(pk)
 

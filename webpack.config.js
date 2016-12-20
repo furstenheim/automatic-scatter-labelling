@@ -12,6 +12,18 @@ module.exports = {
   devServer: {
     contentBase: './',
     port: 8000
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        include: [path.join(__dirname, 'index'), path.join(__dirname, 'src')],
+        loader: 'babel',
+        query: {
+          plugins: ['transform-async-to-generator', 'meaningful-logs']
+        }
+      }
+    ]
   }
   //watch: true
 }
