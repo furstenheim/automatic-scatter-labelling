@@ -41,7 +41,7 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, inters
     pointsLabeled.push(pi)
     if (isWebgl) {
       const rectangle = pi.rectangle
-      await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y, intersectionData)
+      intersectionData = await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y, intersectionData)
     }
     for (let pk of P0) {
       for (let rkl of pk.rays) {

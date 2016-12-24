@@ -1,9 +1,9 @@
 'use strict'
-const mainAlgorithm = require('./src/main-algorithm').mainAlgorithm
+const mainAlgorithm = require('./src/main-algorithm-loader').mainAlgorithm
 var margin = {top: 20, right: 20, bottom: 30, left: 50}
 var width = 2060 - margin.left - margin.right
 var height = 900 - margin.top - margin.bottom
-
+const _ = require('lodash')
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
 
