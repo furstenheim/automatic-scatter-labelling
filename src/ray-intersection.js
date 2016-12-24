@@ -24,6 +24,7 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, inters
     let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, intersectionData, computeIntersection)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
+    intersectionData = bestRay.intersectionData
     if (rij === undefined) {
       // It could only happen that we get rij undefined in the first iteration
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {

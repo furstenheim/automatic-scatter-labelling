@@ -79,6 +79,7 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersecti
       }
     }
   }
-  return {rbest: rbest, pbest: pbest}
+  // We need to return intersectionData because the reference has been neutered in find ray intersection
+  return {rbest: rbest, pbest: pbest, intersectionData: intersectionData}
 
 }
