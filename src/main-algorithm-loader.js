@@ -26,8 +26,18 @@ function mainAlgorithm (extendedPoints, params = {}) {
           }, [intersectionData.buffer])
         }
       }
+    } else {
+      algorithm.postMessage({
+        extendedPoints,
+        params
+      })
+      algorithm.onmessage = function (event) {
+        var data = event.data
+        if (data.type === 'end') {
+          return resolve(data.result)
+        }
+      }
     }
-    // TODO non webgl
 
 
   })

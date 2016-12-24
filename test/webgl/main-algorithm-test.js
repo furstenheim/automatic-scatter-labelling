@@ -1,4 +1,4 @@
-const mainAlgorithm = require('./../../src/main-algorithm').mainAlgorithm
+const mainAlgorithm = require('./../../src/main-algorithm-loader').mainAlgorithm
 describe('Main algorithm', function () {
   it('Label one point', function () {
     const pointsToLabel = [
@@ -15,7 +15,7 @@ describe('Main algorithm', function () {
     ]
     const result = mainAlgorithm(pointsToLabel)
   })
-  it.skip('Performance test', function (done) {
+  it.only('Performance test', function (done) {
     this.timeout(0)
     console.log('starting test')
     // 40 points
@@ -24,22 +24,22 @@ describe('Main algorithm', function () {
     console.time('algorithm 3 rays')
     mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 3, isWebgl: true})
       .then(function (result) {
-        console.log('Time 3 ray webgl:', (new Date() - start)/1000) //  Time 3 ray webgl: 1.129
+        console.log('Time 3 ray webgl:', (new Date() - start)/1000) //  Time 3 ray webgl: 1.496
         start = new Date()
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 3, isWebgl: false})
       })
       .then(function (result) {
-        console.log('Time 3 ray without webgl:', (new Date() - start)/1000) // Time 3 ray without webgl: 0.435
+        console.log('Time 3 ray without webgl:', (new Date() - start)/1000) // Time 3 ray without webgl: 0.949
         start = new Date()
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 128, isWebgl: true})
       })
       .then(function (result) {
-        console.log('Time 128 ray webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 144.352
+        console.log('Time 128 ray webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 200.437
         start = new Date()
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 128, isWebgl: false})
       })
       .then(function (result) {
-        console.log('Time 128 ray without webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 334.352
+        console.log('Time 128 ray without webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 188.938
         start = new Date()
         setTimeout(done, 100000) // So chrome does not delete logs
       })
