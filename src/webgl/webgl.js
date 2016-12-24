@@ -54,9 +54,6 @@ function setUp (extendedPoints, numberOfRays) {
   // We will fill with sin and cos later in the setup
   var radiusTexture = createTexture(gl, radiusData, size)
 
-  //var labelData = new Float32Array(size * size * 4)
-  //var labelTexture = createTexture(gl, labelData, size)
-
   var program = gl.createProgram()
   gl.attachShader(program, vertexShader)
   gl.attachShader(program, transformFragmentShader)
@@ -95,23 +92,29 @@ function setUp (extendedPoints, numberOfRays) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 
   const intersectionData = new Float32Array(size * size * 4)
+  var labelData = new Float32Array(4)
+  var rectanglePoint = new Float32Array(4)
   return {
     radiusData,
     intersectionData,
-    //labelData,
     computeIntersection
   }
   // TODO change program
 
+
   // Rectangle, then pi
   function computeIntersection (top, left, bottom, right, pix, piy) {
-    var labelData = [top, left, bottom, right]
-    //gl.bindTexture(gl.TEXTURE_2D, labelTexture)
-    //gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, labelData)
+    labelData[0] = top
+    labelData[1] = left
+    labelData[2] = bottom
+    labelData[3] = right
     gl.uniform4fv(uLabelTexture, labelData)
-    gl.uniform4fv(uRectanglePoint,  [pix, piy, 0, 0])
+    rectanglePoint[0] = pix
+    rectanglePoint[1] = piy
+    gl.uniform4fv(uRectanglePoint,  rectanglePoint)
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
+    //return intersectionData
   }
 }
 

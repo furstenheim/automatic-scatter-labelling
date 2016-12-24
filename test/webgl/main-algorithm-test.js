@@ -34,7 +34,7 @@ describe('Main algorithm', function () {
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 128, isWebgl: true})
       })
       .then(function (result) {
-        console.log('Time 128 ray webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 214.746
+        console.log('Time 128 ray webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 144.352
         start = new Date()
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 128, isWebgl: false})
       })
