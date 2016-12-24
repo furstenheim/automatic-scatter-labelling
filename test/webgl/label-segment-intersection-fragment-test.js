@@ -77,7 +77,7 @@ describe('Label segment Intersection', function () {
         // rectangle at pk + vk
         const pk = test.pk
         const vk = test.vk
-        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y)
+        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y, intersectionData)
         assert.deepEqual(interval(intersectionData[0], intersectionData[1]), test.expected, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
       })
     })
@@ -141,7 +141,7 @@ describe('Label segment Intersection', function () {
         // rectangle at pk + vk
         const pk = test.pk
         const vk = test.vk
-        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y)
+        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y, intersectionData)
         if (test.expected.start !== null) {
           assert.deepEqual(intersectionData[0], test.expected.start, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
           assert.deepEqual(intersectionData[1], test.expected.end, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)

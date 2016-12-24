@@ -103,7 +103,7 @@ function setUp (extendedPoints, numberOfRays) {
 
 
   // Rectangle, then pi
-  function computeIntersection (top, left, bottom, right, pix, piy) {
+  function computeIntersection (top, left, bottom, right, pix, piy, intersectionData) {
     labelData[0] = top
     labelData[1] = left
     labelData[2] = bottom
@@ -114,7 +114,7 @@ function setUp (extendedPoints, numberOfRays) {
     gl.uniform4fv(uRectanglePoint,  rectanglePoint)
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
-    //return intersectionData
+    return intersectionData
   }
 }
 

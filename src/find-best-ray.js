@@ -34,7 +34,7 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, intersecti
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
       const rectangle = extendedPointMethods.translateLabel(pi, segment)
       if (isWebgl) {
-        await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y)
+        await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y, intersectionData)
       }
 
       for (let pk of P0) {

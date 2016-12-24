@@ -31,7 +31,7 @@ describe('Segment ray intersects', function () {
       radiusData[1] = 0
     })
     const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
-    computeIntersection(2, 0, 0, 0)
+    computeIntersection(2, 0, 0, 0, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 4))
     assert.equal(intersectionData[0], -1, 'Parallel lines')
   })
@@ -41,7 +41,7 @@ describe('Segment ray intersects', function () {
       radiusData[1] = 0
     })
     const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
-    computeIntersection(1, 3, 0, 0)
+    computeIntersection(1, 3, 0, 0, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 4))
     assert.equal(intersectionData[0], 1, 'Crossing lines')
   })
