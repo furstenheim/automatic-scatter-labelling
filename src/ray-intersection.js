@@ -20,7 +20,7 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, inters
   var P0 = pointsToLabel.concat(pointsNotToLabel)
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
-    console.log(remainingPoints.length)
+    if (remainingPoints.length % 5 === 0) console.log(remainingPoints.length)
     let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, intersectionData, computeIntersection)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
