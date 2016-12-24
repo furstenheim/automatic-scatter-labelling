@@ -31,7 +31,8 @@
     "mocha": "^3.0.2",
     "sinon": "2.0.0-pre.4",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "worker-loader": "^0.7.1"
   },
   "dependencies": {
     "iterative-greedy": "0.0.2",

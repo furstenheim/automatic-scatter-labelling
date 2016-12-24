@@ -1,3 +1,4 @@
+const path = require('path')
 module.exports = function (config) {
   config.set({
     // ... normal karma configuration
@@ -20,6 +21,18 @@ module.exports = function (config) {
     },
 
       webpack: {
+        module: {
+          loaders: [
+            {
+              test: /\.js$/,
+              include: [path.join(__dirname, 'index'), path.join(__dirname, 'src')],
+              loader: 'babel',
+              query: {
+                plugins: ['transform-async-to-generator', 'meaningful-logs']
+              }
+            }
+          ]
+        }
       // karma watches the test entry points
       // (you don't need to specify the entry option)
       // webpack watches dependencies

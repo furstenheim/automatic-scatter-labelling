@@ -80,7 +80,7 @@ async function render (data, xAxis, yAxis) {
   console.time('algorithm')
   const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 10, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.timeEnd('algorithm')
-  console.log(result)
+  //console.log(result)
   const dots = svg.selectAll('.dot')
     .data(data)
   dots.enter().append('circle')
@@ -122,7 +122,7 @@ async function render (data, xAxis, yAxis) {
     .attr('y', d => -(d.rectangle.top + d.rectangle.bottom) / 2)
   label2.exit()
     .each(function (d, i){
-      console.log(d, i)
+      //console.log(d, i)
     }).remove()
   xAxis.call(d3.axisBottom(x))
   yAxis.call(d3.axisLeft(y))

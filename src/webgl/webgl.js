@@ -3,6 +3,21 @@ module.exports = {setUp}
 const mainFragment = require('./main-fragment').mainFragment
 const utils = require('./utils')
 const _ = require('lodash')
+
+/*onmessage = function (event) {
+  const {radiusData, intersectionData, computeIntersection} = setUp(event.data.extendedPoints, event.data.numberOfRays)
+  onmessage = function (event) {
+    var data = event.data
+    var intersectionData = computeIntersection(data.top, data.left, data.bottom, data.right, data.pix, data.piy, data.intersectionData)
+    postMessage({
+      intersectionData
+    }, [intersectionData.buffer])
+  }
+  postMessage({
+    radiusData,
+    intersectionData
+  }, [radiusData.buffer, intersectionData.buffer])
+}*/
 /**
  *
  * @param extendedPoints array of objects with label and position
