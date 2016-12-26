@@ -14,9 +14,9 @@ describe('Segment ray intersects', function () {
       return `void main (void) {
         bool intersects;
         vec4 point = read_point();
-        vec4 radius = read_radius();
+        vec2 radius = read_radius();
         vec4 rect = read_rectangle();
-        intersects = segment_segment_intersects(vec2(0., 0.), radius.rg, vec2(0., 0.), rect.rg - rect.ba);
+        intersects = segment_segment_intersects(vec2(0., 0.), radius, vec2(0., 0.), rect.rg - rect.ba);
         if (intersects) {
           commit(vec4(1.0, 1.0, 1.0, 1.0));
         } else {

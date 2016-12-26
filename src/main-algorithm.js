@@ -1,4 +1,3 @@
-'use strict'
 module.exports = {mainAlgorithm}
 
 const extendedPointMethods = require('./extended-point-methods')

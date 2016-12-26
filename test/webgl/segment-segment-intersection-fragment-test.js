@@ -14,10 +14,10 @@ describe('Segment ray intersection', function () {
       return `void main (void) {
         vec2 intersection;
         vec4 point = read_point();
-        vec4 radius = read_radius();
+        vec2 radius = read_radius();
         vec4 rect = read_rectangle();
         // Just to make tests easier we pass rect.rg, and rect.ba instead of computing a segment
-        intersection = segment_segment_intersection(point.xy, radius.rg, rect.rg, rect.ba);
+        intersection = segment_segment_intersection(point.xy, radius, rect.rg, rect.ba);
         commit(vec4(intersection, 0., 0.));
       }`
     })

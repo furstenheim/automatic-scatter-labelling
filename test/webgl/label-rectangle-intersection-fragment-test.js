@@ -14,9 +14,9 @@ describe('Label rectangle intersection', function () {
       return `void main (void) {
         vec2 intersection;
         vec4 point = read_point();
-        vec4 radius = read_radius();
+        vec2 radius = read_radius();
         vec4 rect = read_rectangle();
-        intersection = label_rectangle_intersection(rect, point.ba, radius.rg, point.rg);
+        intersection = label_rectangle_intersection(rect, point.ba, radius, point.rg);
         commit(vec4(intersection, 0., 0.));
       }`
     })

@@ -15,7 +15,7 @@ describe('Main algorithm', function () {
     ]
     const result = mainAlgorithm(pointsToLabel)
   })
-  it.only('Performance test', function (done) {
+  it.skip('Performance test', function (done) {
     this.timeout(0)
     console.log('starting test')
     // 40 points

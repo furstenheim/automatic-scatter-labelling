@@ -20,8 +20,8 @@ function mainFragment (size, numberOfRays) {
   vec4 read_point (void) {
     return texture2D(u_points_texture, pos);
   }
-  vec4 read_radius (void) {
-    return texture2D(u_radius_texture, pos);
+  vec2 read_radius (void) {
+    return texture2D(u_radius_texture, pos).rg;
   }
   vec4 read_rectangle (void) {
     return u_label_texture;

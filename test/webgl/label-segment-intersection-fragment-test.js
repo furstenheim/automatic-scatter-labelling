@@ -14,11 +14,11 @@ describe('Label segment Intersection', function () {
       return `void main (void) {
         vec2 intersection;
         vec4 point = read_point();
-        vec4 radius = read_radius();
+        vec2 radius = read_radius();
         vec4 rect = read_rectangle();
         vec4 rect_point = read_rectangle_point();
         vec2 segment = (rect.ar + rect.gb) / 2. - rect_point.rg;
-        intersection = label_segment_intersection(rect_point.xy, segment, point.ba, radius.rg, point.rg);
+        intersection = label_segment_intersection(rect_point.xy, segment, point.ba, radius, point.rg);
         commit(vec4(intersection, 0., 0.));
       }`
     })

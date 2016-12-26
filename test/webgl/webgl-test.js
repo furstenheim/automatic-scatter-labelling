@@ -83,8 +83,8 @@ describe('Main fragment', function () {
     const numberOfRays = 16
     sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
       return `void main (void) {
-         vec4 radius = read_radius();
-         commit(vec4(radius));
+         vec2 radius = read_radius();
+         commit(vec4(radius, 0., 0.));
       }`
     })
     const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)

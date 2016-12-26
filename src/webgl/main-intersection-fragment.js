@@ -3,15 +3,15 @@ module.exports = {mainIntersectionFragment}
 function mainIntersectionFragment (size, numberOfRays) {
   return `void main (void) {
     vec4 point = read_point();
-    vec4 radius = read_radius();
+    vec2 radius = read_radius();
     vec4 rect = read_rectangle();
     vec4 rect_point = read_rectangle_point();
     vec2 segment = (rect.ar + rect.gb) / 2. - rect_point.rg;
 
-    vec2 label_interval = label_rectangle_intersection(rect, point.ba, radius.rg, point.rg);
-    vec2 segment_interval = label_segment_intersection(rect_point.xy, segment, point.ba, radius.rg, point.rg);
-    vec2 ray_interval = ray_rectangle_intersection(rect, radius.rg, point.rg);
-    vec2 ray_segment_interval = ray_segment_intersection(rect_point.xy, segment, point.rg, radius.rg);
+    vec2 label_interval = label_rectangle_intersection(rect, point.ba, radius, point.rg);
+    vec2 segment_interval = label_segment_intersection(rect_point.xy, segment, point.ba, radius, point.rg);
+    vec2 ray_interval = ray_rectangle_intersection(rect, radius, point.rg);
+    vec2 ray_segment_interval = ray_segment_intersection(rect_point.xy, segment, point.rg, radius);
 
     vec2 label_intersection;
     vec2 segment_intersection;
