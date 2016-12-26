@@ -24,7 +24,7 @@ describe('Main algorithm', function () {
     console.time('algorithm 3 rays')
     mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 3, isWebgl: true})
       .then(function (result) {
-        console.log('Time 3 ray webgl:', (new Date() - start)/1000) //  Time 3 ray webgl: 1.496
+        console.log('Time 3 ray webgl:', (new Date() - start)/1000) //  Time 3 ray webgl: 2.109
         start = new Date()
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 3, isWebgl: false})
       })
@@ -34,7 +34,7 @@ describe('Main algorithm', function () {
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 128, isWebgl: true})
       })
       .then(function (result) {
-        console.log('Time 128 ray webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 200.437
+        console.log('Time 128 ray webgl :', (new Date() - start)/1000) // Time 128 ray webgl : 142.757
         start = new Date()
         return mainAlgorithm(pointsToLabel, {NUMBER_OF_RAYS: 128, isWebgl: false})
       })

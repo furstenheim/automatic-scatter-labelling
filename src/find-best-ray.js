@@ -30,16 +30,22 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra
   P.sort((p1, p2) => p2.availableMeasure - p1.availableMeasure )
   for (let pi of P) {
     let mindik = _.minBy(pi.rays, 'minimum').minimum
+    if (isWebgl) {
+      pi.rays.forEach(function (rij) {
+        let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
+        const rectangle = extendedPointMethods.translateLabel(pi, segment)
+        rectangleData[rij.selfIndex] = rectangle.top
+        rectangleData[rij.selfIndex + 1] = rectangle.left
+        rectangleData[rij.selfIndex + 2] = rectangle.bottom
+        rectangleData[rij.selfIndex + 3] = rectangle.right
+      });
+      ({intersectionData, rectangleData} = await computeIntersection(rectangleData, pi.position.x, pi.position.y, intersectionData))
+    }
     let R = pi.rays.filter(rij => rij.minimum < mindik + TOLERANCE)
     rijloop: for (let rij of R) {
       let Vij = []
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
       const rectangle = extendedPointMethods.translateLabel(pi, segment)
-      if (isWebgl) {
-        Object.assign(rectangleData, [rectangle.top, rectangle.left, rectangle.bottom, rectangle.right]);
-        ({intersectionData, rectangleData} = await computeIntersection(rectangleData, pi.position.x, pi.position.y, intersectionData))
-      }
-
       for (let pk of P0) {
         if (pk === pi) continue
         // No sense to wait for the intersection if rbest is defined
@@ -51,7 +57,7 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra
           let labelIntersection
           let segmentIntersection
           if (isWebgl) {
-            const index = rkl.index
+            const index = rkl.index + rij.selfIndex * 4
             labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
             segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
           } else {

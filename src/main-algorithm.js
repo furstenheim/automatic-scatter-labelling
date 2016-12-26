@@ -66,6 +66,7 @@ function computeRays (extendedPoints) {
     for (let j = 0; j < NUMBER_OF_RAYS; j++) {
       pi.rays.push( {
         index: i*NUMBER_OF_RAYS * NUMBER_OF_RAYS *4 + j * NUMBER_OF_RAYS * 4,
+        selfIndex: j,
         vector : {
           x: Math.sin(2 * Math.PI * j / NUMBER_OF_RAYS),
           y: Math.cos(2 * Math.PI * j / NUMBER_OF_RAYS)
