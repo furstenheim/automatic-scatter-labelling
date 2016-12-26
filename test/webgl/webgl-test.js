@@ -102,22 +102,26 @@ Object.assign(rectangleData, [5, 6, 7, 8, ])
   })
   it('Read from rectangle', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
-    const numberOfRays = 16
+    const numberOfRays = 12
     sandbox.stub(mainIntersectionFragment, 'mainIntersectionFragment', function () {
       return `void main (void) {
          vec4 rect = read_rectangle();
          commit(vec4(rect));
+         //commit(vec4(mod(get_index(), ${numberOfRays}.) + 1., 0., 0., 0.));
       }`
     })
     const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
     Object.assign(rectangleData, [5, 6, 7, 8])
     computeIntersection(rectangleData, 0, 0, intersectionData)
-    console.log(intersectionData.slice(0, 10))
+    console.log(intersectionData.slice(4 * numberOfRays * 11, 4 * numberOfRays * 11+ 48))
     assert.equal(intersectionData[0], 5, 'main intersection was ran')
     assert.equal(intersectionData[1], 6)
-    assert.equal(intersectionData[4], 5)
-    console.log(intersectionData[4])
+    assert.equal(intersectionData[4 * numberOfRays], 5)
+    assert.equal(intersectionData[4 * numberOfRays * 2], 5)
+    console.log(Math.sqrt(intersectionData.length), numberOfRays)
+    assert.equal(intersectionData[4 * numberOfRays * numberOfRays], 5, 'Over the first line')
+    assert.equal(intersectionData.findIndex((v, i) => (i % 4 * numberOfRays) !== 0 && v === 5 ), -1, 'Only rectangle in first coordinate')
   })
   it('Read from rectangle_point', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]

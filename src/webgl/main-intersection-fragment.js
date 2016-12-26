@@ -7,7 +7,6 @@ function mainIntersectionFragment (size, numberOfRays) {
     vec4 rect = read_rectangle();
     vec4 rect_point = read_rectangle_point();
     vec2 segment = (rect.ar + rect.gb) / 2. - rect_point.rg;
-
     vec2 label_interval = label_rectangle_intersection(rect, point.ba, radius, point.rg);
     vec2 segment_interval = label_segment_intersection(rect_point.xy, segment, point.ba, radius, point.rg);
     vec2 ray_interval = ray_rectangle_intersection(rect, radius, point.rg);
