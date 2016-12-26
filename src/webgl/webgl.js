@@ -4,20 +4,7 @@ const mainFragment = require('./main-fragment').mainFragment
 const utils = require('./utils')
 const _ = require('lodash')
 
-/*onmessage = function (event) {
-  const {radiusData, intersectionData, computeIntersection} = setUp(event.data.extendedPoints, event.data.numberOfRays)
-  onmessage = function (event) {
-    var data = event.data
-    var intersectionData = computeIntersection(data.top, data.left, data.bottom, data.right, data.pix, data.piy, data.intersectionData)
-    postMessage({
-      intersectionData
-    }, [intersectionData.buffer])
-  }
-  postMessage({
-    radiusData,
-    intersectionData
-  }, [radiusData.buffer, intersectionData.buffer])
-}*/
+
 /**
  *
  * @param extendedPoints array of objects with label and position
@@ -27,7 +14,7 @@ const _ = require('lodash')
 function setUp (extendedPoints, numberOfRays) {
   const gl = createGl()
   // For each extended point and each direction we save four data
-  const size = computeTexturesSize(extendedPoints.length * numberOfRays)
+  const size = computeTexturesSize(extendedPoints.length * numberOfRays * numberOfRays)
 
   // Four corners of the square
   var positionBuffer = newBuffer(gl, [ -1, -1, 1, -1, 1, 1, -1, 1 ]);
@@ -40,11 +27,13 @@ function setUp (extendedPoints, numberOfRays) {
   for (let i = 0; i < extendedPoints.length; i++) {
     const point = extendedPoints[i]
     for (let j = 0; j < numberOfRays; j++) {
-      const index = numberOfRays * i * 4 + j * 4
-      pointsData[index] = point.position.x
-      pointsData[index + 1] = point.position.y
-      pointsData[index + 2] = point.label.height
-      pointsData[index + 3] = point.label.width
+      for (let k = 0; k < numberOfRays; k++) {
+        const index = numberOfRays * numberOfRays * i * 4 + j * 4 * numberOfRays + k * 4
+        pointsData[index] = point.position.x
+        pointsData[index + 1] = point.position.y
+        pointsData[index + 2] = point.label.height
+        pointsData[index + 3] = point.label.width
+      }
     }
   }
   var pointsTexture = createTexture(gl, pointsData, size)
@@ -54,17 +43,21 @@ function setUp (extendedPoints, numberOfRays) {
   // We will fill with sin and cos later in the setup
   var radiusTexture = createTexture(gl, radiusData, size)
 
+  const rectangleData = new Float32Array(size * size * 4)
+  const rectangleTexture = createTexture(gl, rectangleData, size)
+
   var program = gl.createProgram()
   gl.attachShader(program, vertexShader)
   gl.attachShader(program, transformFragmentShader)
   gl.linkProgram(program)
 
-  var uPointsTexture = gl.getUniformLocation(program, 'u_points_texture')
-  var uRadiusTexture = gl.getUniformLocation(program, 'u_radius_texture')
-  var uLabelTexture = gl.getUniformLocation(program, 'u_label_texture')
-  var uRectanglePoint = gl.getUniformLocation(program, 'u_rect_point')
-  var aPosition = gl.getAttribLocation(program, 'position')
-  var aTexture = gl.getAttribLocation(program, 'texture')
+  const uPointsTexture = gl.getUniformLocation(program, 'u_points_texture')
+  const uRadiusTexture = gl.getUniformLocation(program, 'u_radius_texture')
+  const uLabelTexture = gl.getUniformLocation(program, 'u_label_texture')
+  const uRectangleTexture = gl.getUniformLocation(program, 'u_rectangle_texture')
+  const uRectanglePoint = gl.getUniformLocation(program, 'u_rect_point')
+  const aPosition = gl.getAttribLocation(program, 'position')
+  const aTexture = gl.getAttribLocation(program, 'texture')
 
   gl.useProgram(program)
   gl.viewport(0, 0, size, size)
@@ -81,6 +74,10 @@ function setUp (extendedPoints, numberOfRays) {
   gl.bindTexture(gl.TEXTURE_2D, radiusTexture)
   gl.uniform1i(uRadiusTexture, 1)
 
+  gl.activeTexture(gl.TEXTURE2)
+  gl.bindTexture(gl.TEXTURE_2D, rectangleTexture)
+  gl.uniform1i(uRectangleTexture, 2)
+
   gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer)
 
   gl.enableVertexAttribArray(aTexture)
@@ -94,6 +91,8 @@ function setUp (extendedPoints, numberOfRays) {
   const intersectionData = new Float32Array(size * size * 4)
   var labelData = new Float32Array(4)
   var rectanglePoint = new Float32Array(4)
+
+  gl.bindTexture(gl.TEXTURE_2D, rectangleTexture)
   return {
     radiusData,
     intersectionData,
@@ -104,11 +103,12 @@ function setUp (extendedPoints, numberOfRays) {
 
   // Rectangle, then pi
   function computeIntersection (top, left, bottom, right, pix, piy, intersectionData) {
-    labelData[0] = top
-    labelData[1] = left
-    labelData[2] = bottom
-    labelData[3] = right
-    gl.uniform4fv(uLabelTexture, labelData)
+    rectangleData[0] = top
+    rectangleData[1] = left
+    rectangleData[2] = bottom
+    rectangleData[3] = right
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, rectangleData)
+    //gl.uniform4fv(uLabelTexture, labelData)
     rectanglePoint[0] = pix
     rectanglePoint[1] = piy
     gl.uniform4fv(uRectanglePoint,  rectanglePoint)

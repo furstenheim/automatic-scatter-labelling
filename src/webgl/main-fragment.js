@@ -14,9 +14,13 @@ function mainFragment (size, numberOfRays) {
   float infinity = 1./0.0000001;
   uniform sampler2D u_points_texture;
   uniform sampler2D u_radius_texture;
+  uniform sampler2D u_rectangle_texture;
   uniform vec4 u_label_texture;
   uniform vec4 u_rect_point;
   varying vec2 pos;
+  float get_index (void) {
+    return (pos.x * ${size * 2}. -1.)/2. + ${size * 2}.0 * (pos.y * ${size * 2}. - 1.)/2.;
+  }
   vec4 read_point (void) {
     return texture2D(u_points_texture, pos);
   }
@@ -24,7 +28,7 @@ function mainFragment (size, numberOfRays) {
     return texture2D(u_radius_texture, pos).rg;
   }
   vec4 read_rectangle (void) {
-    return u_label_texture;
+    return texture2D(u_rectangle_texture, vec2(-1., -1.));
   }
   vec4 read_rectangle_point (void) {
     return u_rect_point;

@@ -25,12 +25,12 @@ describe('Set up', function () {
     assert.equal(radiusData[3], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[6], 0, 'Only compute first two coordinates')
     assert.equal(radiusData[7], 0, 'Only compute first two coordinates')
-    assert.equal(radiusData[0], radiusData[numberOfRays * 4], 'Radius data is the same for all points')
+    assert.equal(radiusData[0], radiusData[numberOfRays * numberOfRays * 4], 'Radius data is the same for all points')
     assert.isAtMost(Math.abs(Math.pow(radiusData[0], 2) + Math.pow(radiusData[1], 2)) -  1.0, 0.001, 'Pithagoras')
     assert.isAtMost(Math.abs(radiusData[0] - Math.sin(2 * Math.PI * 0 / numberOfRays)), 0.001, 'It should be sin')
-    assert.isAtMost(Math.abs(radiusData[4] - Math.sin(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be sin')
+    assert.isAtMost(Math.abs(radiusData[4 * numberOfRays] - Math.sin(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be sin')
     assert.isAtMost(Math.abs(radiusData[1] - Math.cos(2 * Math.PI * 0 / numberOfRays)), 0.001, 'It should be cos')
-    assert.isAtMost(Math.abs(radiusData[5] -  Math.cos(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be cos')
+    assert.isAtMost(Math.abs(radiusData[1 + 4 * numberOfRays] -  Math.cos(2 * Math.PI * 1 / numberOfRays)), 0.001, 'It should be cos')
 
     console.log(radiusData.slice(0, 32))
   })
@@ -76,7 +76,7 @@ describe('Main fragment', function () {
     assert.equal(intersectionData[1], 2, 'Point y')
     assert.equal(intersectionData[3], 1, 'Point width')
     assert.equal(intersectionData[2], 3, 'Point height')
-    assert.equal(intersectionData[4 * numberOfRays], 5, 'Second point x')
+    assert.equal(intersectionData[4 * numberOfRays * numberOfRays], 5, 'Second point x')
   })
   it('Read from radius', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
@@ -111,6 +111,9 @@ describe('Main fragment', function () {
     computeIntersection(5, 6, 7, 8, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 5, 'main intersection was ran')
+    assert.equal(intersectionData[1], 6)
+    assert.equal(intersectionData[4], 5)
+    console.log(intersectionData[4])
   })
   it('Read from rectangle_point', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]
@@ -126,6 +129,7 @@ describe('Main fragment', function () {
     computeIntersection(5, 6, 7, 8, 9, 10, intersectionData)
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 9, 'main intersection was ran')
+
   })
   it('Read twice from rectangle', function () {
     const extendedPoints = [{position: {x: 1, y: 2}, label: {width: 1, height: 3}}, {position: {x: 5, y: 6}, label: {width: 4, height: 4}}]

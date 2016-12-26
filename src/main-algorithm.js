@@ -63,15 +63,15 @@ function mainAlgorithm (extendedPoints, params = {}) {
 }
 
 function computeRays (extendedPoints) {
-  for (let j = 0; j < extendedPoints.length; j++) {
-    let pi = extendedPoints[j]
+  for (let i = 0; i < extendedPoints.length; i++) {
+    let pi = extendedPoints[i]
     pi.rays = []
-    for (let i = 0; i < NUMBER_OF_RAYS; i++) {
+    for (let j = 0; j < NUMBER_OF_RAYS; j++) {
       pi.rays.push( {
-        index: j*NUMBER_OF_RAYS*4 + i * 4,
+        index: i*NUMBER_OF_RAYS * NUMBER_OF_RAYS *4 + j * NUMBER_OF_RAYS * 4,
         vector : {
-          x: Math.sin(2 * Math.PI * i / NUMBER_OF_RAYS),
-          y: Math.cos(2 * Math.PI * i / NUMBER_OF_RAYS)
+          x: Math.sin(2 * Math.PI * j / NUMBER_OF_RAYS),
+          y: Math.cos(2 * Math.PI * j / NUMBER_OF_RAYS)
         }
       })
     }
