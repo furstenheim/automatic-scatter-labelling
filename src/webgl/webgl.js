@@ -44,6 +44,7 @@ function setUp (extendedPoints, numberOfRays) {
   var radiusTexture = createTexture(gl, radiusData, size)
 
   const rectangleData = new Float32Array(size * size * 4)
+  const rectangleData2 = new Float32Array(size * size * 4)
   const rectangleTexture = createTexture(gl, rectangleData, size)
 
   var program = gl.createProgram()
@@ -89,15 +90,17 @@ function setUp (extendedPoints, numberOfRays) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 
   const intersectionData = new Float32Array(size * size * 4)
-  var labelData = new Float32Array(4)
+  const intersectionData2 = new Float32Array(size * size * 4)
   var rectanglePoint = new Float32Array(4)
 
   gl.bindTexture(gl.TEXTURE_2D, rectangleTexture)
   return {
     radiusData,
     intersectionData,
+    intersectionData2,
     computeIntersection,
-    rectangleData
+    rectangleData,
+    rectangleData2
   }
   // TODO change program
 
