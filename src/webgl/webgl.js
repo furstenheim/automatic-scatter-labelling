@@ -96,7 +96,8 @@ function setUp (extendedPoints, numberOfRays) {
   return {
     radiusData,
     intersectionData,
-    computeIntersection
+    computeIntersection,
+    rectangleData
   }
   // TODO change program
 
@@ -114,7 +115,7 @@ function setUp (extendedPoints, numberOfRays) {
     gl.uniform4fv(uRectanglePoint,  rectanglePoint)
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
-    return intersectionData
+    return {intersectionData, rectangleData}
   }
 }
 

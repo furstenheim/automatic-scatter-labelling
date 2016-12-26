@@ -30,7 +30,7 @@ if (typeof postMessage !== 'undefined') {
             intersectionData
           }, [intersectionData.buffer])
           onmessage = function (event) {
-            resolve(event.data.intersectionData)
+            resolve({intersectionData: event.data.intersectionData})
           }
         })
       }

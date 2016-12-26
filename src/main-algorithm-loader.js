@@ -20,7 +20,7 @@ function mainAlgorithm (extendedPoints, params = {}) {
         if (data.type === 'end') {
           return resolve(data.result)
         } else {
-          const intersectionData = computeIntersection(data.top, data.left, data.bottom, data.right, data.pix, data.piy, data.intersectionData)
+          const {intersectionData} = computeIntersection(data.top, data.left, data.bottom, data.right, data.pix, data.piy, data.intersectionData)
           algorithm.postMessage({
             intersectionData
           }, [intersectionData.buffer])
