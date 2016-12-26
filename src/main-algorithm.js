@@ -16,25 +16,22 @@ if (typeof postMessage !== 'undefined') {
     var computeIntersection
     var intersectionData
     if (params.isWebgl) {
-      intersectionData = data.intersectionData
-      computeIntersection = function (top, left, bottom, right, pix, piy, intersectionData) {
+      computeIntersection = function (rectangleData, pix, piy, intersectionData) {
         return new Promise(function (resolve, reject) {
           postMessage({
             type: 'computeIntersection',
-            top,
-            left,
-            bottom,
-            right,
+            rectangleData,
             pix,
             piy,
             intersectionData
-          }, [intersectionData.buffer])
+          }, [rectangleData.buffer, intersectionData.buffer])
           onmessage = function (event) {
-            resolve({intersectionData: event.data.intersectionData})
+            resolve({intersectionData: event.data.intersectionData, rectangleData: event.data.rectangleData})
           }
         })
       }
-      params.intersectionData = intersectionData
+      params.intersectionData = data.intersectionData
+      params.rectangleData = data.rectangleData
       params.computeIntersection = computeIntersection
     }
     mainAlgorithm(extendedPoints, params)
@@ -52,14 +49,14 @@ function mainAlgorithm (extendedPoints, params = {}) {
   const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
   const isWebgl = params.isWebgl
   computeRays(extendedPoints)
-  var intersectionData, computeIntersection
+  var intersectionData, computeIntersection, rectangleData
   if (isWebgl && !params.intersectionData) {
-    ({intersectionData, computeIntersection} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
+    ({intersectionData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
   } else if (isWebgl && params.intersectionData) {
-    ({intersectionData, computeIntersection} = params)
+    ({intersectionData, computeIntersection, rectangleData} = params)
   }
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
-  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, intersectionData, computeIntersection), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
+  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData}), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
 }
 
 function computeRays (extendedPoints) {

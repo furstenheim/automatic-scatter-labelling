@@ -13,7 +13,9 @@ const raySegmentIntersection = require('./ray-segment-intersection').raySegmentI
 const clone = require('lodash.clone')
 
 // TODO use sets
-async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, intersectionData, computeIntersection) {
+async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra) {
+  let {intersectionData, rectangleData} = webglExtra
+  const computeIntersection = webglExtra.computeIntersection
   const rejectedPoints = []
   // P in the article
   var remainingPoints = pointsToLabel
@@ -21,10 +23,12 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, inters
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
     if (remainingPoints.length % 5 === 0) console.log(remainingPoints.length)
-    let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, intersectionData, computeIntersection)
+    webglExtra = {computeIntersection, intersectionData, rectangleData}
+    let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, webglExtra)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
     intersectionData = bestRay.intersectionData
+    rectangleData = bestRay.rectangleData
     if (rij === undefined) {
       // It could only happen that we get rij undefined in the first iteration
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {
@@ -42,7 +46,8 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, inters
     pointsLabeled.push(pi)
     if (isWebgl) {
       const rectangle = pi.rectangle;
-      ({intersectionData} = await computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.position.x, pi.position.y, intersectionData))
+      Object.assign(rectangleData, [rectangle.top, rectangle.left, rectangle.bottom, rectangle.right]);
+      ({intersectionData, rectangleData} = await computeIntersection(rectangleData, pi.position.x, pi.position.y, intersectionData))
     }
     for (let pk of P0) {
       for (let rkl of pk.rays) {

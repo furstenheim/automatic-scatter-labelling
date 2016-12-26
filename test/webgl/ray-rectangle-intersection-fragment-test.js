@@ -33,9 +33,10 @@ describe('Ray rectangle Intersection', function () {
       radiusData[1] = radius.y
     })
     const pi ={x: 1286.8666666666668, y: -262.72727272727263}
-    const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     const rectangle = {"height":24.5,"width":49.9375,"top":-227.72727272727263,"bottom":-252.22727272727263,"left":1261.8979166666668,"right":1311.8354166666668}
-    computeIntersection(rectangle.top, rectangle.left, rectangle.bottom, rectangle.right, pi.x, pi.y, intersectionData)
+    Object.assign(rectangleData, [rectangle.top, rectangle.left, rectangle.bottom, rectangle.right])
+    computeIntersection(rectangleData, pi.x, pi.y, intersectionData)
     rectangle.width = rectangle.right - rectangle.left
     rectangle.height = rectangle.top - rectangle.bottom
     console.log(intersectionData.slice(0, 2), labelRectangleIntersection(rectangle,extendedPoints[0].label, radius,  extendedPoints[0].position))

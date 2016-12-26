@@ -103,11 +103,7 @@ function setUp (extendedPoints, numberOfRays) {
 
 
   // Rectangle, then pi
-  function computeIntersection (top, left, bottom, right, pix, piy, intersectionData) {
-    rectangleData[0] = top
-    rectangleData[1] = left
-    rectangleData[2] = bottom
-    rectangleData[3] = right
+  function computeIntersection (rectangleData, pix, piy, intersectionData) {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, rectangleData)
     //gl.uniform4fv(uLabelTexture, labelData)
     rectanglePoint[0] = pix

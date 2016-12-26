@@ -39,7 +39,7 @@ describe('Set up', function () {
     const numberOfRays = 16
     var c = document.querySelectorAll('canvas')
     assert.equal(c.length, 0)
-    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     c = document.querySelectorAll('canvas')
     assert.equal(c.length, 0)
   })
@@ -54,9 +54,10 @@ describe('Main fragment', function () {
          commit(vec4(2., 1., 0., 0.));
       }`
     })
-    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
-    computeIntersection(0, 0, 0, 0, 0, 0, intersectionData)
+    Object.assign(rectangleData, [0, 0, 0, 0])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     assert.equal(intersectionData[0], 2, 'main intersection was ran')
   })
   it('Read from point', function () {
@@ -68,9 +69,10 @@ describe('Main fragment', function () {
          commit(vec4(point));
       }`
     })
-    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
-    computeIntersection(5, 6, 7, 8, 0, 0, intersectionData)
+Object.assign(rectangleData, [5, 6, 7, 8, ])
+    computeIntersection(rectangleData,0, 0, intersectionData)
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 1, 'Point x')
     assert.equal(intersectionData[1], 2, 'Point y')
@@ -87,9 +89,10 @@ describe('Main fragment', function () {
          commit(vec4(radius, 0., 0.));
       }`
     })
-    const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
-    computeIntersection(5, 6, 7, 8, 0, 0, intersectionData)
+    Object.assign(rectangleData, [5, 6, 7, 8])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], radiusData[0], 'Reading from radius')
     assert.equal(intersectionData[1], radiusData[1], 'Reading from radius')
@@ -106,9 +109,10 @@ describe('Main fragment', function () {
          commit(vec4(rect));
       }`
     })
-    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
-    computeIntersection(5, 6, 7, 8, 0, 0, intersectionData)
+    Object.assign(rectangleData, [5, 6, 7, 8])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 5, 'main intersection was ran')
     assert.equal(intersectionData[1], 6)
@@ -124,9 +128,10 @@ describe('Main fragment', function () {
          commit(vec4(rect));
       }`
     })
-    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
-    computeIntersection(5, 6, 7, 8, 9, 10, intersectionData)
+    Object.assign(rectangleData, [5, 6, 7, 8])
+    computeIntersection(rectangleData, 9, 10, intersectionData)
     console.log(intersectionData.slice(0, 10))
     assert.equal(intersectionData[0], 9, 'main intersection was ran')
 
@@ -140,11 +145,13 @@ describe('Main fragment', function () {
          commit(vec4(rect));
       }`
     })
-    const {intersectionData, labelData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+    const {intersectionData, labelData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
     assert.equal(intersectionData[0], 0, 'No intersection is computed on set up')
-    computeIntersection(5, 6, 7, 8, 0, 0, intersectionData)
+    Object.assign(rectangleData, [5, 6, 7, 8])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     assert.equal(intersectionData[0], 5, 'main intersection was ran')
-    computeIntersection(10, 6, 7, 8, 0, 0, intersectionData)
+    Object.assign(rectangleData, [10, 6, 7, 8])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     assert.equal(intersectionData[0], 10, 'main intersection was ran')
   })
 })

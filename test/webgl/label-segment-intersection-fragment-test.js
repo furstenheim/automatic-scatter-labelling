@@ -73,11 +73,12 @@ describe('Label segment Intersection', function () {
           radiusData[0] = test.vi.x
           radiusData[1] = test.vi.y
         })
-        const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+        const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
         // rectangle at pk + vk
         const pk = test.pk
         const vk = test.vk
-        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y, intersectionData)
+        Object.assign(rectangleData, [pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x])
+        computeIntersection(rectangleData, pk.x, pk.y, intersectionData)
         assert.deepEqual(interval(intersectionData[0], intersectionData[1]), test.expected, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
       })
     })
@@ -137,11 +138,12 @@ describe('Label segment Intersection', function () {
           radiusData[0] = test.vi.x
           radiusData[1] = test.vi.y
         })
-        const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
+        const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
         // rectangle at pk + vk
         const pk = test.pk
         const vk = test.vk
-        computeIntersection(pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x, pk.x, pk.y, intersectionData)
+        Object.assign(rectangleData, [pk.y + vk.y, pk.x + vk.x, pk.y + vk.y, pk.x + vk.x])
+        computeIntersection(rectangleData, pk.x, pk.y, intersectionData)
         if (test.expected.start !== null) {
           assert.deepEqual(intersectionData[0], test.expected.start, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)
           assert.deepEqual(intersectionData[1], test.expected.end, `intersection ${intersectionData[0]}, ${intersectionData[1]} <-> ${test.expected.start} ${test.expected.end}`)

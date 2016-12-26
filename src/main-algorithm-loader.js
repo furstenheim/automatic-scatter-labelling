@@ -7,23 +7,25 @@ function mainAlgorithm (extendedPoints, params = {}) {
     const NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
     const isWebgl = params.isWebgl
     const algorithm = new MainAlgorithmWorker
-    let intersectionData, computeIntersection
+    let intersectionData, computeIntersection, rectangleData
     if (isWebgl) {
-      ({intersectionData, computeIntersection} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
+      ({intersectionData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
       algorithm.postMessage({
         extendedPoints,
         params,
-        intersectionData
-      }, [intersectionData.buffer])
+        intersectionData,
+        rectangleData
+      }, [intersectionData.buffer, rectangleData.buffer])
       algorithm.onmessage = function (event) {
         var data = event.data
         if (data.type === 'end') {
           return resolve(data.result)
         } else {
-          const {intersectionData} = computeIntersection(data.top, data.left, data.bottom, data.right, data.pix, data.piy, data.intersectionData)
+          const {intersectionData, rectangleData} = computeIntersection(data.rectangleData, data.pix, data.piy, data.intersectionData)
           algorithm.postMessage({
-            intersectionData
-          }, [intersectionData.buffer])
+            intersectionData,
+            rectangleData
+          }, [intersectionData.buffer, rectangleData.buffer])
         }
       }
     } else {

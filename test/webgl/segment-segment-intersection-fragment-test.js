@@ -28,8 +28,9 @@ describe('Segment ray intersection', function () {
       radiusData[0] = 0
       radiusData[1] = 1
     })
-    const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
-    computeIntersection(3, 0, 1, 0, 0, 0, intersectionData)
+    const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
+    Object.assign(rectangleData, [3, 0, 1, 0])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 4))
     assert.equal(intersectionData[0], -1)
     assert.equal(intersectionData[1], -3)
@@ -40,8 +41,9 @@ describe('Segment ray intersection', function () {
       radiusData[0] = 1
       radiusData[1] = 0
     })
-    const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
-    computeIntersection(0, 1, 0, 1, 0, 0, intersectionData)
+    const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
+    Object.assign(rectangleData, [0, 1, 0, 1])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 4))
     assert.equal(intersectionData[0], -3)
     assert.equal(intersectionData[1], -1)
@@ -52,8 +54,9 @@ describe('Segment ray intersection', function () {
       radiusData[0] = 1
       radiusData[1] = 1
     })
-    const {intersectionData, labelData, radiusData, computeIntersection} = webgl.setUp(extendedPoints, numberOfRays)
-    computeIntersection(3, 0, 1, 0, 0 , 0, intersectionData)
+    const {intersectionData, labelData, radiusData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, numberOfRays)
+    Object.assign(rectangleData, [3, 0, 1, 0])
+    computeIntersection(rectangleData, 0, 0, intersectionData)
     console.log(intersectionData.slice(0, 4))
     assert.equal(intersectionData[0], -1)
     assert.equal(intersectionData[1], -3)
