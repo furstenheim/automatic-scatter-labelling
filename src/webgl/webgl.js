@@ -44,7 +44,6 @@ function setUp (extendedPoints, numberOfRays) {
   var radiusTexture = createTexture(gl, radiusData, size)
 
   const rectangleData = new Float32Array(size * size * 4)
-  const rectangleData2 = new Float32Array(size * size * 4)
   const rectangleTexture = createTexture(gl, rectangleData, size)
 
   var program = gl.createProgram()
@@ -90,17 +89,16 @@ function setUp (extendedPoints, numberOfRays) {
   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
 
   const intersectionData = new Float32Array(size * size * 4)
-  const intersectionData2 = new Float32Array(size * size * 4)
   var rectanglePoint = new Float32Array(4)
 
   gl.bindTexture(gl.TEXTURE_2D, rectangleTexture)
   return {
     radiusData,
     intersectionData,
-    intersectionData2,
     computeIntersection,
+    computeIntersectionAsync,
+    readIntersection,
     rectangleData,
-    rectangleData2
   }
   // TODO change program
 
@@ -115,6 +113,19 @@ function setUp (extendedPoints, numberOfRays) {
     redraw(gl)
     gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
     return {intersectionData, rectangleData}
+  }
+  function readIntersection (intersectionData) {
+    gl.readPixels(0, 0, size, size, gl.RGBA, gl.FLOAT, intersectionData)
+    return {intersectionData}
+  }
+  function computeIntersectionAsync (rectangleData, pix, piy) {
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.FLOAT, rectangleData)
+    //gl.uniform4fv(uLabelTexture, labelData)
+    rectanglePoint[0] = pix
+    rectanglePoint[1] = piy
+    gl.uniform4fv(uRectanglePoint,  rectanglePoint)
+    redraw(gl)
+    return {rectangleData}
   }
 }
 
