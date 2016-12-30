@@ -14,7 +14,7 @@ const clone = require('lodash.clone')
 
 // TODO use sets
 async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra) {
-  let {intersectionData, rectangleData, intersectionData2, rectangleData2} = webglExtra
+  let {intersectionData, rectangleData} = webglExtra
   const computeIntersection = webglExtra.computeIntersection
   const rejectedPoints = []
   // P in the article
@@ -23,14 +23,12 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglE
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
     if (remainingPoints.length % 5 === 0) console.log(remainingPoints.length)
-    webglExtra = {computeIntersection, intersectionData, rectangleData, intersectionData2, rectangleData2}
+    webglExtra = {computeIntersection, intersectionData, rectangleData}
     let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, webglExtra)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
     intersectionData = bestRay.intersectionData
     rectangleData = bestRay.rectangleData
-    intersectionData2 = bestRay.intersectionData2
-    rectangleData2 = bestRay.rectangleData2
     if (rij === undefined) {
       // It could only happen that we get rij undefined in the first iteration
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {

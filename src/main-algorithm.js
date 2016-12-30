@@ -14,6 +14,7 @@ if (typeof postMessage !== 'undefined') {
     var extendedPoints = data.extendedPoints
     var params = data.params
     var computeIntersection
+    var intersectionData
     if (params.isWebgl) {
       computeIntersection = function (rectangleData, pix, piy, intersectionData) {
         return new Promise(function (resolve, reject) {
@@ -30,8 +31,6 @@ if (typeof postMessage !== 'undefined') {
         })
       }
       params.intersectionData = data.intersectionData
-      params.intersectionData2 = data.intersectionData2
-      params.rectangleData2 = data.rectangleData2
       params.rectangleData = data.rectangleData
       params.computeIntersection = computeIntersection
     }
@@ -50,15 +49,14 @@ function mainAlgorithm (extendedPoints, params = {}) {
   const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
   const isWebgl = params.isWebgl
   computeRays(extendedPoints)
-  var intersectionData, computeIntersection, rectangleData, intersectionData2, rectangleData2
+  var intersectionData, computeIntersection, rectangleData
   if (isWebgl && !params.intersectionData) {
-    // TODO add intersection data 2 and rectangle data 2
     ({intersectionData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
   } else if (isWebgl && params.intersectionData) {
-    ({intersectionData, computeIntersection, rectangleData, intersectionData2, rectangleData2} = params)
+    ({intersectionData, computeIntersection, rectangleData} = params)
   }
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
-  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData, intersectionData2, rectangleData2}), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
+  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData}), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
 }
 
 function computeRays (extendedPoints) {
