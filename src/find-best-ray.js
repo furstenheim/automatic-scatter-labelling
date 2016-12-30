@@ -16,8 +16,8 @@ const utils = require('./utils')
 const TOLERANCE = 2 // pixels
 
 async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra) {
-  let {intersectionData, rectangleData} = webglExtra
-  const {computeIntersection, readIntersection, computeIntersectionAsync} = webglExtra
+  let {intersectionData, rectangleData, rectangleData2, intersectionData2} = webglExtra
+  const computeIntersection = webglExtra.computeIntersection
   // We follow the article page 4 Algorithm 1
   var P = pointsToLabel
   var P0 = pointsNotToLabel.concat(pointsToLabel)
@@ -29,71 +29,65 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra
   P0.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
   P.forEach(p=> extendedPointMethods.updateMinima(p))
   P.sort((p1, p2) => p2.availableMeasure - p1.availableMeasure )
-  const gpuCompute = csp.chan(1)
   const gpu2cpu = csp.chan(1)
   const gpu2gpu = csp.chan(1)
-  const cpu2gpu = csp.chan(1)
   // Is there a better way to get notified at the end of a coroutine? Like q.async
   const gpuPromise = (function () {
     return new Promise(function (resolve) {
-      csp.go(computeInGPU, [resolve])
-    })
-  })()
-  const gpuReadPromise = (function () {
-    return new Promise(function (resolve) {
-      csp.go(readFromGPU, [resolve])
+      csp.go(computeInGPU, [gpu2gpu, gpu2cpu, resolve])
     })
   })()
   const cpuPromise = (function () {
     return new Promise(function (resolve) {
-      csp.go(computeInCPU, [resolve])
+      csp.go(computeInCPU, [gpu2cpu, resolve])
     })
   })()
-  await Promise.all([gpuPromise, gpuReadPromise, cpuPromise])
-  gpuCompute.close()
+  await Promise.all([gpuPromise, cpuPromise])
   gpu2cpu.close()
   gpu2gpu.close()
-  cpu2gpu.close()
   // We need to return intersectionData because the reference has been neutered in find ray intersection
-  return {rbest: rbest, pbest: pbest, intersectionData, rectangleData}
+  return {rbest: rbest, pbest: pbest, intersectionData, rectangleData, intersectionData2, rectangleData2}
 
-  function * computeInGPU (callback) {
-    let firstRun = true
+  function * computeInGPU (gpu2gpu, gpu2cpu, callback) {
+    let intersectionBuffer, rectangleBuffer
+    let i = 0
     for (let pi of P) {
+      i++
+      // Get buffer
+      if (i % 2) {
+        intersectionBuffer = intersectionData
+        rectangleBuffer = rectangleData
+      } else {
+        intersectionBuffer = intersectionData2
+        rectangleBuffer = rectangleData2
+      }
       pi.rays.forEach(function (rij) {
         let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
         const rectangle = extendedPointMethods.translateLabel(pi, segment)
-        rectangleData[rij.selfIndex] = rectangle.top
-        rectangleData[rij.selfIndex + 1] = rectangle.left
-        rectangleData[rij.selfIndex + 2] = rectangle.bottom
-        rectangleData[rij.selfIndex + 3] = rectangle.right
+        rectangleBuffer[rij.selfIndex] = rectangle.top
+        rectangleBuffer[rij.selfIndex + 1] = rectangle.left
+        rectangleBuffer[rij.selfIndex + 2] = rectangle.bottom
+        rectangleBuffer[rij.selfIndex + 3] = rectangle.right
       })
-      // First point we compute intersections, later on we request the next one and pass the previous one
-      computeIntersectionAsync(rectangleData, pi.position.x, pi.position.y)
+      // It would be nice for co spawn to resolve promises
+      computeIntersection(rectangleBuffer, pi.position.x, pi.position.y, intersectionBuffer)
         .then(function (result) {
-          ({rectangleData} = result)
-          csp.putAsync(gpuCompute, 'Done computing')
-        })
-      yield csp.take(gpuCompute)
-      yield csp.put(gpu2gpu)
+          csp.putAsync(gpu2gpu, result)
+        });
+      ({intersectionData: intersectionBuffer, rectangleData: rectangleBuffer} = yield csp.take(gpu2gpu))
+      // Reassign buffers
+      if (i % 2) {
+        intersectionData = intersectionBuffer
+        rectangleData = rectangleBuffer
+      } else {
+        intersectionData2 = intersectionBuffer
+        rectangleData2 = rectangleBuffer
+      }
+      yield csp.put(gpu2cpu, intersectionBuffer)
     }
     callback()
   }
-  function * readFromGPU (callback) {
-    for (let pi of P) {
-      // intersection data is ready
-      yield csp.take(gpu2gpu)
-      readIntersection(intersectionData)
-        .then(function (result) {
-          ;({intersectionData} = result)
-          csp.putAsync(gpu2cpu, intersectionData)
-        })
-      // intersection data is free
-      yield csp.take(cpu2gpu)
-    }
-    callback()
-  }
-  function * computeInCPU (callback) {
+  function * computeInCPU (gpu2cpu, callback) {
     let intersectionBuffer
     for (let pi of P) {
       let mindik = _.minBy(pi.rays, 'minimum').minimum
@@ -145,9 +139,6 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra
           minimumAvailableSpace = _.min(Vij)
           pbest = pi
         }
-      }
-      if (isWebgl) {
-        yield csp.put(cpu2gpu, 'IntersectionData free')
       }
     }
     callback()

@@ -9,22 +9,11 @@ let NUMBER_OF_RAYS
 
 // Called as webworker
 if (typeof postMessage !== 'undefined') {
-  const csp = require('js-csp')
-  const computeAsyncCh = csp.chan(1)
-  const computeCh = csp.chan(1)
-  const readCh = csp.chan(1)
   onmessage = function (event) {
     var data = event.data
-    if (data.type === 'computeIntersectionAsync') {
-      return csp.putAsync(computeAsyncCh, data)
-    } else if (data.type === 'readIntersection') {
-      return csp.putAsync(readCh, data)
-    } else if (data.type === 'computeIntersection') {
-      return csp.putAsync(computeCh, data)
-    }
     var extendedPoints = data.extendedPoints
     var params = data.params
-    var computeIntersection, computeIntersectionAsync, readIntersection
+    var computeIntersection
     if (params.isWebgl) {
       computeIntersection = function (rectangleData, pix, piy, intersectionData) {
         return new Promise(function (resolve, reject) {
@@ -35,34 +24,16 @@ if (typeof postMessage !== 'undefined') {
             piy,
             intersectionData
           }, [rectangleData.buffer, intersectionData.buffer])
-          csp.takeAsync(computeCh, data => resolve({intersectionData: data.intersectionData, rectangleData: data.rectangleData}))
-        })
-      }
-      computeIntersectionAsync = function (rectangleData, pix, piy) {
-        return new Promise(function (resolve, reject) {
-          postMessage({
-            type: 'computeIntersectionAsync',
-            rectangleData,
-            pix,
-            piy,
-          }, [rectangleData.buffer])
-          csp.takeAsync(computeAsyncCh, data => resolve({rectangleData: data.rectangleData}))
-        })
-      }
-      readIntersection = function (intersectionData) {
-        return new Promise(function (resolve, reject) {
-          postMessage({
-            type: 'readIntersection',
-            intersectionData
-          }, [intersectionData.buffer])
-          csp.takeAsync(readCh, data => resolve({intersectionData: data.intersectionData}))
+          onmessage = function (event) {
+            resolve({intersectionData: event.data.intersectionData, rectangleData: event.data.rectangleData})
+          }
         })
       }
       params.intersectionData = data.intersectionData
+      params.intersectionData2 = data.intersectionData2
+      params.rectangleData2 = data.rectangleData2
       params.rectangleData = data.rectangleData
       params.computeIntersection = computeIntersection
-      params.computeIntersectionAsync = computeIntersectionAsync
-      params.readIntersection = readIntersection
     }
     mainAlgorithm(extendedPoints, params)
       .then(function (result) {
@@ -79,14 +50,15 @@ function mainAlgorithm (extendedPoints, params = {}) {
   const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
   const isWebgl = params.isWebgl
   computeRays(extendedPoints)
-  var intersectionData, computeIntersection, rectangleData, readIntersection, computeIntersectionAsync
+  var intersectionData, computeIntersection, rectangleData, intersectionData2, rectangleData2
   if (isWebgl && !params.intersectionData) {
+    // TODO add intersection data 2 and rectangle data 2
     ({intersectionData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
   } else if (isWebgl && params.intersectionData) {
-    ({intersectionData, computeIntersection, rectangleData, readIntersection, computeIntersectionAsync} = params)
+    ({intersectionData, computeIntersection, rectangleData, intersectionData2, rectangleData2} = params)
   }
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
-  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData, readIntersection, computeIntersectionAsync}), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
+  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData, intersectionData2, rectangleData2}), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
 }
 
 function computeRays (extendedPoints) {
