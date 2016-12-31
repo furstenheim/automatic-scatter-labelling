@@ -78,7 +78,7 @@ async function render (data, xAxis, yAxis) {
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
   var a = new Date()
-  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 6, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 10, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log((new Date() -a) / 1000) // 40s
   //console.log(result)
   const dots = svg.selectAll('.dot')

@@ -27,67 +27,66 @@ async function findBestRay (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra
   var pbest // This is not in the original algorithm but allows to easily find the corresponding point
   P0.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
   P.forEach(p=> extendedPointMethods.updateMinima(p))
-  P.sort((p1, p2) => p2.availableMeasure - p1.availableMeasure )
-  for (let pi of P) {
-    let mindik = _.minBy(pi.rays, 'minimum').minimum
-    if (isWebgl) {
-      pi.rays.forEach(function (rij) {
-        let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
-        const rectangle = extendedPointMethods.translateLabel(pi, segment)
-        rectangleData[rij.selfIndex] = rectangle.top
-        rectangleData[rij.selfIndex + 1] = rectangle.left
-        rectangleData[rij.selfIndex + 2] = rectangle.bottom
-        rectangleData[rij.selfIndex + 3] = rectangle.right
-      });
-      ({intersectionData, rectangleData} = await computeIntersection(rectangleData, pi.position.x, pi.position.y, intersectionData))
-    }
-    let R = pi.rays.filter(rij => rij.minimum < mindik + TOLERANCE)
-    rijloop: for (let rij of R) {
-      let Vij = []
+  const pi = _.minBy(P, 'availableMeasure')
+  let mindik = _.minBy(pi.rays, 'minimum').minimum
+  let R = pi.rays.filter(r => r.availableMeasure > 0)
+  if (isWebgl) {
+    R.forEach(function (rij) {
+      const index = 4 * rij.selfIndex
       let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
       const rectangle = extendedPointMethods.translateLabel(pi, segment)
-      for (let pk of P0) {
-        if (pk === pi) continue
-        // No sense to wait for the intersection if rbest is defined
+      rectangleData[index] = rectangle.top
+      rectangleData[index + 1] = rectangle.left
+      rectangleData[index + 2] = rectangle.bottom
+      rectangleData[index + 3] = rectangle.right
+    });
+    ({intersectionData, rectangleData} = await computeIntersection(rectangleData, pi.position.x, pi.position.y, intersectionData))
+  }
+  rijloop: for (let rij of R) {
+    let Vij = []
+    let segment = {x: rij.vector.x * rij.minimum, y: rij.vector.y * rij.minimum}
+    const rectangle = extendedPointMethods.translateLabel(pi, segment)
+    for (let pk of P0) {
+      if (pk === pi) continue
+      // No sense to wait for the intersection if rbest is defined
 
-        //int pk
-        let availableSpace = pk.availableMeasure
-        // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
-        for (let rkl of pk.rays) {
-          let labelIntersection
-          let segmentIntersection
-          if (isWebgl) {
-            const index = rkl.index + rij.selfIndex * 4
-            labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
-            segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
-          } else {
-            // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
-            const labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
-            const segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
-            const rayInterval = rayRectangleIntersection(rectangle, rkl.vector, pk.position)
-            const raySegmentInterval = raySegmentIntersection(pi.position, segment, pk.position, rkl.vector)
-            labelIntersection = labelInterval.coalesceInPlace(rayInterval)
-            segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
-          }
-          if (!labelIntersection.empty || !segmentIntersection.empty) {
-            availableSpace -= rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
-          }
+      //int pk
+      let availableSpace = pk.availableMeasure
+      // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
+      for (let rkl of pk.rays) {
+        let labelIntersection
+        let segmentIntersection
+        if (isWebgl) {
+          const index = rkl.index + rij.selfIndex * 4
+          labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
+          segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
+        } else {
+          // We have split label rectangle intersection into two algorithms, label rectangle and label segment. Those two intervals should intersect since the segment intersects the rectangle, so we can coalesce the intervals
+          const labelInterval = labelRectangleIntersection(rectangle, pk.label, rkl.vector, pk.position)
+          const segmentInterval = labelSegmentIntersection(pi.position, segment, pk.label, rkl.vector, pk.position)
+          const rayInterval = rayRectangleIntersection(rectangle, rkl.vector, pk.position)
+          const raySegmentInterval = raySegmentIntersection(pi.position, segment, pk.position, rkl.vector)
+          labelIntersection = labelInterval.coalesceInPlace(rayInterval)
+          segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
         }
-        // This ray is not good because we try to maximize the minimum
-        if (rbest && availableSpace < minimumAvailableSpace) {
-          continue rijloop
+        if (!labelIntersection.empty || !segmentIntersection.empty) {
+          availableSpace -= rkl.available.measureMultipleIntersection(multiInterval.coalesce(labelIntersection, segmentIntersection))
         }
-        Vij.push(availableSpace)
       }
-      Vij.sort((i,j) => i - j) // order to compare in lexicographical order
-      if (!Vbest || utils.compareArraysLexicographically(Vij, Vbest) < 0) {
-        rbest = rij
-        Vbest = Vij
-        minimumAvailableSpace = _.min(Vij)
-        pbest = pi
+      // This ray is not good because we try to maximize the minimum
+      if (rbest && availableSpace < minimumAvailableSpace) {
+        continue rijloop
       }
+      Vij.push(availableSpace)
+    }
+    Vij.sort((i,j) => i - j) // order to compare in lexicographical order
+    if (!Vbest || utils.compareArraysLexicographically(Vij, Vbest) < 0) {
+      rbest = rij
+      Vbest = Vij
+      minimumAvailableSpace = _.min(Vij)
+      pbest = pi
     }
   }
   // We need to return intersectionData because the reference has been neutered in find ray intersection
-  return {rbest: rbest, pbest: pbest, intersectionData, rectangleData}
+  return {rbest: rbest, pbest: pbest, intersectionData, rectangleData, usedWebgl: isWebgl}
 }

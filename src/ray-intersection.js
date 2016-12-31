@@ -16,9 +16,10 @@ const clone = require('lodash.clone')
 async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra) {
   let {intersectionData, rectangleData} = webglExtra
   const computeIntersection = webglExtra.computeIntersection
-  const rejectedPoints = []
+  pointsToLabel.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
+  const rejectedPoints = _.filter(pointsToLabel, p => p.availableMeasure === 0)
   // P in the article
-  var remainingPoints = pointsToLabel
+  var remainingPoints = _.filter(pointsToLabel, p => p.availableMeasure > 0)
   var P0 = pointsToLabel.concat(pointsNotToLabel)
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
@@ -29,6 +30,7 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglE
     let pi = bestRay.pbest
     intersectionData = bestRay.intersectionData
     rectangleData = bestRay.rectangleData
+    const usedWebgl = bestRay.usedWebgl
     if (rij === undefined) {
       // It could only happen that we get rij undefined in the first iteration
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {
@@ -44,17 +46,12 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglE
     //P0 = P0.filter((el, i) => i!== index)
     //P = P.filter((el, i) => i!== index)
     pointsLabeled.push(pi)
-    if (isWebgl) {
-      const rectangle = pi.rectangle;
-      Object.assign(rectangleData, [rectangle.top, rectangle.left, rectangle.bottom, rectangle.right]);
-      ({intersectionData, rectangleData} = await computeIntersection(rectangleData, pi.position.x, pi.position.y, intersectionData))
-    }
     for (let pk of P0) {
       for (let rkl of pk.rays) {
         let labelIntersection
         let segmentIntersection
-        if (isWebgl) {
-          const index = rkl.index
+        if (usedWebgl) {
+          const index = rkl.index + rij.selfIndex * 4
           labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
           segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
         } else {
