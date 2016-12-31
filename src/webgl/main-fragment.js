@@ -22,7 +22,7 @@ function mainFragment (size, numberOfRays) {
     return (pos.x * ${size * 2}. -1.)/2. + ${size}.0 * (pos.y * ${size * 2}. - 1.)/2.;
   }
   vec2 get_rectangle_index (void) {
-    return vec2((mod(get_index(), ${numberOfRays}.0) + 1.) / (${2 * size}.), -1.);
+    return vec2((mod(get_index(), ${numberOfRays}.0) + 0.5) / (${size}.), 1./ ${2 * size}.);
   }
   vec4 read_point (void) {
     return texture2D(u_points_texture, pos);
