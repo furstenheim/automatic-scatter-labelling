@@ -56,7 +56,12 @@ function mainAlgorithm (extendedPoints, params = {}) {
     ({intersectionData, computeIntersection, rectangleData} = params)
   }
   extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
-  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData}), extendedPoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
+  extendedPoints.forEach(function (p) {
+    extendedPointMethods.resetAvailableSpace(p)
+    extendedPointMethods.updateAvailableSpace(p)
+  })
+  const possiblePoints = extendedPoints.filter(p => p.availableMeasure > 0)
+  return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {intersectionData, computeIntersection, rectangleData}), possiblePoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
 }
 
 function computeRays (extendedPoints) {

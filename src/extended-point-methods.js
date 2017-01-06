@@ -49,7 +49,7 @@ function computeInitialAvailabeSpaces (extendedPoints, params) {
 
 function resetAvailableSpace (extendedPoint) {
   for (let rij of extendedPoint.rays) {
-    rij.available = rij.initiallyAvailable
+    rij.available = rij.initiallyAvailable.clone()
   }
 }
 
