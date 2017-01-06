@@ -1,7 +1,7 @@
 'use strict'
 module.exports = {findBestRay}
 
-const _ = require('lodash')
+import _ from 'lodash'
 
 const extendedPointMethods = require('./extended-point-methods')
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
