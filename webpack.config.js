@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'app-bundle.js',
-    publicPath: '/dist'
+    publicPath: '/dist/'
   },
   devServer: {
     contentBase: './',
@@ -18,12 +18,24 @@ module.exports = {
       {
         test: /\.js$/,
         include: [path.join(__dirname, 'index'), path.join(__dirname, 'src')],
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           plugins: ['transform-async-to-generator', 'meaningful-logs']
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        worker: {
+          output: {
+            filename: 'worker.js',
+            chunkFilename: '[id].worker.js'
+          }
+        }
+      }
+    })
+  ]
   //watch: true
 }

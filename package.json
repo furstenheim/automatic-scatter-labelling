@@ -30,7 +30,7 @@
     "karma-webpack": "^1.8.0",
     "mocha": "^3.0.2",
     "sinon": "2.0.0-pre.4",
-    "webpack": "^1.13.2",
+    "webpack": "^2.2.0-rc.4",
     "webpack-dev-server": "^1.16.2",
     "worker-loader": "^0.7.1"
   },
