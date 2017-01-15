@@ -2,7 +2,7 @@ module.exports = {mainAlgorithm}
 
 const extendedPointMethods = require('./extended-point-methods')
 const rayIntersection = require('./ray-intersection').rayIntersection
-import _ from 'lodash'
+const _ = require('lodash')
 const iterativeGreedy = require('iterative-greedy')
 const webgl = require('./webgl/webgl')
 let NUMBER_OF_RAYS

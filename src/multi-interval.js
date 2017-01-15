@@ -2,7 +2,7 @@
 module.exports = {multiInterval}
 const interval = require('./interval').interval
 const utils = require('./utils')
-import _ from 'lodash'
+const _ = require('lodash')
 //Disjoint union of several intervals
 // intervals array of coordinates
 function MultiInterval(intervals, isClone) {

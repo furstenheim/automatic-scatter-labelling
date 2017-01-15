@@ -1,5 +1,4 @@
 var webpack = require('webpack')
-var LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 var path = require('path')
 module.exports = {
   entry: {
@@ -21,14 +20,10 @@ module.exports = {
         include: [path.join(__dirname, 'index'), path.join(__dirname, 'src')],
         loader: 'babel',
         query: {
-          plugins: ['transform-async-to-generator', 'lodash', 'transform-es2015-modules-commonjs', 'meaningful-logs']
+          plugins: ['transform-async-to-generator', 'meaningful-logs']
         }
       }
     ]
-  },
-  'plugins': [
-    new LodashModuleReplacementPlugin,
-    new webpack.optimize.OccurrenceOrderPlugin
-  ]
+  }
   //watch: true
 }
