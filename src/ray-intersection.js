@@ -10,7 +10,7 @@ const labelRectangleIntersection = require('./label-rectangle-intersection')
 const labelSegmentIntersection = require('./label-segment-intersection')
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const raySegmentIntersection = require('./ray-segment-intersection').raySegmentIntersection
-const clone = require('lodash.clone')
+const _ = require('lodash')
 
 // TODO use sets
 async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra) {
@@ -35,7 +35,7 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglE
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {
         throw new Error('Unexpected behaviour')
       }
-      return {chosen: [], rejected: clone(pointsToLabel)}
+      return {chosen: [], rejected: _.clone(pointsToLabel)}
     }
     let vi = {x: rij.vector.x * rij.available.getMin(), y: rij.vector.y * rij.available.getMin()}
     extendedPointMethods.promoteLabelToRectangle(pi, vi)

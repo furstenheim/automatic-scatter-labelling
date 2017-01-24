@@ -9,6 +9,9 @@ module.exports = {
     filename: 'app-bundle.js',
     publicPath: '/dist/'
   },
+  externals: {
+    lodash: '_'
+  },
   devServer: {
     contentBase: './',
     port: 8000
@@ -32,6 +35,9 @@ module.exports = {
           output: {
             filename: 'worker.js',
             chunkFilename: '[id].worker.js'
+          },
+          externals: {
+            lodash: '_'
           }
         }
       }

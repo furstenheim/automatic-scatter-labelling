@@ -11,6 +11,7 @@ function mainAlgorithm (extendedPoints, params = {}) {
     if (isWebgl) {
       ({intersectionData, computeIntersection, rectangleData} = webgl.setUp(extendedPoints, NUMBER_OF_RAYS))
       algorithm.postMessage({
+        type: 'start',
         extendedPoints,
         params,
         intersectionData,
@@ -24,12 +25,15 @@ function mainAlgorithm (extendedPoints, params = {}) {
           const {intersectionData, rectangleData} = computeIntersection(data.rectangleData, data.pix, data.piy, data.intersectionData)
           algorithm.postMessage({
             intersectionData,
-            rectangleData
+            rectangleData,
+            uuid: data.uuid,
+            type: 'computeIntersection'
           }, [intersectionData.buffer, rectangleData.buffer])
         }
       }
     } else {
       algorithm.postMessage({
+        type: 'start',
         extendedPoints,
         params
       })

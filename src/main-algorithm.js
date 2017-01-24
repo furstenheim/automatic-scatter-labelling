@@ -1,47 +1,74 @@
 module.exports = {mainAlgorithm}
 
+importScripts('https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js')
 const extendedPointMethods = require('./extended-point-methods')
 const rayIntersection = require('./ray-intersection').rayIntersection
-const _ = require('lodash')
+//const _ = require('lodash')
 const iterativeGreedy = require('iterative-greedy')
 const webgl = require('./webgl/webgl')
 let NUMBER_OF_RAYS
-
+// In this object we register the callbacks for computations in the main thread (gpu case)
+const callbacks = {}
 // Called as webworker
 if (typeof postMessage !== 'undefined') {
   onmessage = function (event) {
     var data = event.data
-    var extendedPoints = data.extendedPoints
-    var params = data.params
-    var computeIntersection
-    var intersectionData
-    if (params.isWebgl) {
-      computeIntersection = function (rectangleData, pix, piy, intersectionData) {
-        return new Promise(function (resolve, reject) {
-          postMessage({
-            type: 'computeIntersection',
-            rectangleData,
-            pix,
-            piy,
-            intersectionData
-          }, [rectangleData.buffer, intersectionData.buffer])
-          onmessage = function (event) {
-            resolve({intersectionData: event.data.intersectionData, rectangleData: event.data.rectangleData})
-          }
-        })
-      }
-      params.intersectionData = data.intersectionData
-      params.rectangleData = data.rectangleData
-      params.computeIntersection = computeIntersection
+    switch (data.type) {
+      case 'start':
+        launchMainAlgorithmFromEvent(event)
+        break
+      case 'computeIntersection':
+        returnGPUComputation(event)
+        break
+      default:
+        console.error('Not a valid event type', data.type)
     }
-    mainAlgorithm(extendedPoints, params)
-      .then(function (result) {
-        postMessage({
-          type: 'end',
-          result
-        })
-      })
   }
+}
+
+function returnGPUComputation (event) {
+  const uuid = event.data.uuid
+  if (_.isFunction(callbacks[uuid])) {
+    callbacks[uuid](event)
+    delete callbacks[uuid]
+  } else {
+    console.error('Callback should be a function, uuid:', uuid)
+  }
+}
+
+function launchMainAlgorithmFromEvent (event) {
+  var data = event.data
+  var extendedPoints = data.extendedPoints
+  var params = data.params
+  if (params.isWebgl) {
+    params.intersectionData = data.intersectionData
+    params.rectangleData = data.rectangleData
+    params.computeIntersection = computeIntersectionWithGPU
+  }
+  mainAlgorithm(extendedPoints, params)
+    .then(function (result) {
+      postMessage({
+        type: 'end',
+        result
+      })
+    })
+}
+
+function computeIntersectionWithGPU (rectangleData, pix, piy, intersectionData) {
+  var uuid = parseInt(Math.random() * 1000000).toString() // no need for anything fancy
+  return new Promise(function (resolve, reject) {
+    postMessage({
+      type: 'computeIntersection',
+      rectangleData,
+      pix,
+      piy,
+      intersectionData,
+      uuid
+    }, [rectangleData.buffer, intersectionData.buffer])
+    callbacks[uuid] = function (event) {
+      resolve({intersectionData: event.data.intersectionData, rectangleData: event.data.rectangleData})
+    }
+  })
 }
 
 function mainAlgorithm (extendedPoints, params = {}) {
