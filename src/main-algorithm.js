@@ -37,24 +37,26 @@ function returnGPUComputation (event) {
 }
 
 function launchMainAlgorithmFromEvent (event) {
-  var data = event.data
-  var extendedPoints = data.extendedPoints
-  var params = data.params
+  const data = event.data
+  const extendedPoints = data.extendedPoints
+  const params = data.params
+  const processUUID = data.processUUID // we use this in case the algorihm is required several times
   if (params.isWebgl) {
     params.intersectionData = data.intersectionData
     params.rectangleData = data.rectangleData
-    params.computeIntersection = computeIntersectionWithGPU
+    params.computeIntersection = _.partialRight(computeIntersectionWithGPU, processUUID)
   }
   mainAlgorithm(extendedPoints, params)
     .then(function (result) {
       postMessage({
         type: 'end',
+        processUUID,
         result
       })
     })
 }
 
-function computeIntersectionWithGPU (rectangleData, pix, piy, intersectionData) {
+function computeIntersectionWithGPU (rectangleData, pix, piy, intersectionData, processUUID) {
   var uuid = parseInt(Math.random() * 1000000).toString() // no need for anything fancy
   return new Promise(function (resolve, reject) {
     postMessage({
@@ -63,7 +65,8 @@ function computeIntersectionWithGPU (rectangleData, pix, piy, intersectionData) 
       pix,
       piy,
       intersectionData,
-      uuid
+      uuid,
+      processUUID
     }, [rectangleData.buffer, intersectionData.buffer])
     callbacks[uuid] = function (event) {
       resolve({intersectionData: event.data.intersectionData, rectangleData: event.data.rectangleData})
