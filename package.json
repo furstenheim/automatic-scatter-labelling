@@ -1,5 +1,5 @@
 {
-  "name": "automatic-scatter-chart-labelling",
+  "name": "automatic-scatter-labelling",
   "version": "0.1.0",
   "description": "Implementation in d3 of the automatic labeling for scatter plots described [here](https://www.think-cell.com/en/career/talks/pdf/think-cell_article_aaai2006.pdf)",
   "main": "dist/automatic-scatter-labelling.js",
@@ -8,6 +8,10 @@
     "webpack": "webpack",
     "dev-server": "webpack-dev-server --inline --hot",
     "browser-test": "karma start karma.conf.js"
+  },
+  "reposistory": {
+    "type": "git",
+    "url": "https://github.com/furstenheim/automatic-scatter-labelling"
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",
@@ -35,7 +39,9 @@
     "worker-loader": "git://github.com/furstenheim/worker-loader.git#489ad4ae39ca46469b694330e5500f4badff9591"
   },
   "dependencies": {
-    "iterative-greedy": "0.0.4",
+    "iterative-greedy": "0.0.4"
+  },
+  "peerDependencies": {
     "lodash": "^4.16.2"
   }
 }
