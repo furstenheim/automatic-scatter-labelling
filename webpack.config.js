@@ -1,12 +1,16 @@
 var webpack = require('webpack')
 var path = require('path')
+var libraryName = 'automatic-scatter-labelling'
 module.exports = {
   entry: {
     app: ['./index.js']
   },
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'app-bundle.js',
+    filename: libraryName + '.js',
+    library: 'automaticScatterLabelling',
+    libraryTarget: 'umd',
+    umdNamedDefine: true,
     publicPath: '/dist/'
   },
   externals: {
@@ -33,7 +37,7 @@ module.exports = {
       options: {
         worker: {
           output: {
-            filename: 'worker.js',
+            filename: 'automatic-label-worker.js',
             chunkFilename: '[id].worker.js'
           },
           externals: {
