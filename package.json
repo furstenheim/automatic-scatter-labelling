@@ -35,7 +35,7 @@
     "worker-loader": "git://github.com/furstenheim/worker-loader.git#489ad4ae39ca46469b694330e5500f4badff9591"
   },
   "dependencies": {
-    "iterative-greedy": "0.0.2",
+    "iterative-greedy": "0.0.4",
     "lodash": "^4.16.2"
   }
 }
