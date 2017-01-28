@@ -66,7 +66,7 @@ async function render (data, xAxis, yAxis) {
      id: d.id,
      position: {
        x: x(d.obesity_percentage),
-       y: -y(d.life_expectancy_at_60)
+       y: y(d.life_expectancy_at_60)
      },
      label: {
        height: d.label.height + 2,
@@ -78,7 +78,7 @@ async function render (data, xAxis, yAxis) {
   console.log('start ', JSON.stringify(extendedPoints))
   //debugger
   var a = new Date()
-  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: false, NUMBER_OF_RAYS: 10, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: false, NUMBER_OF_RAYS: 25, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log((new Date() -a) / 1000) // 40s
   //console.log(result)
   const dots = svg.selectAll('.dot')
@@ -104,9 +104,9 @@ async function render (data, xAxis, yAxis) {
     .style('stroke', 'black')
     .style('stroke-with', '2px')
     .attr('x1', d => idToPoints[d.id][0].position.x)
-    .attr('y1', d => -idToPoints[d.id][0].position.y)
+    .attr('y1', d => idToPoints[d.id][0].position.y)
     .attr('x2', d => (d.rectangle.left + d.rectangle.right) / 2)
-    .attr('y2', d => -(d.rectangle.top + d.rectangle.bottom) / 2)
+    .attr('y2', d => (d.rectangle.top + d.rectangle.bottom) / 2)
 
   const label2 = svg.selectAll('text.graph-label')
     .data(result, function (d, i) {
@@ -119,7 +119,7 @@ async function render (data, xAxis, yAxis) {
     .attr('x', function (d) {
       return (d.rectangle.left + d.rectangle.right) / 2
     })
-    .attr('y', d => -(d.rectangle.top + d.rectangle.bottom) / 2)
+    .attr('y', d => (d.rectangle.top + d.rectangle.bottom) / 2)
   label2.exit()
     .each(function (d, i){
       //console.log(d, i)

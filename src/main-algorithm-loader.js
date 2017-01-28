@@ -6,6 +6,16 @@ const webGLFunctions = {} // Here we store the reference to the functions
 const promiseResolutions = {}
 function mainAlgorithm (extendedPoints, params = {}) {
   return new Promise(function (resolve, reject) {
+    extendedPoints = extendedPoints.map(p => {
+      return {
+        id: p.id,
+        position: {
+          x: p.position.x,
+          y: -p.position.y // The algorithm expects y to grow upwards
+        },
+        label: p.label
+      }
+    })
     const NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
     const isWebgl = params.isWebgl
     let intersectionData, computeIntersection, rectangleData
@@ -30,8 +40,19 @@ function mainAlgorithm (extendedPoints, params = {}) {
       })
     }
     promiseResolutions[processUUID] = function (event) {
-      const data = event.data
-      return resolve(data.result)
+      const result = event.data.result.map(p => {
+          return {
+            id: p.id,
+            rectangle: {
+              left: p.rectangle.left,
+              right: p.rectangle.right,
+              top: -p.rectangle.top,
+              bottom: -p.rectangle.bottom
+            }
+          }
+        }
+      )
+      return resolve(result)
     }
   })
 }
