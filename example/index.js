@@ -1,8 +1,10 @@
 'use strict'
 const mainAlgorithm = automaticScatterLabelling
+const windowHeight = window.innerHeight
+const windowWidth = window.innerWidth
 var margin = {top: 20, right: 20, bottom: 30, left: 50}
-var width = 2060 - margin.left - margin.right
-var height = 900 - margin.top - margin.bottom
+var width = windowWidth * 0.8 - margin.left - margin.right
+var height = windowHeight - margin.top - margin.bottom
 var x = d3.scaleLinear().range([0, width])
 var y = d3.scaleLinear().range([height, 0])
 
@@ -21,10 +23,47 @@ d3.csv('data.csv', function (err, data) {
     d.life_expectancy_at_60 = Number(d.life_expectancy_at_60)
     d.id = i
   })
+  x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
+  y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
   const xAxis = svg.append('g')
     .attr('transform', `translate(0, ${height})`)
+    .call(d3.axisBottom(x))
+  const xLabel = svg.append('g')
+    .attr('transform', `translate(0, ${height})`)
+    .append('text')
+    .attr('class', 'label')
+    .attr('x', width)
+    .attr('y', -12)
+    .style('text-anchor', 'end')
+    .text('Obesity percentage')
   const yAxis = svg.append('g')
     .attr('class', 'axis-y')
+    .call(d3.axisLeft(y))
+  const yLabel = svg.append('g')
+    .append('text')
+    .attr('class', 'label')
+    .attr('transform', 'rotate(-90)')
+    .attr('y', 10)
+    //.attr('dy', '.71em')
+    .style('text-anchor', 'end')
+    .text('Life expectancy at 60')
+  const developmentGroups = _.map(_.uniqBy(data, 'development_group'), 'development_group')
+  const legend = svg.selectAll('.legend')
+    .data(developmentGroups)
+    .enter().append('g')
+    .attr('class', 'legend')
+    .attr('transform', (d, i) => `translate(0, ${i * 20})`)
+  legend.append('rect')
+    .attr('x', width - 18)
+    .attr('width', 18)
+    .attr('height', 18)
+    .style('fill', color)
+  legend.append('text')
+    .attr('x', width - 24)
+    .attr('y', 9)
+    .attr('dy', '.35em')
+    .style('text-anchor', 'end')
+    .text(d => d)
   render(data, xAxis, yAxis)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
@@ -34,8 +73,7 @@ d3.csv('data.csv', function (err, data) {
 
 async function render (data, xAxis, yAxis) {
   const radius = 3.5
-  x.domain(d3.extent(data, d => d.obesity_percentage)).nice()
-  y.domain(d3.extent(data, d => d.life_expectancy_at_60)).nice()
+
   //data = _.filter(data, d => _.includes(['Ireland', 'United Kingdom', 'Luxembourg'], d.country))
 
   const labels = svg.selectAll('text.graph-label')
@@ -123,8 +161,6 @@ async function render (data, xAxis, yAxis) {
     .each(function (d, i){
       //console.log(d, i)
     }).remove()
-  xAxis.call(d3.axisBottom(x))
-  yAxis.call(d3.axisLeft(y))
 
 }
 
