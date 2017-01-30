@@ -72,20 +72,22 @@ d3.csv('data.csv', function (err, data) {
     .attr('dy', '.35em')
     .style('text-anchor', 'end')
     .text(d => d)
-  renderLoop(data)
+  co(function * () {
+    yield * renderLoop(data)
+  })
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/
 })
 
-async function renderLoop (data) {
+function * renderLoop (data) {
   let i = 0
   while (true) {
     i +=5
     const amountOfDataToDisplay = (i % data.length) + 5
     const dataToDisplay = data.slice(0, amountOfDataToDisplay)
-    await render(dataToDisplay)
-    await wait(500)
+    yield * render(dataToDisplay)
+    yield wait(500)
   }
 }
 function wait (time) {
@@ -94,7 +96,7 @@ function wait (time) {
   })
 }
 
-async function render (data) {
+function * render (data) {
   const radius = 3.5
   const labels = svg.selectAll('text.graph-label')
     .data(data, function (d, i) {
@@ -132,7 +134,7 @@ async function render (data) {
   dots.enter().append('circle')
     .attr('class', 'dot')
     .attr('r', radius)
-    .attr('opacity', 100)
+    .attr('opacity', 0)
     .attr('cx', d => x(d.obesity_percentage))
     .attr('cy', d => y(d.life_expectancy_at_60))
     .style('fill', d=> color(d.development_group))
@@ -157,10 +159,12 @@ async function render (data) {
   })
   const idToPoints = _.groupBy(extendedPoints, 'id')
   var a = new Date()
-  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: false, NUMBER_OF_RAYS: 25, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  const result = yield mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: false, NUMBER_OF_RAYS: 25, radius: 3 * radius, bbox: {top: margin.top, bottom: -margin.top + height, left: margin.left, right: margin.left + width, width, height: height}})
   console.log((new Date() -a) / 1000) // 40s
   //console.log(result)
 
+  svg.selectAll('.dot')
+    .attr('opacity', 100)
   const linesMatched = svg.selectAll('.segment')
     .data(result, d => d.id)
   linesMatched.transition()
