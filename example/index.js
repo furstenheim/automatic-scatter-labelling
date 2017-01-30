@@ -72,18 +72,30 @@ d3.csv('data.csv', function (err, data) {
     .attr('dy', '.35em')
     .style('text-anchor', 'end')
     .text(d => d)
-  render(data, xAxis, yAxis)
+  renderLoop(data)
 /*  setTimeout(function () {
     render(data.slice(0, 5), xAxis, yAxis)
   }, 2000)*/
 })
 
+async function renderLoop (data) {
+  let i = 0
+  while (true) {
+    i +=5
+    const amountOfDataToDisplay = (i % data.length) + 5
+    const dataToDisplay = data.slice(0, amountOfDataToDisplay)
+    await render(dataToDisplay)
+    await wait(500)
+  }
+}
+function wait (time) {
+  return new Promise(function (resolve){
+    setTimeout(resolve, time)
+  })
+}
 
-async function render (data, xAxis, yAxis) {
+async function render (data) {
   const radius = 3.5
-
-  //data = _.filter(data, d => _.includes(['Ireland', 'United Kingdom', 'Luxembourg'], d.country))
-
   const labels = svg.selectAll('text.graph-label')
     .data(data, function (d, i) {
       return d.id
@@ -95,7 +107,7 @@ async function render (data, xAxis, yAxis) {
     .attr('text-anchor', 'middle')
     .attr('x', d => x(d.obesity_percentage))
     .attr('y', d => y(d.life_expectancy_at_60))
-    .attr('opacity', 100)
+    .attr('opacity', 0)
     .text(function (d) {
       return d.country
     }).each(function (d) { // Get sizes for the algorithm
@@ -105,27 +117,16 @@ async function render (data, xAxis, yAxis) {
         width: bbox.width
       }
     })
-
-  const extendedPoints = data.map((d) => {
-   return {
-     id: d.id,
-     position: {
-       x: x(d.obesity_percentage),
-       y: y(d.life_expectancy_at_60)
-     },
-     label: {
-       height: d.label.height + 2,
-       width: d.label.width + 2
-     }
-   }
-  })
-  const idToPoints = _.groupBy(extendedPoints, 'id')
-  console.log('start ', JSON.stringify(extendedPoints))
-  //debugger
-  var a = new Date()
-  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: true, NUMBER_OF_RAYS: 25, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
-  console.log((new Date() -a) / 1000) // 40s
-  //console.log(result)
+  const lines = svg.selectAll('.segment')
+    .data(data, d => d.id)
+    .enter().append('line')
+    .attr('class', 'segment')
+    .style('stroke', 'black')
+    .style('stroke-with', '2px')
+    .attr('x1', d => x(d.obesity_percentage))
+    .attr('y1', d => y(d.life_expectancy_at_60))
+    .attr('x2', d => x(d.obesity_percentage))
+    .attr('y2', d => y(d.life_expectancy_at_60))
   const dots = svg.selectAll('.dot')
     .data(data)
   dots.enter().append('circle')
@@ -141,34 +142,49 @@ async function render (data, xAxis, yAxis) {
     .attr('opacity', 0)
     .attr('r', 0)
     .remove()
+  const extendedPoints = data.map((d) => {
+   return {
+     id: d.id,
+     position: {
+       x: x(d.obesity_percentage),
+       y: y(d.life_expectancy_at_60)
+     },
+     label: {
+       height: d.label.height + 2,
+       width: d.label.width + 2
+     }
+   }
+  })
+  const idToPoints = _.groupBy(extendedPoints, 'id')
+  var a = new Date()
+  const result = await mainAlgorithm(extendedPoints, {MAX_NUMBER_OF_ITERATIONS: 1, isWebgl: false, NUMBER_OF_RAYS: 25, radius: 3 * radius, bbox: {top: -margin.top, bottom: -margin.top - height, left: margin.left, right: margin.left + width, width, height: height}})
+  console.log((new Date() -a) / 1000) // 40s
+  //console.log(result)
 
-  const lines = svg.selectAll('.segment')
-    .data(result)
-  lines.enter().append('line')
-    .attr('class', 'segment')
-    .style('stroke', 'black')
-    .style('stroke-with', '2px')
+  const linesMatched = svg.selectAll('.segment')
+    .data(result, d => d.id)
+  linesMatched.transition()
+    .duration(500)
     .attr('x1', d => idToPoints[d.id][0].position.x)
     .attr('y1', d => idToPoints[d.id][0].position.y)
     .attr('x2', d => (d.rectangle.left + d.rectangle.right) / 2)
     .attr('y2', d => (d.rectangle.top + d.rectangle.bottom) / 2)
 
-  const label2 = svg.selectAll('text.graph-label')
+  linesMatched.exit()
+    .remove()
+  const labelsMatched = svg.selectAll('text.graph-label')
     .data(result, function (d, i) {
         return d.id
-    }) // id corresponds to previous position
+    })
 
-  label2.transition()
+  labelsMatched.transition()
     .duration(500)
     .attr('opacity', 100)
     .attr('x', function (d) {
       return (d.rectangle.left + d.rectangle.right) / 2
     })
     .attr('y', d => (d.rectangle.top + d.rectangle.bottom) / 2)
-  label2.exit()
-    .each(function (d, i){
-      //console.log(d, i)
-    }).remove()
-
+  labelsMatched.exit()
+    .remove()
 }
 
