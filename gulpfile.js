@@ -10,37 +10,33 @@ const literalify = require('literalify')
 const buffer = require('vinyl-buffer')
 const browserSync = require('browser-sync').create()
 var transform = require('vinyl-transform')
+const aliasify = require('aliasify')
 const through = require('through2')
+const notify = require('gulp-notify')
+
 gulp.task('start-server', ['watch'], function () {
   browserSync.init({
     server: {
       baseDir: './'
-    }
+    },
+    startPath: '/example'
   })
 })
 
 gulp.task('build:main', function () {
   var bundler = watchify(browserify({
-    externals: ['lodash'],
+    standalone: 'automaticScatterLabelling',
     entries: [
       './index.js'
     ],
-    debug: true,
-    shim: {
-      lodash: {
-        exports: 'global:_'
-      }
-    }
+    debug: true
   }))
 
-  function transformer (file) {
-    return through(function (buf, enc, next) {
-      this.push(buf.toString('utf8').replace('require(\'lodash\')', 'global._'))
-      next()
-    })
-  }
   function gulpBundle () {
     bundler.bundle()
+      .on('error', function (err) {
+        return notify().write(err)
+      })
       .pipe(source('app.js'))
       .pipe(buffer())
       .pipe(gulp.dest('dist/'))
@@ -53,22 +49,19 @@ gulp.task('build:main', function () {
       })
   }
     bundler
+      .transform('exposify', {expose: {lodash: '_'}})
       .transform(babelify, {plugins: ['meaningful-logs']})
       .on('update', function (a) {
-        console.log('update')
         gulpBundle()
       })
       .on('error', function (e) {
-        console.error(e)
+        return notify().write(err)
       })
       .on('log', function (log) {
         console.log(log)
       })
     return gulpBundle()
-})/*
-gulp.task('server-reload', function () {
-  browserSync.reload()
-})*/
+})
 
 gulp.task('test', function () {
   gulp
@@ -76,7 +69,7 @@ gulp.task('test', function () {
     .pipe(mocha().on('error', console.error))
 })
 gulp.task('watch', ['build:main'], function () {
-    gulp.watch(['example/*.*', 'src/*.*', 'index.js']/*, ['server-reload']*/)
+    //gulp.watch(['example/*.*', 'src/*.*', 'index.js']/*, ['server-reload']*/)
     //gulp.watch(['test/*.*'], ['test'])
 })
 gulp.task('default', [/*'start-server',*/'start-server'])

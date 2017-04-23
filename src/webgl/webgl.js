@@ -2,7 +2,7 @@ module.exports = {setUp}
 
 const mainFragment = require('./main-fragment').mainFragment
 const utils = require('./utils')
-const _ = require('lodash')
+const _ = require('lodash');
 
 
 /**

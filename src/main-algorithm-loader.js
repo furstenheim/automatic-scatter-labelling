@@ -1,8 +1,7 @@
 module.exports = {mainAlgorithm}
 const work = require('webworkify')
-var MainAlgorithmWorker = work(require('./main-algorithm.js'))
+const algorithm = work(require('./main-algorithm.js'))
 const webgl = require('./webgl/webgl')
-const algorithm = new MainAlgorithmWorker
 const webGLFunctions = {} // Here we store the reference to the functions
 const promiseResolutions = {}
 function mainAlgorithm (extendedPoints, params = {}) {
