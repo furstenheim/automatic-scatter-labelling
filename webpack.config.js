@@ -27,7 +27,7 @@ module.exports = {
         include: [path.join(__dirname, 'index'), path.join(__dirname, 'src')],
         loader: 'babel-loader',
         query: {
-          plugins: ['transform-async-to-generator', 'meaningful-logs']
+          plugins: ['meaningful-logs']
         }
       }
     ]

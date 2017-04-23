@@ -1,6 +1,5 @@
-module.exports = {mainAlgorithm}
+//module.exports = {mainAlgorithm}
 
-importScripts('https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js')
 const extendedPointMethods = require('./extended-point-methods')
 const rayIntersection = require('./ray-intersection').rayIntersection
 //const _ = require('lodash')
@@ -10,20 +9,25 @@ let NUMBER_OF_RAYS
 // In this object we register the callbacks for computations in the main thread (gpu case)
 const callbacks = {}
 // Called as webworker
-if (typeof postMessage !== 'undefined') {
-  onmessage = function (event) {
-    var data = event.data
-    switch (data.type) {
-      case 'start':
-        launchMainAlgorithmFromEvent(event)
-        break
-      case 'computeIntersection':
-        returnGPUComputation(event)
-        break
-      default:
-        console.error('Not a valid event type', data.type)
+module.exports = function (self) {
+  self.importScripts('https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js')
+
+  if (typeof postMessage !== 'undefined') {
+    self.onmessage = function (event) {
+      var data = event.data
+      switch (data.type) {
+        case 'start':
+          launchMainAlgorithmFromEvent(event)
+          break
+        case 'computeIntersection':
+          returnGPUComputation(event)
+          break
+        default:
+          console.error('Not a valid event type', data.type)
+      }
     }
   }
+
 }
 
 function returnGPUComputation (event) {
