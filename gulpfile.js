@@ -37,7 +37,7 @@ gulp.task('build:main', function () {
       .on('error', function (err) {
         return notify().write(err)
       })
-      .pipe(source('app.js'))
+      .pipe(source('automatic-labelling.js'))
       .pipe(buffer())
       .pipe(gulp.dest('dist/'))
       .on('error', function (e) {
