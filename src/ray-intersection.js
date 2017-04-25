@@ -13,9 +13,7 @@ const raySegmentIntersection = require('./ray-segment-intersection').raySegmentI
 const _ = require('lodash')
 
 // TODO use sets
-async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglExtra) {
-  let {intersectionData, rectangleData} = webglExtra
-  const computeIntersection = webglExtra.computeIntersection
+async function rayIntersection (pointsToLabel, pointsNotToLabel) {
   pointsToLabel.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
   const rejectedPoints = _.filter(pointsToLabel, p => p.availableMeasure === 0)
   // P in the article
@@ -23,13 +21,9 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglE
   var P0 = pointsToLabel.concat(pointsNotToLabel)
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
-    webglExtra = {computeIntersection, intersectionData, rectangleData}
-    let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel, isWebgl, webglExtra)
+    let bestRay = await findBestRay.findBestRay(remainingPoints, pointsNotToLabel)
     let rij = bestRay.rbest
     let pi = bestRay.pbest
-    intersectionData = bestRay.intersectionData
-    rectangleData = bestRay.rectangleData
-    const usedWebgl = bestRay.usedWebgl
     if (rij === undefined) {
       // It could only happen that we get rij undefined in the first iteration
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {
@@ -39,28 +33,19 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel, isWebgl, webglE
     }
     let vi = {x: rij.vector.x * rij.available.getMin(), y: rij.vector.y * rij.available.getMin()}
     extendedPointMethods.promoteLabelToRectangle(pi, vi)
-    //let index = pointsToLabel.findIndex(el => el === pi)
     remainingPoints = remainingPoints.filter(el => el !== pi)
     P0 = P0.filter(el => el !== pi)
-    //P0 = P0.filter((el, i) => i!== index)
-    //P = P.filter((el, i) => i!== index)
     pointsLabeled.push(pi)
     for (let pk of P0) {
       for (let rkl of pk.rays) {
         let labelIntersection
         let segmentIntersection
-        if (usedWebgl) {
-          const index = rkl.index + rij.selfIndex * 4
-          labelIntersection = interval(intersectionData[index], intersectionData[index + 1])
-          segmentIntersection = interval(intersectionData[index + 2], intersectionData[index + 3])
-        } else {
-          const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
-          const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
-          const rayInterval = rayRectangleIntersection(pi.rectangle, rkl.vector, pk.position)
-          const raySegmentInterval = raySegmentIntersection(pi.position, vi, pk.position, rkl.vector)
-          labelIntersection = labelInterval.coalesceInPlace(rayInterval)
-          segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
-        }
+        const labelInterval = labelRectangleIntersection.labelRectangleIntersection(pi.rectangle, pk.label, rkl.vector, pk.position)
+        const segmentInterval = labelSegmentIntersection.labelSegmentIntersection(pi.position, vi, pk.label, rkl.vector, pk.position)
+        const rayInterval = rayRectangleIntersection(pi.rectangle, rkl.vector, pk.position)
+        const raySegmentInterval = raySegmentIntersection(pi.position, vi, pk.position, rkl.vector)
+        labelIntersection = labelInterval.coalesceInPlace(rayInterval)
+        segmentIntersection = segmentInterval.coalesceInPlace(raySegmentInterval)
         if (!labelIntersection.empty || !segmentIntersection.empty) {
           rkl.available.multipleRemove(multiInterval.coalesce(labelIntersection, segmentIntersection))
         }
