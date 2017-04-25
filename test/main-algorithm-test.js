@@ -2,7 +2,7 @@ const mainAlgorithm = require('./../src/main-algorithm-loader').mainAlgorithm
 const multiInterval = require('./../src/multi-interval').multiInterval
 const interval = require('./../src/interval').interval
 describe('Main algorithm', function () {
-  it.only('Label one point', async function () {
+  it('Label one point', async function () {
     const pointsToLabel = [
       {
         id: 1,

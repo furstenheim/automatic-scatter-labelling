@@ -1,9 +1,9 @@
 const findBestRay = require('./../src/find-best-ray').findBestRay
 const multiInterval = require('./../src/multi-interval').multiInterval
 const interval = require('./../src/interval').interval
-const assert = require('assert')
+const assert = require('chai').assert
 describe('Find best ray', function () {
-  it('It returns a ray from points to Label', function () {
+  it('It returns a ray from points to Label', async function () {
     const pointsToLabel = [
       {
         position: {
@@ -38,9 +38,8 @@ describe('Find best ray', function () {
         }
       }
     ]
-    const rbest = findBestRay(pointsToLabel, pointsNotToLabel).rbest
+    const {rbest, pbest} = await findBestRay(pointsToLabel, pointsNotToLabel, false, {})
     assert.equal(rbest, pointsToLabel[0].rays[0], 'There was only one ray')
-    const pbest = findBestRay(pointsToLabel, pointsNotToLabel).pbest
     assert.equal(pbest, pointsToLabel[0], 'There was only one ray')
   })
 
