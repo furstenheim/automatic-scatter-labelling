@@ -10,6 +10,7 @@ module.exports = function (config) {
     preprocessors: {
       'test/*-test.js': ['browserify']
     },
+    reporters: ['progress', 'coverage'],
     customLaunchers: {
       ChromeOutOfFocus: {
         base: 'Chrome',
@@ -18,12 +19,16 @@ module.exports = function (config) {
     },
     browserify: {
       debug: true,
-      transform: [['babelify', {plugins: ['meaningful-logs']}]]
+      transform: [['babelify', {plugins: ['meaningful-logs', 'istanbul']}]]
     },
     browsers: ['ChromeOutOfFocus'],
     browserConsoleLogOptions: {
       terminal: true,
       level: ''
+    },
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/'
     }
   })
 }
