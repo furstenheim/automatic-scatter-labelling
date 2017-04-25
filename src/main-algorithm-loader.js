@@ -1,6 +1,7 @@
 module.exports = {mainAlgorithm}
 const work = require('webworkify')
 const algorithm = work(require('./main-algorithm.js'))
+const _ = require('lodash')
 const webgl = require('./webgl/webgl')
 const webGLFunctions = {} // Here we store the reference to the functions
 const promiseResolutions = {}

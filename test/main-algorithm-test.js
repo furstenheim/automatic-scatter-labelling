@@ -1,8 +1,8 @@
-const mainAlgorithm = require('./../src/main-algorithm').mainAlgorithm
+const mainAlgorithm = require('./../src/main-algorithm-loader').mainAlgorithm
 const multiInterval = require('./../src/multi-interval').multiInterval
 const interval = require('./../src/interval').interval
 describe('Main algorithm', function () {
-  it('Label one point', function () {
+  it.only('Label one point', async function () {
     const pointsToLabel = [
       {
         id: 1,
@@ -16,7 +16,7 @@ describe('Main algorithm', function () {
       }
     ]
 
-    const result = mainAlgorithm(pointsToLabel)
+    const result = await mainAlgorithm(pointsToLabel)
   })
   it.skip('Performance test', function () {
     // 40 points
