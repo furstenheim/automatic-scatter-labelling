@@ -9,9 +9,7 @@ const labelSegmentIntersection = require('./label-segment-intersection').labelSe
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const raySegmentIntersection = require('./ray-segment-intersection').raySegmentIntersection
 const multiInterval = require('./multi-interval').multiInterval
-const interval = require('./interval').interval
 const utils = require('./utils')
-
 
 async function findBestRay (pointsToLabel, pointsNotToLabel) {
   // We follow the article page 4 Algorithm 1

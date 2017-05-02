@@ -1,4 +1,3 @@
-const path = require('path')
 module.exports = function (config) {
   config.set({
     // ... normal karma configuration

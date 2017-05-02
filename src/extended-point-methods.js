@@ -1,8 +1,13 @@
 'use strict'
-module.exports = {updateAvailableSpace, promoteLabelToRectangle,
-  computeInitialAvailabeSpaces, resetAvailableSpace, updateMinima, translateLabel}
+module.exports = {
+  updateAvailableSpace,
+  promoteLabelToRectangle,
+  computeInitialAvailabeSpaces,
+  resetAvailableSpace,
+  updateMinima,
+  translateLabel
+}
 
-const pointSegmentIntersection = require('./point-segment-intersection').pointSegmentIntersection
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const multiInterval = require('./multi-interval').multiInterval
@@ -28,8 +33,8 @@ function computeInitialAvailabeSpaces (extendedPoints, params) {
   const radius = params.radius
   const bbox = params.bbox
   for (let pi of extendedPoints) {
-    for (let rij of pi.rays){
-      rij.initiallyAvailable =  multiInterval([interval(0, Number.POSITIVE_INFINITY)])
+    for (let rij of pi.rays) {
+      rij.initiallyAvailable = multiInterval([interval(0, Number.POSITIVE_INFINITY)])
       for (let pk of extendedPoints) {
         const rectangle = {top: pk.position.y + radius, bottom: pk.position.y - radius, left: pk.position.x - radius, right: pk.position.x + radius, width: 2 * radius, height: 2 * radius}
         rij.initiallyAvailable.remove(labelRectangleIntersection(rectangle, pi.label, rij.vector, pi.position))

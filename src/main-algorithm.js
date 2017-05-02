@@ -37,7 +37,6 @@ module.exports = function (self) {
   function mainAlgorithm (extendedPoints, params = {}) {
     NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
     const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
-    const isWebgl = params.isWebgl
     computeRays(extendedPoints)
     extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
     extendedPoints.forEach(function (p) {
@@ -45,7 +44,7 @@ module.exports = function (self) {
       extendedPointMethods.updateAvailableSpace(p)
     })
     const possiblePoints = extendedPoints.filter(p => p.availableMeasure > 0)
-    return iterativeGreedy.solve(_.partialRight(rayIntersection, isWebgl, {}), possiblePoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
+    return iterativeGreedy.solve(_.partialRight(rayIntersection), possiblePoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
   }
 
   function computeRays (extendedPoints) {

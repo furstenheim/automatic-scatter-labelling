@@ -9,7 +9,7 @@ function labelRectangleIntersection (lk, li, vi, pi) {
   let max = Number.POSITIVE_INFINITY
   if (vi.y !== 0) {
     const firstIntersection = (lk.height / 2 + li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
-    const secondIntersection = (- lk.height / 2 - li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
+    const secondIntersection = (-lk.height / 2 - li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
     // Multiplying by a negative sign reverses an inequality
     if (vi.y > 0) {
       max = Math.min(max, firstIntersection)
