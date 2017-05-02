@@ -1,7 +1,6 @@
 module.exports = {mainAlgorithm}
 const work = require('webworkify')
 const algorithm = work(require('./main-algorithm.js'))
-const _ = require('lodash')
 const promiseResolutions = {}
 function mainAlgorithm (extendedPoints, params = {}) {
   return new Promise(function (resolve, reject) {

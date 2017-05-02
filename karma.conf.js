@@ -5,7 +5,7 @@ module.exports = function (config) {
       {pattern: 'test/*-test.js', watched: false}
     ],
     frameworks: ['browserify', 'mocha', 'chai'],
-    browserNoActivityTimeout: 10000,
+    browserNoActivityTimeout: 100000,
     preprocessors: {
       'test/*-test.js': ['browserify']
     },

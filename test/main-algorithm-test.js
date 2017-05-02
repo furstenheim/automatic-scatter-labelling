@@ -1,8 +1,7 @@
 const mainAlgorithm = require('./../src/main-algorithm-loader').mainAlgorithm
-const multiInterval = require('./../src/multi-interval').multiInterval
-const interval = require('./../src/interval').interval
 describe('Main algorithm', function () {
   it('Label one point', async function () {
+    this.timeout('20s') // It needs to load the webworker
     const pointsToLabel = [
       {
         id: 1,
@@ -17,6 +16,7 @@ describe('Main algorithm', function () {
     ]
 
     const result = await mainAlgorithm(pointsToLabel)
+
   })
   it.skip('Performance test', function () {
     // 40 points

@@ -5,6 +5,7 @@
   "main": "dist/automatic-labelling.js",
   "scripts": {
     "gulp": "gulp",
+    "test": "karma start karma.conf.js --single-run",
     "test-watch": "karma start karma.conf.js"
   },
   "reposistory": {
@@ -15,7 +16,10 @@
     "ignore": [
       "/coverage/",
       "/dist"
-    ]
+    ],
+    "global": {
+      "describe": true
+    }
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",
