@@ -50,12 +50,10 @@
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
     "watchify": "^3.9.0",
-    "webworkify": "^1.4.0"
+    "webworkify": "^1.4.0",
+    "lodash": "^4.16.2"
   },
   "dependencies": {
     "iterative-greedy": "1.0.0"
-  },
-  "peerDependencies": {
-    "lodash": "^4.16.2"
   }
 }

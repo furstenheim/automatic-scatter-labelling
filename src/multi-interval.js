@@ -2,13 +2,12 @@
 module.exports = {multiInterval}
 const interval = require('./interval').interval
 const utils = require('./utils')
-const _ = require('lodash')
-//Disjoint union of several intervals
+// Disjoint union of several intervals
 // intervals array of coordinates
-function MultiInterval(intervals, isClone) {
+function MultiInterval (intervals, isClone) {
   // Not very nice but it is hard to clone in js
   if (isClone) {
-    this.intervals = _.clone(intervals)
+    this.intervals = [...intervals]
     return this
   }
   if (!Array.isArray(intervals) || intervals.length === 0) {

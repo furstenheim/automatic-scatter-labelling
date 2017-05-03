@@ -4,20 +4,18 @@ module.exports = {rayIntersection}
 const findBestRay = require('./find-best-ray')
 const extendedPointMethods = require('./extended-point-methods')
 const multiInterval = require('./multi-interval').multiInterval
-const interval = require('./interval').interval
 // Better to grab the module here and fetch the method in the algorithm, that way we can stub
 const labelRectangleIntersection = require('./label-rectangle-intersection')
 const labelSegmentIntersection = require('./label-segment-intersection')
 const rayRectangleIntersection = require('./ray-rectangle-intersection').rayRectangleIntersection
 const raySegmentIntersection = require('./ray-segment-intersection').raySegmentIntersection
-const _ = require('lodash')
 
 // TODO use sets
 async function rayIntersection (pointsToLabel, pointsNotToLabel) {
   pointsToLabel.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
-  const rejectedPoints = _.filter(pointsToLabel, p => p.availableMeasure === 0)
+  const rejectedPoints = pointsToLabel.filter(p => p.availableMeasure === 0)
   // P in the article
-  var remainingPoints = _.filter(pointsToLabel, p => p.availableMeasure > 0)
+  var remainingPoints = pointsToLabel.filter(p => p.availableMeasure > 0)
   var P0 = pointsToLabel.concat(pointsNotToLabel)
   const pointsLabeled = [] // Here we differ from the original article, once we find a point in P to label we remove it from P and add it to pointsLabeled, otherwise the algorithm does not finish
   while (remainingPoints.length !== 0) {
@@ -29,7 +27,7 @@ async function rayIntersection (pointsToLabel, pointsNotToLabel) {
       if (pointsLabeled.length !== 0 || rejectedPoints.length !== 0) {
         throw new Error('Unexpected behaviour')
       }
-      return {chosen: [], rejected: _.clone(pointsToLabel)}
+      return {chosen: [], rejected: [...pointsToLabel]}
     }
     let vi = {x: rij.vector.x * rij.available.getMin(), y: rij.vector.y * rij.available.getMin()}
     extendedPointMethods.promoteLabelToRectangle(pi, vi)

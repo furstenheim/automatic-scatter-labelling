@@ -1,8 +1,6 @@
 'use strict'
 module.exports = {findBestRay}
 
-const _ = require('lodash')
-
 const extendedPointMethods = require('./extended-point-methods')
 const labelRectangleIntersection = require('./label-rectangle-intersection').labelRectangleIntersection
 const labelSegmentIntersection = require('./label-segment-intersection').labelSegmentIntersection
@@ -20,10 +18,9 @@ async function findBestRay (pointsToLabel, pointsNotToLabel) {
   var rbest
   var Vbest
   var pbest // This is not in the original algorithm but allows to easily find the corresponding point
-  P0.forEach(p=> extendedPointMethods.updateAvailableSpace(p))
-  P.forEach(p=> extendedPointMethods.updateMinima(p))
-  const pi = _.minBy(P, 'availableMeasure')
-  let mindik = _.minBy(pi.rays, 'minimum').minimum
+  P0.forEach(p => extendedPointMethods.updateAvailableSpace(p))
+  P.forEach(p => extendedPointMethods.updateMinima(p))
+  const pi = P.reduce((i, j) => i.availableMeasure < j.availableMeasure ? i : j)
   let R = pi.rays.filter(r => r.availableMeasure > 0)
   rijloop: for (let rij of R) {
     let Vij = []
@@ -33,7 +30,7 @@ async function findBestRay (pointsToLabel, pointsNotToLabel) {
       if (pk === pi) continue
       // No sense to wait for the intersection if rbest is defined
 
-      //int pk
+      // int pk
       let availableSpace = pk.availableMeasure
       // Not doing the preintersection here. Something fishy in the article, if preintersect is empty then  integral pk- is 0 which does not make much sense
       for (let rkl of pk.rays) {
@@ -56,11 +53,11 @@ async function findBestRay (pointsToLabel, pointsNotToLabel) {
       }
       Vij.push(availableSpace)
     }
-    Vij.sort((i,j) => i - j) // order to compare in lexicographical order
+    Vij.sort((i, j) => i - j) // order to compare in lexicographical order
     if (!Vbest || utils.compareArraysLexicographically(Vij, Vbest) < 0) {
       rbest = rij
       Vbest = Vij
-      minimumAvailableSpace = _.min(Vij)
+      minimumAvailableSpace = Vij.reduce((i, j) => Math.min(i, j), Number.POSITIVE_INFINITY)
       pbest = pi
     }
   }

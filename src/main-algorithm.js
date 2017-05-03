@@ -1,9 +1,7 @@
 let NUMBER_OF_RAYS
 // Called as webworker
 module.exports = function (self) {
-  importScripts('https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js')
   const extendedPointMethods = require('./extended-point-methods')
-  const _ = require('lodash')
   const rayIntersection = require('./ray-intersection').rayIntersection
   const iterativeGreedy = require('iterative-greedy')
   if (typeof postMessage !== 'undefined') {
@@ -35,8 +33,8 @@ module.exports = function (self) {
   }
 
   function mainAlgorithm (extendedPoints, params = {}) {
-    NUMBER_OF_RAYS = _.isNumber(params.NUMBER_OF_RAYS) ? params.NUMBER_OF_RAYS : 3
-    const MAX_NUMBER_OF_ITERATIONS = _.isNumber(params.MAX_NUMBER_OF_ITERATIONS) ? params.MAX_NUMBER_OF_ITERATIONS : 1
+    NUMBER_OF_RAYS = (typeof params.NUMBER_OF_RAYS === 'number') ? params.NUMBER_OF_RAYS : 3
+    const MAX_NUMBER_OF_ITERATIONS = (typeof params.MAX_NUMBER_OF_ITERATIONS === 'number') ? params.MAX_NUMBER_OF_ITERATIONS : 1
     computeRays(extendedPoints)
     extendedPointMethods.computeInitialAvailabeSpaces(extendedPoints, {radius: params.radius || 2, bbox: params.bbox})
     extendedPoints.forEach(function (p) {
@@ -44,7 +42,7 @@ module.exports = function (self) {
       extendedPointMethods.updateAvailableSpace(p)
     })
     const possiblePoints = extendedPoints.filter(p => p.availableMeasure > 0)
-    return iterativeGreedy.solve(_.partialRight(rayIntersection), possiblePoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
+    return iterativeGreedy.solve(rayIntersection, possiblePoints, resetFunction, {serializeFunction, MAX_NUMBER_OF_ITERATIONS})
   }
 
   function computeRays (extendedPoints) {
@@ -69,7 +67,7 @@ module.exports = function (self) {
     // When we label a point we promote label to rectangle and we reset it at each iteration
     const labeledPoints = arrayOfPoints.filter(point => !!point.rectangle)
     // To serialize we need an id
-    return labeledPoints.map(point => { return {id: point.id, rectangle: _.clone(point.rectangle)} })
+    return labeledPoints.map(point => { return {id: point.id, rectangle: Object.assign({}, point.rectangle)} })
   }
 
 // At each iteration of iterative greedy we reset the conditions
