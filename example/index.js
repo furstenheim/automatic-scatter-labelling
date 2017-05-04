@@ -152,6 +152,7 @@ function * render (data) {
        y: y(d.life_expectancy_at_60)
      },
      label: {
+       offsetX: d.label.width / 2,
        height: d.label.height + 2,
        width: d.label.width + 2
      }

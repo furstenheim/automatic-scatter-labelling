@@ -17,9 +17,10 @@
       "/coverage/",
       "/dist"
     ],
-    "global": {
-      "describe": true
-    }
+    "globals": [
+        "describe",
+        "it"
+      ]
   },
   "author": "Gabriel Fürstenheim <furstenheim@gmail.com>",
   "license": "ISC",

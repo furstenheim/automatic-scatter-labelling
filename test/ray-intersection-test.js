@@ -32,7 +32,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]
@@ -49,7 +49,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]
@@ -73,7 +73,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       },
       {
@@ -88,7 +88,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]
@@ -105,7 +105,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]
@@ -132,7 +132,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]
@@ -149,7 +149,7 @@ describe('Ray intersection', function () {
           }
         ],
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]

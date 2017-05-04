@@ -1,6 +1,6 @@
 const mainAlgorithm = require('./../src/main-algorithm-loader').mainAlgorithm
 describe('Main algorithm', function () {
-  it('Label one point', async function () {
+  it.skip('Label one point', async function () {
     this.timeout('20s') // It needs to load the webworker
     const pointsToLabel = [
       {
@@ -10,7 +10,7 @@ describe('Main algorithm', function () {
           y: 0
         },
         label: {
-          height: 1, width: 2
+          offsetX: 0, offsetY: 0, height: 1, width: 2
         }
       }
     ]

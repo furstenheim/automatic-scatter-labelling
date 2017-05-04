@@ -8,7 +8,7 @@ describe('Label segment Intersection', function () {
       {
         description: 'Non intersecting',
         expected: interval.empty(),
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 0, y: 1},
         pk: {x: 2, y: 2},
         vk: {x:1, y:1}
@@ -16,7 +16,7 @@ describe('Label segment Intersection', function () {
       {
         description: 'Label containing the point',
         expected: interval(1,4),
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 0, y: 1},
         pk: {x: 0, y: 2},
         vk: {x:1, y:1}
@@ -24,7 +24,7 @@ describe('Label segment Intersection', function () {
       {
         description: 'Segment parallel to vector',
         expected: interval(1, 4),
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 0, y: 1},
         pk: {x: 0, y: 2},
         vk: {x:0, y:1}
@@ -32,7 +32,7 @@ describe('Label segment Intersection', function () {
       {
         description: 'Diagonal vector',
         expected: interval(1, 4),
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 1, y: 1},
         pk: {x: 2, y: 2},
         vk: {x:1, y:1}
@@ -40,10 +40,10 @@ describe('Label segment Intersection', function () {
       {
         description: 'Diagonal vector, point is not contained',
         expected: interval(3, 5),
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 1, y: 1},
         pk: {x: 0, y: 4},
-        vk: {x:4, y:0}
+        vk: {x: 4, y: 0}
       }
     ]
     tests.forEach(function (test) {
@@ -59,7 +59,7 @@ describe('Label segment Intersection', function () {
         description: 'Non intersecting',
         expected: interval.empty(),
         pi: {x: 0, y: 2},
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 0, y: 1},
         pk: {x: 2, y: 2},
         vk: {x:1, y:1},
@@ -68,7 +68,7 @@ describe('Label segment Intersection', function () {
         description: 'Label containing the point',
         expected: interval(1,4),
         pi: {x: 1, y: 0},
-        li: {width: 3, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 3, height: 2},
         vi: {x: 0, y: 1},
         pk: {x: 0, y: 2},
         vk: {x:1, y:1}
@@ -77,7 +77,7 @@ describe('Label segment Intersection', function () {
         description: 'Segment parallel to vector',
         expected: interval(0, 3),
         pi: {x: 1, y: 1},
-        li: {width: 3, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 3, height: 2},
         vi: {x: 0, y: 1},
         pk: {x: 0, y: 2},
         vk: {x:0, y:1}
@@ -86,7 +86,7 @@ describe('Label segment Intersection', function () {
         description: 'Diagonal vector',
         expected: interval(0, 1),
         pi: {x: 2, y: 3},
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 1, y: 1},
         pk: {x: 2, y: 2},
         vk: {x:1, y:1}
@@ -95,7 +95,7 @@ describe('Label segment Intersection', function () {
         description: 'Diagonal vector, point is not contained',
         expected: interval(3, 5),
         pi: {x: -1, y: 0},
-        li: {width: 2, height: 2},
+        li: {offsetX: 0, offsetY: 0, width: 2, height: 2},
         vi: {x: 1, y: 1},
         pk: {x: 0, y: 4},
         vk: {x:4, y:0}

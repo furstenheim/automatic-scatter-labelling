@@ -12,19 +12,19 @@ describe('Origin point', function () {
       lk.width = lk.right - lk.left
       lk.height = lk.top - lk.bottom
       it('Initial label contains the original label', function () {
-        var li = {width: 5, height: 2}
+        var li = {offsetX: 0, offsetY: 0, width: 5, height: 2}
         var intersection = labelRectangleIntersection(lk, li, vi, pi)
         // The intersection starts when the center is at 2 and ends when the center is at 5
         assert.deepEqual(intersection, interval(2,5))
       })
       it('Initial label intersects in the middle and height is bigger than the other height', function () {
-        var li = {width: 3, height: 2}
+        var li = {offsetX: 0, offsetY: 0, width: 3, height: 2}
         var intersection = labelRectangleIntersection(lk, li, vi, pi)
         // The intersection starts when the center is at 2 and ends when the center is at 5
         assert.deepEqual(intersection, interval(2,5))
       })
       it('Initial label intersects in the middle and height is smaller', function () {
-        var li = {width: 3, height: 0.5}
+        var li = {offsetX: 0, offsetY: 0, width: 3, height: 0.5}
         var intersection = labelRectangleIntersection(lk, li, vi, pi)
         assert.deepEqual(intersection, interval(2.75, 4.25))
       })
@@ -36,7 +36,7 @@ describe('Origin point', function () {
       var lk = {top: 3, left: 1, right: 2, bottom: 2 }
       lk.width = lk.right - lk.left
       lk.height = lk.top - lk.bottom
-      var li = {width: 5, height: 2}
+      var li = {offsetX: 0, offsetY: 0, width: 5, height: 2}
       var intersection = labelRectangleIntersection(lk, li, vi, pi)
       assert.deepEqual(intersection, interval(1,4))
     })
@@ -47,7 +47,7 @@ describe('Origin point', function () {
     lk.width = lk.right - lk.left
     lk.height = lk.top - lk.bottom
     it('First label contained', function () {
-      var li = {height: 5, width: 2}
+      var li = {offsetX: 0, offsetY: 0, height: 5, width: 2}
       var intersection = labelRectangleIntersection(lk, li, vi, pi)
       assert.deepEqual(intersection, interval(2, 5))
     })
@@ -55,7 +55,7 @@ describe('Origin point', function () {
   describe('Vector with negative coordinates', function () {
     var vi = {y: 0.8660254037844387, x: -0.4999999999999998}
     var pi = {x: 1164.1499999999999, y: -382.50000000000017}
-    var li = {height: 21.25, width: 111.296875}
+    var li = {offsetX: 0, offsetY: 0, height: 21.25, width: 111.296875}
     var lk = {"height":21.25,"width":61.265625,"top":-350.62500000000017,"bottom":-371.87500000000017,"left":1175.9734942797204,"right":1237.2391192797204}
     it('Intersect', function ()  {
       assert.ok((Math.abs((lk.top + lk.bottom) / 2 - (pi.y + vi.y * 5)) < li.height) && Math.abs((lk.left + lk.right) / 2 - (pi.x + vi.y * 5)) <  li.width, 'Label intersect at 5')

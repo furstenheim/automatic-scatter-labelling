@@ -13,7 +13,7 @@ module.exports = function (config) {
     customLaunchers: {
       ChromeOutOfFocus: {
         base: 'Chrome',
-        flags: ['--headless', '--disable-gpu', '--window-size=300,300', ' --remote-debugging-port=9222']
+        flags: ['--window-size=300,300', ' --remote-debugging-port=9222']
       }
     },
     browserify: {

@@ -126,7 +126,7 @@ describe('Promote label to rectangle', function () {
       description: 'Diagonal vector, point at origin',
       point: {
         position: {x: 0, y: 0},
-        label: {height: 1, width: 2},
+        label: {offsetX: 0, offsetY: 0, height: 1, width: 2},
         rays: [
         ]
       },
@@ -137,7 +137,7 @@ describe('Promote label to rectangle', function () {
       description: 'Horizontal negative vector point at origin',
       point: {
         position: {x: 0, y: 0},
-        label: {height: 2, width: 2},
+        label: {offsetX: 0, offsetY: 0, height: 2, width: 2},
         rays: [
           {
             available: multiInterval([interval.empty()])
@@ -151,7 +151,7 @@ describe('Promote label to rectangle', function () {
       description: 'Point not at origin',
       point: {
         position: {x: -1, y: -1},
-        label: {height: 2, width: 2},
+        label: {offsetX: 0, offsetY: 0, height: 2, width: 2},
         rays: [
           {
             available: multiInterval([interval.empty()])
