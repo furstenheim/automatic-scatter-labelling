@@ -11,7 +11,12 @@ function mainAlgorithm (extendedPoints, params = {}) {
           x: p.position.x,
           y: -p.position.y // The algorithm expects y to grow upwards
         },
-        label: p.label
+        label: {
+          height: p.label.height,
+          width: p.label.width,
+          offsetX: p.label.offsetX || 0,
+          offsetY: p.label.offsetY || 0
+        }
       }
     })
     const processUUID = parseInt(Math.random() * 1000000).toString() // no need for anything fancy

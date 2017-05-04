@@ -10,12 +10,11 @@ function labelSegmentIntersection (pk, vk, li, vi, pi) {
   // translate so we can assume that point is in the centre
   pk = {x: pk.x - pi.x, y: pk.y - pi.y}
   // TODO handle parallel lines
-  var pointCovered
   // The time interval where they meet is connected so it is enough to find the end points. This must occur when either the corners of the label intersect or when
   const intersections = []
   // the end points of the segment intersect
-  for (let x of [- li.width / 2, li.width / 2]) {
-    for (let y of [ - li.height / 2, li.height / 2]) {
+  for (let x of [-li.width / 2 + li.offsetX, li.width / 2 + li.offsetX]) {
+    for (let y of [-li.height / 2 + li.offsetY, li.height / 2 + li.offsetY]) {
       let intersection = segmentSegmentIntersection({x, y}, vi, pk, vk)
       // Intersects inside the segment
       if (intersection && intersection.s >= 0 && intersection.s <= 1) {
@@ -43,9 +42,8 @@ function labelSegmentIntersection (pk, vk, li, vi, pi) {
       }
     }
   }
-  var min = intersections.reduce((a, b) => Math.min(a,b), Number.POSITIVE_INFINITY)
-  var max = intersections.reduce((a, b) => Math.max(a,b), Number.NEGATIVE_INFINITY)
+  var min = intersections.reduce((a, b) => Math.min(a, b), Number.POSITIVE_INFINITY)
+  var max = intersections.reduce((a, b) => Math.max(a, b), Number.NEGATIVE_INFINITY)
   min = Math.max(min, 0)
   return interval(min, max)
-
 }

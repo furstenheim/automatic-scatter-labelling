@@ -50,10 +50,10 @@ module.exports = function (self) {
       let pi = extendedPoints[i]
       pi.rays = []
       for (let j = 0; j < NUMBER_OF_RAYS; j++) {
-        pi.rays.push( {
-          index: i*NUMBER_OF_RAYS * NUMBER_OF_RAYS *4 + j * NUMBER_OF_RAYS * 4,
+        pi.rays.push({
+          index: i * NUMBER_OF_RAYS * NUMBER_OF_RAYS * 4 + j * NUMBER_OF_RAYS * 4,
           selfIndex: j,
-          vector : {
+          vector: {
             x: Math.sin(2 * Math.PI * j / NUMBER_OF_RAYS),
             y: Math.cos(2 * Math.PI * j / NUMBER_OF_RAYS)
           }

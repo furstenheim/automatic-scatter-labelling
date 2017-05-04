@@ -76,9 +76,9 @@ function translateLabel (extendedPoint, vi) {
   return {
     height: label.height,
     width: label.width,
-    top: point.y + vi.y + label.height / 2,
-    bottom: point.y + vi.y - label.height / 2,
-    left: point.x + vi.x - label.width / 2,
-    right: point.x + vi.x + label.width / 2
+    top: point.y + vi.y + label.height / 2 + label.offsetY,
+    bottom: point.y + vi.y - label.height / 2 + label.offsetY,
+    left: point.x + vi.x - label.width / 2 + label.offsetX,
+    right: point.x + vi.x + label.width / 2 + label.offsetX
   }
 }

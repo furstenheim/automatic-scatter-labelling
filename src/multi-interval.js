@@ -19,7 +19,7 @@ function MultiInterval (intervals, isClone) {
   // So we can check interval
   var intervalConstructor = interval(0, 1).constructor
   for (let myInterval of intervals) {
-    if (! myInterval instanceof intervalConstructor) {
+    if (!myInterval instanceof intervalConstructor) {
       this.intervals = []
       return this
     }
@@ -62,7 +62,7 @@ MultiInterval.prototype.clone = function () {
   return new MultiInterval(this.intervals, true)
 }
 MultiInterval.prototype.remove = function (myInterval) {
-  if (! myInterval instanceof this.intervalConstructor) {
+  if (!myInterval instanceof this.intervalConstructor) {
     throw new Error('Not an interval')
   }
   if (this.isEmpty() || myInterval.empty) {
@@ -115,7 +115,7 @@ function _remove(intervals, myStart, myEnd) {
 
 // In place
 MultiInterval.prototype.multipleRemove = function (myMultiInterval) {
-  if (! myMultiInterval instanceof MultiInterval) {
+  if (!myMultiInterval instanceof MultiInterval) {
     throw new Error('Not a multi interval')
   }
   if (this.isEmpty() || myMultiInterval.isEmpty()) {
@@ -185,11 +185,10 @@ MultiInterval.prototype.measure = function () {
   return measure
 }
 
-
-//TODO test
+// TODO test
 MultiInterval.prototype.getMin = function () {
   if (this.isEmpty()) return Number.POSITIVE_INFINITY
-  return this.intervals[0]//this.intervals.reduce((min, cur) => cur.start < min ? cur.start : min, Number.POSITIVE_INFINITY)
+  return this.intervals[0]
 }
 
 multiInterval.coalesce = function (interval, anotherInterval) {

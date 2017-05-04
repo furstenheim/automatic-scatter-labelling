@@ -11,5 +11,5 @@ function pointSegmentIntersection (pi, pk, vk) {
   if (vk.y !== 0) intersectionPoint = (pi.y - pk.y) / vk.y
   else if (vk.x !== 0) intersectionPoint = (pi.x - pk.x) / vk.x
   if (intersectionPoint < 0) return interval.empty()
-  return  interval(intersectionPoint, Number.POSITIVE_INFINITY)
+  return interval(intersectionPoint, Number.POSITIVE_INFINITY)
 }

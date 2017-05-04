@@ -8,8 +8,8 @@ function labelRectangleIntersection (lk, li, vi, pi) {
   let min = 0
   let max = Number.POSITIVE_INFINITY
   if (vi.y !== 0) {
-    const firstIntersection = (lk.height / 2 + li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
-    const secondIntersection = (-lk.height / 2 - li.height / 2 + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
+    const firstIntersection = (lk.height / 2 + li.height / 2 - li.offsetY + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
+    const secondIntersection = (-lk.height / 2 - li.height / 2 - li.offsetY + (lk.top + lk.bottom) / 2 - pi.y) / vi.y
     // Multiplying by a negative sign reverses an inequality
     if (vi.y > 0) {
       max = Math.min(max, firstIntersection)
@@ -20,12 +20,12 @@ function labelRectangleIntersection (lk, li, vi, pi) {
     }
   } else {
     // vector is vertical and they will never intersect
-    if (pi.y - (lk.top + lk.bottom) / 2 > lk.height / 2 + li.height / 2) return interval.empty()
-    if (pi.y - (lk.top + lk.bottom) / 2 < - lk.height / 2 - li.height / 2) return interval.empty()
+    if (li.offsetY + pi.y - (lk.top + lk.bottom) / 2 > lk.height / 2 + li.height / 2) return interval.empty()
+    if (li.offsetY + pi.y - (lk.top + lk.bottom) / 2 < -lk.height / 2 - li.height / 2) return interval.empty()
   }
   if (vi.x !== 0) {
-    const thirdIntersection = (lk.width / 2 + li.width / 2 + (lk.right + lk.left) / 2 - pi.x) / vi.x
-    const fourthIntersection = (- lk.width / 2 - li.width / 2 + (lk.right + lk.left) / 2 - pi.x) / vi.x
+    const thirdIntersection = (lk.width / 2 + li.width / 2 + (lk.right + lk.left) / 2 - pi.x - li.offsetX) / vi.x
+    const fourthIntersection = (-lk.width / 2 - li.width / 2 + (lk.right + lk.left) / 2 - pi.x - li.offsetX) / vi.x
     if (vi.x > 0) {
       max = Math.min(max, thirdIntersection)
       min = Math.max(min, fourthIntersection)
@@ -34,8 +34,8 @@ function labelRectangleIntersection (lk, li, vi, pi) {
       max = Math.min(max, fourthIntersection)
     }
   } else {
-    if (pi.x - (lk.right + lk.left) / 2 > lk.width / 2 + li.width / 2) return interval.empty()
-    if (pi.x - (lk.right + lk.left) / 2 < -lk.width / 2 - li.width / 2) return interval.empty()
+    if (pi.x + li.offsetX - (lk.right + lk.left) / 2 > lk.width / 2 + li.width / 2) return interval.empty()
+    if (pi.x + li.offsetX - (lk.right + lk.left) / 2 < -lk.width / 2 - li.width / 2) return interval.empty()
   }
 
   // Only interested in positive values
