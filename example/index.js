@@ -172,7 +172,7 @@ function * render (data) {
     .duration(500)
     .attr('x1', d => idToPoints[d.id][0].position.x)
     .attr('y1', d => idToPoints[d.id][0].position.y)
-    .attr('x2', d => (d.rectangle.left + d.rectangle.right) / 2)
+    .attr('x2', d => d.rectangle.left)
     .attr('y2', d => (d.rectangle.top + d.rectangle.bottom) / 2)
 
   linesMatched.exit()
@@ -186,7 +186,7 @@ function * render (data) {
     .duration(500)
     .attr('opacity', 100)
     .attr('x', function (d) {
-      return (d.rectangle.left + d.rectangle.right) / 2
+      return (d.rectangle.left  + d.rectangle.right)/2
     })
     .attr('y', d => (d.rectangle.top + d.rectangle.bottom) / 2)
   labelsMatched.exit()

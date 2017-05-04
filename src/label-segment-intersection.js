@@ -8,13 +8,13 @@ var interval = require('./interval').interval
 // Label li moves with vector vi. We find the interval at which it intersects the segment pk, vk. If pk is contained then the interval goes to INFINITY
 function labelSegmentIntersection (pk, vk, li, vi, pi) {
   // translate so we can assume that point is in the centre
-  pk = {x: pk.x - pi.x, y: pk.y - pi.y}
+  pk = {x: pk.x - pi.x - li.offsetX, y: pk.y - pi.y - li.offsetY}
   // TODO handle parallel lines
   // The time interval where they meet is connected so it is enough to find the end points. This must occur when either the corners of the label intersect or when
   const intersections = []
   // the end points of the segment intersect
-  for (let x of [-li.width / 2 + li.offsetX, li.width / 2 + li.offsetX]) {
-    for (let y of [-li.height / 2 + li.offsetY, li.height / 2 + li.offsetY]) {
+  for (let x of [-li.width / 2, li.width / 2]) {
+    for (let y of [-li.height / 2, li.height / 2]) {
       let intersection = segmentSegmentIntersection({x, y}, vi, pk, vk)
       // Intersects inside the segment
       if (intersection && intersection.s >= 0 && intersection.s <= 1) {
