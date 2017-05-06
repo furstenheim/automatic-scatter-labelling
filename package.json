@@ -1,7 +1,7 @@
 {
   "name": "automatic-scatter-labelling",
-  "version": "0.1.0",
-  "description": "Implementation in d3 of the automatic labeling for scatter plots described [here](https://www.think-cell.com/en/career/talks/pdf/think-cell_article_aaai2006.pdf)",
+  "version": "1.0.0",
+  "description": "Place labels in a scatter plot without overlapping. Implements the NOLOOKAHEAD described in https://www.think-cell.com/en/career/talks/pdf/think-cell_article_aaai2006.pdf",
   "main": "dist/automatic-labelling.js",
   "scripts": {
     "gulp": "gulp",
