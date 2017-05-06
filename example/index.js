@@ -45,7 +45,6 @@
       .attr('class', 'label')
       .attr('transform', 'rotate(-90)')
       .attr('y', 10)
-      //.attr('dy', '.71em')
       .style('text-anchor', 'end')
       .text('Life expectancy at 60')
     const developmentGroups = _.map(_.uniqBy(data, 'development_group'), 'development_group')
@@ -76,9 +75,6 @@
     co(function * () {
       yield * renderLoop(data)
     })
-    /*  setTimeout(function () {
-     render(data.slice(0, 5), xAxis, yAxis)
-     }, 2000)*/
   })
 
   function * renderLoop(data) {
@@ -183,7 +179,6 @@
     var a = new Date()
     const result = yield mainAlgorithm(extendedPoints, {
       MAX_NUMBER_OF_ITERATIONS: 1,
-      isWebgl: false,
       NUMBER_OF_RAYS: 25,
       radius: 3 * radius,
       bbox: {
